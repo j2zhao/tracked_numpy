@@ -192,19 +192,19 @@ def get_build_overrides():
     from distutils.version import LooseVersion
 
     def _needs_gcc_c99_flag(obj):
-        if obj.compiler.compiler_type != 'unix':
-            return False
+        # if obj.compiler.compiler_type != 'unix':
+        #     return False
 
-        cc = obj.compiler.compiler[0]
-        if "gcc" not in cc:
-            return False
+        # cc = obj.compiler.compiler[0]
+        # if "gcc" not in cc:
+        #     return False
 
-        # will print something like '4.2.1\n'
-        out = subprocess.run([cc, '-dumpversion'], stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE, universal_newlines=True)
-        # -std=c99 is default from this version on
-        if LooseVersion(out.stdout) >= LooseVersion('5.0'):
-            return False
+        # # will print something like '4.2.1\n'
+        # out = subprocess.run([cc, '-dumpversion'], stdout=subprocess.PIPE,
+        #                      stderr=subprocess.PIPE, universal_newlines=True)
+        # # -std=c99 is default from this version on
+        # if LooseVersion(out.stdout) >= LooseVersion('5.0'):
+        #     return False
         return True
 
     class new_build_clib(build_clib):

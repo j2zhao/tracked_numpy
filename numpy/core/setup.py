@@ -985,6 +985,13 @@ def configuration(parent_package='',top_path=None):
                     sources=[join('src', 'umath', '_rational_tests.c.src')])
 
     #######################################################################
+    #                   custom float dtype module                      #
+    #######################################################################
+
+    config.add_extension('tracked_float',
+                    sources=[join('src', 'umath', 'tracked_float.c')])
+
+    #######################################################################
     #                        struct_ufunc_test module                     #
     #######################################################################
 

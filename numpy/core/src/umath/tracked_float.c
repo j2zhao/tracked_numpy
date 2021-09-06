@@ -1,5 +1,7 @@
 #define NPY_NO_DEPRECATED_API NPY_API_VERSION
 
+#define PY_SSIZE_T_CLEAN
+
 #include <Python.h>
 #include <structmember.h>
 #include <numpy/arrayobject.h>
@@ -8,6 +10,8 @@
 #include <math.h>
 #include "common.h"
 #include "ndarraytypes.h"
+
+
 
 /* Uncomment the following line to work around a bug in numpy */
 /* #define ACQUIRE_GIL */
@@ -72,14 +76,14 @@ tfloat_nonzero(tracked_float x) {
 }
 
 static NPY_INLINE int
-tfloat_sign(tracked_float x) {
-    return x.n<0?-1:x.n==0?0:1;
+sign(npy_float64 n) {
+    return n<0?-1:n==0?0:1;
 }
 
 static NPY_INLINE provenance
-make provenance(npy_int id, npy_int start_0, npy_int start_1, npy_int end_0, npy_int end_1, npy_int type) {
+make_provenance(npy_int id, npy_int start_0, npy_int start_1, npy_int end_0, npy_int end_1, npy_int type) {
     provenance prov = {id, start_0, start_1, end_0, end_1, type};
-    return prov
+    return prov;
 }
 
 static NPY_INLINE tracked_float
@@ -96,7 +100,7 @@ make_tfloat_start(npy_float64 n, npy_int id, npy_int start_0, npy_int start_1) {
     return r;
 }
 
-static NPY_INLINE tracked_float
+static NPY_INLINE provenance
 make_prov_start(npy_int id, npy_int start_0, npy_int start_1) {
     provenance prov = {id, start_0, start_1, 0, 0, 0};
     return prov;
@@ -108,42 +112,40 @@ make_prov_start(npy_int id, npy_int start_0, npy_int start_1) {
 static NPY_INLINE tracked_float
 make_tfloat_prov1(npy_float64 n, tracked_float a) {
     npy_int size = a.size;
-    size_t p_size = size(provenance);
-    tracked_float r;
-    if (size - 1) > 0 {
+    size_t p_size = sizeof(provenance);
+    //tracked_float r;
+    if ((size - 1) > 0) {
         provenance overflow[size - 1];
         provenance p;
         memcpy(overflow, a.overflow, p_size*(size - 1));
         memcpy(&p, &a.p, p_size);
-        r = {n, p, size, overflow};
+        tracked_float r = {n, p, size, overflow};
         return r;
     }
     else {
         provenance p;
         memcpy(&p, &a.p, p_size);
-        r = {n, p, size, NULL};
+        tracked_float r = {n, p, size, NULL};
         return r;
     }
 }
 
 static NPY_INLINE tracked_float
-make_tfloat_prov2(np_float64 n, tracked_float a, tracked_float b) {
-    npy_int size0 = a.size
-    npy_int size1 = b.size
-    npy_int size = size0 + size1
+make_tfloat_prov2(npy_float64 n, tracked_float a, tracked_float b) {
+    npy_int size0 = a.size;
+    npy_int size1 = b.size;
+    npy_int size = size0 + size1;
     /* we have history */
     if (size >= 1) {
         provenance p;
         provenance overflow[size - 1];
         int offset = -1;
         size_t p_size = sizeof(provenance);
-        tracked_float r;
         /*a has history*/
         if (size0 > 0) {
             memcpy(&p, &a.p, p_size);
-            x = true;
             if (size0 > 1) {
-                memcpy(overflow, a.overflow, (size0 - 1)*p_sizes);
+                memcpy(overflow, a.overflow, (size0 - 1)*p_size);
             }
             offset = size0 - 1;
         }
@@ -153,11 +155,11 @@ make_tfloat_prov2(np_float64 n, tracked_float a, tracked_float b) {
                 memcpy(overflow, b.overflow, (size1 - 1)*p_size);
             }
             else {
-                memcpy(overflow + offset, b.p, p_size);
-                memcpy(overflow + offset + 1, b.p, p_size*(size1 - 1));
+                memcpy(overflow + offset, &b.p, p_size);
+                memcpy(overflow + offset + 1, b.overflow, p_size*(size1 - 1));
             }
         }
-        r = {n, p, size, overflow};
+        tracked_float r = {n, p, size, overflow};
         return r;
     }
     else {
@@ -182,14 +184,14 @@ append_prov(provenance* p, provenance* of, tracked_float* a) {
 }
 
 static NPY_INLINE int 
-append_prov_of(provenance* of, tracked_float a) {
-    npy_int s = a.size;
+append_prov_of(provenance* of, tracked_float* a) {
+    npy_int s = a -> size;
     if (s == 0) {
         return s;
     }
-    memcpy(of, &a.p, sizeof(provenance));
+    memcpy(of, &(a-> p), sizeof(provenance));
     if (s > 1) {
-        memcpy(of + 1, a.overflow, sizeof(provenance)*(s - 1));
+        memcpy(of + 1, a -> overflow, sizeof(provenance)*(s - 1));
     }
     return s;
 }
@@ -237,7 +239,21 @@ PyTFloat_FromTFloat(tracked_float x) {
             Py_INCREF(Py_NotImplemented); \
             return Py_NotImplemented; \
         } \
-        return 0; \
+    } \
+
+#define AS_DOUBLE_2(dst,object) \
+    { \
+        if (PyTFloat_Check(object)) { \
+            dst = ((PyTFloat*)object)->f.n; \
+        } \
+        else if (PyFloat_Check(object)){ \
+            dst = PyFloat_AsDouble(object); \
+        }  else if (PyLong_Check(object)) { \
+            dst = PyLong_AsDouble(object); \
+        } else { \
+            Py_INCREF(Py_NotImplemented); \
+            return -1; \
+        } \
     } \
 
 // no error checking
@@ -249,8 +265,8 @@ pytfloat_new(PyTypeObject* type, PyObject* args, PyObject* kwds) {
     npy_int id = PyLong_AsLong(PyTuple_GET_ITEM(args, 1));
     npy_int start_0 = PyLong_AsLong(PyTuple_GET_ITEM(args, 2));
     npy_int start_1 = PyLong_AsLong(PyTuple_GET_ITEM(args, 3));
-    tracked_float r = make_tfloat_start(n, double id, double start_0, double start_1);
-    return PyTFloat_FromTFFloat(r);
+    tracked_float r = make_tfloat_start(n, id, start_0, start_1);
+    return PyTFloat_FromTFloat(r);
 }
 
 static PyObject*
@@ -279,29 +295,27 @@ pytfloat_richcompare(PyObject* a, PyObject* b, int op) {
 
 static char*
 provenance_repr(provenance p, provenance* overflow) {
-    size_t rsize;
+    int rsize;
     if (overflow != NULL) {
-        rsize = sizeof(overflow)/sizeof(provenance) + 1;
+        rsize = sizeof(*overflow)/sizeof(provenance) + 1;
     }
     else {
         rsize = 1;
     }
-    char* output[rsize*50];
+    char output[rsize*50];
     int offset = 0;
     provenance q = p;
     int x;
-    for (x = 0, x < rsize, x ++) {
+    for (x = 0; x < rsize; x ++) {
         offset += sprintf(output + offset, "[(%d,%d,%d,%d,%d,%d)]", 
-            q.id, q.start_0, q.start_1, q.start_2,x.end_0, q.end_1, q.type);
+            q.id, q.start_0, q.start_1, q.end_0, q.end_1, q.type);
         if (x > 0 && x < rsize -1 ) {
             offset += sprintf(output + offset, " , ");
         }
-        if (rsize != 1 || x = rsize - 1) {
+        if (x != rsize - 1) {
             q = overflow[x];
         }
     }
-    char* output[rsize*50];
-
     return output;
     
 }
@@ -315,48 +329,49 @@ pytfloat_repr(PyObject* self) {
 
 static PyObject*
 pytfloat_str(PyObject* self) {
-    return pytfloat_rep(self);
+    return pytfloat_repr(self);
 }
 
 static npy_hash_t
 pytfloat_hash(PyObject* self) {
-    tracked x = ((PyTFloat*)self)->f;
+    tracked_float x = ((PyTFloat*)self)->f;
     /* Use a extremely weak hash as Python expects ?*/
     long h = 131071*x.n+524287*x.size;
     /* Never return the special error value -1 */
     return h==-1?2:h;
 }
 
-#define TFLOAT_BINOP_2(name, exp) \
+#define TFLOAT_BINOP(name, exp) \
     static PyObject* \
     pytfloat_##name(PyObject* a, PyObject* b) { \
         tracked_float z;\
         int a_tf = PyTFloat_Check(a); \
         int b_tf = PyTFloat_Check(b); \
-        npy_float64 x = AS_DOUBLE(a);\
-        npy_float64 y = AS_DOUBLE(b);\
-        np_float64 n = (np_float64) exp; \
+        npy_float64 x; \
+        AS_DOUBLE(x, a);\
+        npy_float64 y; \
+        AS_DOUBLE(y, b);\
+        npy_float64 n = (npy_float64) exp; \
         if (PyErr_Occurred()) { \
             return 0; \
         } \
         if (a_tf && b_tf) { \
-            z = make_tfloat_prov2(n, a->f, b ->f); \
+            z = make_tfloat_prov2(n, ((PyTFloat*) a) ->f, ((PyTFloat*) b) ->f); \
         } else if (a_tf) { \
-            z = make_tfloat_prov1(n, a -> f); \
+            z = make_tfloat_prov1(n, ((PyTFloat*) a) -> f); \
         } else if (b_tf) { \
-            z = make_tfloat_prov1(n, b -> f); \
+            z = make_tfloat_prov1(n, ((PyTFloat*) b) -> f); \
         } else { \
             return PyFloat_FromDouble((double) n); \
         } \
         return PyTFloat_FromTFloat(z); \
     }
-#define TFLOAT_BINOP(name, exp) TFLOAT_BINOP_2(name, x exp y))
 
-TFLOAT_BINOP(add, +)
-TFLOAT_BINOP(subtract, -)
-TFLOAT_BINOP(multiply, *)
-TFLOAT_BINOP(divide, /)
-TFLOAT_BINOP_2(floor_divide, (int)floor(x / y) )
+TFLOAT_BINOP(add, x + y)
+TFLOAT_BINOP(subtract, x - y)
+TFLOAT_BINOP(multiply, x*y)
+TFLOAT_BINOP(divide, x/y)
+TFLOAT_BINOP(floor_divide, (int)floor(x / y) )
 
 #define TFLOAT_UNOP(name, exp) \
     static PyObject* \
@@ -383,8 +398,8 @@ TFLOAT_BINOP_2(floor_divide, (int)floor(x / y) )
         return convert(z); \
     }
 
-TFLOAT_UNOP(negative, -x)
-TFLOAT_UNOP(absolute,fabs(x))
+TFLOAT_UNOP(negative, -y)
+TFLOAT_UNOP(absolute,fabs(y))
 
 TFLOAT_UNOP_2(int, long, (long)y, PyLong_FromLong)
 TFLOAT_UNOP_2(float,double, (double)y,PyFloat_FromDouble)
@@ -397,7 +412,7 @@ pytfloat_positive(PyObject* self) {
 
 static int
 pytfloat_nonzero(PyObject* self) {
-    tfloat x = ((PyTFloat*)self)->f;
+    tracked_float x = ((PyTFloat*)self)->f;
     return tfloat_nonzero(x);
 }
 
@@ -441,18 +456,18 @@ static PyNumberMethods pytfloat_as_number = {
 };
 
 static PyObject*
-pytfloat_float_get(PyObject* self) {
+pytfloat_float_get(PyObject* self, void* closure) {
     return PyFloat_FromDouble(((PyTFloat*)self)->f.n);
 }
 
 static PyObject*
-pytfloat_psize_get(PyObject* self) {
+pytfloat_psize_get(PyObject* self, void* closure) {
     return PyLong_FromLong(((PyTFloat*)self)->f.size);
 }
 
 static int
 pytfloat_float_set(PyObject* self, PyObject* value, void* closure) {
-    npy_float64 x = PyFloat_AsDouble(((PyFloat*)value);
+    npy_float64 x = PyFloat_AsDouble(value);
     if (PyErr_Occurred()) {
         return 0;
     }
@@ -468,15 +483,16 @@ pytfloat_provenance_get(PyObject* self, void* closure) {
     int i;
     provenance p = f.p;
 
-    PyListObject plist = PyList_New(PyLong_AsSsize_t(PyLong_FromLong(size)));
-    PyTupleObject prov = PyTuple_Pack(6, PyLong_FromLong(p.id), PyLong_FromLong(p.start_0), 
+    Py_ssize_t x = PyLong_AsSsize_t(PyLong_FromLong(size));
+    PyObject* plist = PyList_New(x);
+    PyObject* prov = PyTuple_Pack(6, PyLong_FromLong(p.id), PyLong_FromLong(p.start_0), 
         PyLong_FromLong(p.start_1), PyLong_FromLong(p.end_0), PyLong_FromLong(p.end_1), 
         PyLong_FromLong(p.type));
     PyList_SetItem(plist, 0, prov);
 
-    for (i = 1; i < size, i++) {
+    for (i = 1; i < size; i++) {
         provenance p = f.overflow[i];
-        PyTupleObject prov = PyTuple_Pack(6, PyLong_FromLong(p.id), PyLong_FromLong(p.start_0), 
+        PyObject* prov = PyTuple_Pack(6, PyLong_FromLong(p.id), PyLong_FromLong(p.start_0), 
             PyLong_FromLong(p.start_1), PyLong_FromLong(p.end_0), PyLong_FromLong(p.end_1), 
             PyLong_FromLong(p.type));
         PyList_SetItem(plist, 0, prov);
@@ -485,17 +501,17 @@ pytfloat_provenance_get(PyObject* self, void* closure) {
 }
 
 static PyGetSetDef pytfloat_getset[] = {
-    {(char*)"n", pytfloat_float, pytfloat_float_set, (char*)"float", 0},
+    {(char*)"n", pytfloat_float_get, pytfloat_float_set, (char*)"float", 0},
     {(char*)"provenance",pytfloat_provenance_get,0,(char*)"list of provenance",0},
     {(char*)"pnum",pytfloat_psize_get,0,(char*)"number of predecessors",0},
     {0} /* sentinel */
 };
 
 static void pytfloat_dealloc(PyObject* self){
-    if ((PyTFloat*)self->f.overflow != NULL) {
+    if (((PyTFloat*)self)->f.overflow != NULL) {
         free(((PyTFloat*)self)->f.overflow);
     }
-    Py_TYPE(obj)->tp_free(obj);
+    Py_TYPE(self)->tp_free(self);
 }
 
 static PyTypeObject PyTFloat_Type = {
@@ -566,8 +582,8 @@ npytfloat_setitem(PyObject* item, void* data, void* arr) {
         r = ((PyTFloat*)item)->f;
     }
     else {
-        npy_float64 n = AS_DOUBLE(item);
-        int eq;
+        npy_float64 n;
+        AS_DOUBLE_2(n, item);
         if (error_converting(n)) {
             return -1;
         }
@@ -619,23 +635,23 @@ npytfloat_copyswap(void* dst, void* src, int swap, void* arr) {
     if (!src) {
         return;
     }
-    r = (tfloat*)dst;
-    memcpy(r,src,sizeof(tfloat));
+    r = (tracked_float*)dst;
+    memcpy(r,src,sizeof(tracked_float));
     
     if (r -> overflow != NULL) {
-        size_t t = sizeof((r -> overflow))/sizeof(provenance)
+        size_t t = sizeof(*(r -> overflow))/sizeof(provenance);
         provenance of[t];
-        memcpy(of, &(r -> overflow), sizeof(provenance)*t);
-        r -> overflow = &of;
+        memcpy(of, (r -> overflow), sizeof(provenance)*t);
+        r -> overflow = of;
     }
     
     if (swap) {
         byteswap_float(&r->n);
         byteswap_provenance(&r->p);
         byteswap(&r->size);
-        if (r.overflow != NULL) {
-            provenance of[] = r -> overflow;
-            size_t t = sizeof(r -> overflow)/sizeof(provenance);
+        if (r -> overflow != NULL) {
+            provenance* of = r -> overflow;
+            int t = sizeof(*(r -> overflow))/sizeof(provenance);
             int i;
             for(i = 0; i < t; i++) {
                 byteswap_provenance(&of[i]);
@@ -657,24 +673,24 @@ npytfloat_copyswapn(void* dst_, npy_intp dstride, void* src_,
         for (i = 0; i < n; i++) {
             tracked_float* r = (tracked_float*)(dst+dstride*i);
             if (r -> overflow != NULL) {
-                size_t t = sizeof((r -> overflow))/sizeof(provenance)
+                size_t t = sizeof(*(r -> overflow))/sizeof(provenance);
                 provenance of[t];
-                memcpy(of, &(s.overflow), sizeof(provenance)*(s.size - 1));
-                r -> overflow = &of;
+                memcpy(of, r->overflow, sizeof(provenance)*(r -> size - 1));
+                r -> overflow = of;
             }
         }
     }
     else {
         for (i = 0; i < n; i++) {
-            npy_tfloat_copyswap(dst+dstride*i, src+sstride*i, swap, void* arr)
+            npytfloat_copyswap(dst+dstride*i, src+sstride*i, swap, arr);
         }
     }
 }
 
-
+static int
 npytfloat_compare(const void* d0, const void* d1, void* arr) {
-    tfloat x = *(tfloat*)d0,
-             y = *(tfloat*)d1;
+    tracked_float x = *(tracked_float*)d0,
+             y = *(tracked_float*)d1;
     npy_float64 a = x.n, b = y.n;
 
     return (a < b)?-1:(a=b)?0:1;
@@ -684,21 +700,21 @@ npytfloat_compare(const void* d0, const void* d1, void* arr) {
     static int \
     npytfloat_##name(void* data_, npy_intp n, \
             npy_intp* max_ind, void* arr) { \
-        const tfloat* data; \
+        const tracked_float* data; \
         npy_intp best_i; \
         npy_float64 x, y; \
         npy_intp i; \
         if (!n) { \
             return 0; \
         } \
-        data = (tfloat*)data_; \
+        data = (tracked_float*)data_; \
         best_i = 0; \
         y = data[0].n; \
         for (i = 1; i < n; i++) { \
             x = data[i].n; \
             if (op) { \
                 best_i = i; \
-                y = data[i]; \
+                y = data[i].n; \
             } \
         } \
         *max_ind = best_i; \
@@ -722,16 +738,16 @@ npytfloat_dot(void* ip0_, npy_intp is0, void* ip1_, npy_intp is1,
     npy_int prov_size = 0;
     //size of provenance
     for (i = 0; i < n; i++) {
-        prov_size += ((tfloat*)ip0) -> size;
-        prov_size += ((tfloat*)ip1) -> size;
-        r += (((tfloat*)ip0) -> n) * (((tfloat*)ip1) -> n);
+        prov_size += ((tracked_float*)ip0) -> size;
+        prov_size += ((tracked_float*)ip1) -> size;
+        r += (((tracked_float*)ip0) -> n) * (((tracked_float*)ip1) -> n);
         ip0 += is0;
         ip1 += is1;
     }
 
     if (prov_size > 1) {
         provenance of[prov_size - 1];
-        tf.overflow = &of;
+        tf.overflow = of;
     }
 
     tf.n = r;
@@ -741,17 +757,17 @@ npytfloat_dot(void* ip0_, npy_intp is0, void* ip1_, npy_intp is1,
     ip1 = (char*)ip1_;
     for (i = 0; i < n; i++) {
         if (!j){
-            j += append_prov(&(tf.p), tf.overflow, (tfloat*)ip01);
+            j += append_prov(&(tf.p), tf.overflow, (tracked_float*)ip0);
         } else {
-            j += append_prov(tf.overflow, (tfloat*)ip01);
+            j += append_prov_of(tf.overflow, (tracked_float*)ip0);
         }
         if (!j){
-            j += append_prov(&(tf.p), tf.overflow, (tfloat*)ip11);
+            j += append_prov(&(tf.p), tf.overflow, (tracked_float*)ip1);
         } else {
-            j += append_prov(tf.overflow, (tfloat*)ip11);
+            j += append_prov_of(tf.overflow, (tracked_float*)ip1);
         }
-        ip01 += is0;
-        ip11 += is1;
+        ip0 += is0;
+        ip1 += is1;
     }
 
     *(tracked_float*)op = tf;
@@ -795,7 +811,7 @@ npytfloat_fillwithscalar(void* buffer_, npy_intp length,
 // I don't know how PyArrayObject works with PyLong
 static void
 npytfloat_initialize(PyObject* self, PyObject *args) {
-    PyArrayObject* array = PyTuple_GET_ITEM(args, 0);
+    PyArrayObject* array = (PyArrayObject*)PyTuple_GET_ITEM(args, 0);
     long id = PyLong_AsLong(PyTuple_GET_ITEM(args, 1));
     npy_intp* shape = PyArray_SHAPE(array);
     npy_int i;
@@ -804,8 +820,9 @@ npytfloat_initialize(PyObject* self, PyObject *args) {
 
     for (i = 0; i < shape[0]; i ++) {
         for (j = 0; j < shape[1]; j ++){
+            provenance p = {id, i, j, 0, 0, 0};
             r = (tracked_float*) PyArray_GETPTR2(array, i, j);
-            r -> p = {id, i, j, 0, 0, 0};
+            r -> p = p;
             r -> size = 1;
             r -> overflow = NULL;
         } 
@@ -855,10 +872,9 @@ PyArray_Descr npytfloat_descr = {
 //TODO: none of the casting/initialization functions initialize provenance
 //We have to have that as a separate step
 #define DEFINE_CAST2(type) \
-    DEFINE_CAST(type,tracked_float,tracked_float y = make_prov_start((npy_float64) x, -1, -1, -1);) \
+    DEFINE_CAST(type,tracked_float,tracked_float y = make_tfloat_start((npy_float64) x, -1, -1, -1);) \
     DEFINE_CAST(tracked_float, type ,npy_float64 z = x.n; \
                 type y = z; if (y != z) set_overflow();)
-
 
 DEFINE_CAST2(npy_int8)
 DEFINE_CAST2(npy_int16)
@@ -873,7 +889,7 @@ DEFINE_CAST2(npy_uint32)
 DEFINE_CAST2(npy_uint64)
 DEFINE_CAST2(npy_bool)
 
-#define BINARY_UFUNC(name,outtype,exp) \
+#define TFLOAT_BINARY_UFUNC(name, exp) \
     void tfloat_ufunc_##name(char** args, npy_intp const *dimensions, \
               npy_intp const *steps, void* data) { \
         npy_intp is0 = steps[0], is1 = steps[1], \
@@ -886,33 +902,48 @@ DEFINE_CAST2(npy_bool)
             tracked_float y = *(tracked_float*)i1; \
             a = x.n; \
             b = y.n; \
-            if (outtype != tracked_float) { \
-                 *(outtype*)o = exp; \
-            } else {\
-                npy_float64 n = (npy_float64) exp;\
-                *(outtype*)o = make_tfloat_prov2(n, x, y)\
-            }\
+            npy_float64 n = (npy_float64) exp;\
+            *(tracked_float*) o = make_tfloat_prov2(n, x, y);\
+            i0 += is0; i1 += is1; o += os; \
+        } \
+    }
+
+#define TFLOAT_BINARY_UFUNC_GEN(name, outtype, exp) \
+    void tfloat_ufunc_##name(char** args, npy_intp const *dimensions, \
+              npy_intp const *steps, void* data) { \
+        npy_intp is0 = steps[0], is1 = steps[1], \
+            os = steps[2], n = *dimensions; \
+        char *i0 = args[0], *i1 = args[1], *o = args[2]; \
+        int k; \
+        npy_float64 a, b; \
+        for (k = 0; k < n; k++) { \
+            tracked_float x = *(tracked_float*)i0; \
+            tracked_float y = *(tracked_float*)i1; \
+            a = x.n; \
+            b = y.n; \
+            *(outtype*)o = exp; \
             i0 += is0; i1 += is1; o += os; \
         } \
     }
 
 //figure out how to create equivalent of gcd and etc. -> custom functions for this
-TFLOAT_BINARY_UFUNC(add,tracked_float,a + b)
-TFLOAT_BINARY_UFUNC(subtract,tracked_float,a - b)
-TFLOAT_BINARY_UFUNC(multiply,tracked_float, a*b)
-TFLOAT_BINARY_UFUNC(divide,tracked_float,a/b)
-TFLOAT_BINARY_UFUNC(floor_divide,tracked_float,(int) floor(a/ b))
-PyUFuncGenericFunction tfloat_ufunc_true_divide = tfloat_ufunc_divide;
-TFLOAT_BINARY_UFUNC(minimum,tracked_float, a<b?a:b)
-TFLOAT_BINARY_UFUNC(maximum,tracked_float, a< b?b:a)
-TFLOAT_BINARY_UFUNC(equal,npy_bool,a = b)
-TFLOAT_BINARY_UFUNC(not_equal,npy_bool, a!= b)
-TFLOAT_BINARY_UFUNC(less,npy_bool, a < b)
-TFLOAT_BINARY_UFUNC(greater,npy_bool,a > b))
-TFLOAT_BINARY_UFUNC(less_equal, npy_bool, a <= b))
-TFLOAT_BINARY_UFUNC(greater_equal, npy_bool, a >= b))
+TFLOAT_BINARY_UFUNC(add, a + b)
 
-#define UNARY_UFUNC(name,outtype,exp) \
+TFLOAT_BINARY_UFUNC(subtract,a - b)
+TFLOAT_BINARY_UFUNC(multiply, a*b)
+TFLOAT_BINARY_UFUNC(divide,a/b)
+TFLOAT_BINARY_UFUNC(floor_divide,(int) floor(a/ b))
+PyUFuncGenericFunction tfloat_ufunc_true_divide = tfloat_ufunc_divide;
+TFLOAT_BINARY_UFUNC(minimum, a<b?a:b)
+TFLOAT_BINARY_UFUNC(maximum, a< b?b:a)
+TFLOAT_BINARY_UFUNC_GEN(equal,npy_bool,a = b)
+TFLOAT_BINARY_UFUNC_GEN(not_equal,npy_bool, a!= b)
+TFLOAT_BINARY_UFUNC_GEN(less,npy_bool, a < b)
+TFLOAT_BINARY_UFUNC_GEN(greater,npy_bool,a > b)
+TFLOAT_BINARY_UFUNC_GEN(less_equal, npy_bool, a <= b)
+TFLOAT_BINARY_UFUNC_GEN(greater_equal, npy_bool, a >= b)
+
+#define TFLOAT_UNARY_UFUNC(name,exp) \
     void tfloat_ufunc_##name(char** args, npy_intp const *dimensions, \
                                npy_intp const *steps, void* data) { \
         npy_intp is = steps[0], os = steps[1], n = *dimensions; \
@@ -921,28 +952,25 @@ TFLOAT_BINARY_UFUNC(greater_equal, npy_bool, a >= b))
         for (k = 0; k < n; k++) { \
             tracked_float x = *(tracked_float*)i; \
             npy_float64 a = x.n;\
-            if (outtype != tracked_float) { \
-                 *(outtype*)o = exp; \
-            } else {\
-                npy_float64 n = (npy_float64) exp;\
-                *(outtype*)o = make_tfloat_prov2(n, x, y)\
-            }\
+            npy_float64 n = (npy_float64) exp;\
+            *(tracked_float*)o = make_tfloat_prov1(n, x);\
             i += is; o += os; \
         } \
     }
 
-UNARY_UFUNC(negative,tracked_float, - a)
-UNARY_UFUNC(absolute,tracked_float,fabs(a))
-UNARY_UFUNC(floor,tracked_float, floor(a))
-UNARY_UFUNC(ceil,tracked_float, ceil(a))
-UNARY_UFUNC(trunc,tracked_float,trunc(c))
-UNARY_UFUNC(square,tracked_float, a*a)
-UNARY_UFUNC(rint,tracked_float,rint(a)))
-UNARY_UFUNC(sign,tracked_float,tfloat_sign(a))
+TFLOAT_UNARY_UFUNC(absolute,fabs(a))
+TFLOAT_UNARY_UFUNC(floor, floor(a))
+TFLOAT_UNARY_UFUNC(ceil, ceil(a)) 
+TFLOAT_UNARY_UFUNC(trunc,trunc(a))
+TFLOAT_UNARY_UFUNC(square, a*a)
+TFLOAT_UNARY_UFUNC(rint,rint(a))
+TFLOAT_UNARY_UFUNC(sign,sign(a))
+TFLOAT_UNARY_UFUNC(negative, -a)
+
 
 /*UNARY_UFUNC(reciprocal,tracked_float,inverse(x)) -> TODO: add more functions as needed*/
 //get provenance as string NEED TO REGISTER AS NEW UFUNC???
-UNARY_UFUNC(provenance_str,char*,provenance_repr(x.p, x.overflow))
+//UNARY_UFUNC(provenance_str,char*,provenance_repr(x.p, x.overflow))
 
 static NPY_INLINE void
 tfloat_matrix_multiply(char **args, npy_intp const *dimensions, npy_intp const *steps)
@@ -989,7 +1017,7 @@ tfloat_matrix_multiply(char **args, npy_intp const *dimensions, npy_intp const *
 }
 
 static void
-rational_gufunc_matrix_multiply(char **args, npy_intp const *dimensions,
+tfloat_gufunc_matrix_multiply(char **args, npy_intp const *dimensions,
                                 npy_intp const *steps, void *NPY_UNUSED(func))
 {
     /* outer dimensions counter */
@@ -1008,14 +1036,14 @@ rational_gufunc_matrix_multiply(char **args, npy_intp const *dimensions,
      * core dimensions for each loop
      */
     for (N_ = 0; N_ < dN; N_++, args[0] += s0, args[1] += s1, args[2] += s2) {
-        rational_matrix_multiply(args, dimensions+1, steps+3);
+        tfloat_matrix_multiply(args, dimensions+1, steps+3);
     }
 }
 
 //test_add -> do i need this? -> how to test
 
 PyMethodDef module_methods[] = {
-    {"initialize", (PyCFunction) npytfloat_initialize, METH_STATIC | METH_VARARGS, ""}
+    {"initialize", (PyCFunction) npytfloat_initialize, METH_STATIC | METH_VARARGS, ""},
     {0} /* sentinel */
 };
 
@@ -1035,7 +1063,7 @@ PyMODINIT_FUNC PyInit_tracked_float(void) {
     PyObject *m = NULL;
     PyObject* numpy_str;
     PyObject* numpy;
-    int npy_rational;
+    int npy_tfloat;
 
     import_array();
     if (PyErr_Occurred()) {
@@ -1056,19 +1084,19 @@ PyMODINIT_FUNC PyInit_tracked_float(void) {
     }
 
     /* Can't set this until we import numpy */
-    PyRational_Type.tp_base = &PyGenericArrType_Type;
+    PyTFloat_Type.tp_base = &PyGenericArrType_Type;
 
     /* Initialize tracked_float type object */
     if (PyType_Ready(&PyTFloat_Type) < 0) {
         goto fail;
     }
 
-    /* Initialize rational descriptor */
+    /* Initialize  descriptor */
     PyArray_InitArrFuncs(&npytfloat_arrfuncs);
     npytfloat_arrfuncs.getitem = npytfloat_getitem;
     npytfloat_arrfuncs.setitem = npytfloat_setitem;
-    npytfloat_arrfuncs.copyswapn = npyrational_copyswapn;
-    npytfloat_arrfuncs.copyswap = npytfloat_copyswapn;
+    npytfloat_arrfuncs.copyswapn = npytfloat_copyswapn;
+    npytfloat_arrfuncs.copyswap = npytfloat_copyswap;
     npytfloat_arrfuncs.compare = npytfloat_compare;
     npytfloat_arrfuncs.argmin = npytfloat_argmin;
     npytfloat_arrfuncs.argmax = npytfloat_argmax;
@@ -1090,10 +1118,9 @@ PyMODINIT_FUNC PyInit_tracked_float(void) {
         goto fail;
     }
 
-    /* Register casts to and from rational */
+    /* Register casts to and from tfloat */
     #define REGISTER_CAST(From,To,from_descr,to_typenum, safe) { \
             PyArray_Descr* from_descr_##From##_##To = (from_descr); \
-            
             if (PyArray_RegisterCastFunc(from_descr_##From##_##To, \
                                          (to_typenum), \
                                          npycast_##From##_##To) < 0) { \
@@ -1105,19 +1132,19 @@ PyMODINIT_FUNC PyInit_tracked_float(void) {
                 goto fail; \
             } \
         }
-    #define REGISTER_INT_CASTS(type) \
+    #define REGISTER_INT_CASTS(bits) \
         REGISTER_CAST(npy_int##bits, tracked_float, \
                       PyArray_DescrFromType(NPY_INT##bits), npy_tfloat, 1) \
         REGISTER_CAST(tracked_float, npy_int##bits, &npytfloat_descr, \
                       NPY_INT##bits, 0)
     
-    #define REGISTER_FLOAT_CASTS(type, safe1, safe2) \
+    #define REGISTER_FLOAT_CASTS(bits, safe1, safe2) \
         REGISTER_CAST(npy_float##bits, tracked_float, \
                       PyArray_DescrFromType(NPY_FLOAT##bits), npy_tfloat, safe1) \
         REGISTER_CAST(tracked_float, npy_float##bits, &npytfloat_descr, \
                       NPY_FLOAT##bits, safe1)
     
-    #define REGISTER_UINT_CASTS(type) \
+    #define REGISTER_UINT_CASTS(bits) \
         REGISTER_CAST(npy_uint##bits, tracked_float, \
                       PyArray_DescrFromType(NPY_UINT##bits), npy_tfloat, 1) \
         REGISTER_CAST(tracked_float, npy_uint##bits, &npytfloat_descr, \
@@ -1137,13 +1164,11 @@ PyMODINIT_FUNC PyInit_tracked_float(void) {
     REGISTER_UINT_CASTS(32)
     REGISTER_UINT_CASTS(64)
 
-    REGISTER_CAST(npy_bool, tracked_float,
-                      PyArray_DescrFromType(NPY_BOOL), npy_tfloat, 1) \
-    REGISTER_CAST(tracked_float, npy_bool, &npytfloat_descr, \
-                      npy_bool, 0)
+    REGISTER_CAST(npy_bool, tracked_float, PyArray_DescrFromType(NPY_BOOL), npy_tfloat, 1) 
+    REGISTER_CAST(tracked_float, npy_bool, &npytfloat_descr, NPY_BOOL, 0)
 
     /* Register ufuncs */
-    #define REGISTER_UFUNC(name,...) { \
+#define REGISTER_UFUNC(name,...) { \
         PyUFuncObject* ufunc = \
             (PyUFuncObject*)PyObject_GetAttrString(numpy, #name); \
         int _types[] = __VA_ARGS__; \
@@ -1158,17 +1183,20 @@ PyMODINIT_FUNC PyInit_tracked_float(void) {
             Py_DECREF(ufunc); \
             goto fail; \
         } \
-        if (PyUFunc_RegisterLoopForType((PyUFuncObject*)ufunc, npy_tfloat \
+        if (PyUFunc_RegisterLoopForType((PyUFuncObject*)ufunc, npy_tfloat, \
                 tfloat_ufunc_##name, _types, 0) < 0) { \
             Py_DECREF(ufunc); \
             goto fail; \
         } \
         Py_DECREF(ufunc); \
     }
+
     #define REGISTER_UFUNC_BINARY_TFLOAT(name) \
         REGISTER_UFUNC(name, {npy_tfloat, npy_tfloat, npy_tfloat})
+        
     #define REGISTER_UFUNC_BINARY_COMPARE(name) \
         REGISTER_UFUNC(name, {npy_tfloat, npy_tfloat, NPY_BOOL})
+        
     #define REGISTER_UFUNC_UNARY(name) \
         REGISTER_UFUNC(name, {npy_tfloat, npy_tfloat})
     /* Binary */
@@ -1204,8 +1232,8 @@ PyMODINIT_FUNC PyInit_tracked_float(void) {
         goto fail;
     }
 
-    /* Add rational type */
-    Py_INCREF(&PyTFLOAT_Type);
+    /* Add tfloat type */
+    Py_INCREF(&PyTFloat_Type);
     PyModule_AddObject(m, "tfloat",(PyObject*)&PyTFloat_Type);
 
     /* Create matrix multiply generalized ufunc */
@@ -1219,28 +1247,28 @@ PyMODINIT_FUNC PyInit_tracked_float(void) {
             goto fail;
         }
         if (PyUFunc_RegisterLoopForType((PyUFuncObject*)gufunc, npy_tfloat,
-                rational_gufunc_matrix_multiply, types2, 0) < 0) {
+                tfloat_gufunc_matrix_multiply, types2, 0) < 0) {
             goto fail;
         }
         PyModule_AddObject(m,"matrix_multiply",(PyObject*)gufunc);
     }
     
-    /* Create unary ufuncs */
-    #define NEW_UNARY_UFUNC(name,type,doc) { \
-        int types[2] = {npy_tfloat,type}; \
-        PyObject* ufunc = PyUFunc_FromFuncAndData(0,0,0,0,1,1, \
-            PyUFunc_None,(char*)#name,(char*)doc,0); \
-        if (!ufunc) { \
-            goto fail; \
-        } \
-        if (PyUFunc_RegisterLoopForType((PyUFuncObject*)ufunc, \
-                npy_tfloat,tfloat_ufunc_##name,types,0)<0) { \
-            goto fail; \
-        } \
-        PyModule_AddObject(m,#name,(PyObject*)ufunc); \
-    }
+    // /* Create unary ufuncs */
+    // #define NEW_UNARY_UFUNC(name,type,doc) { \
+    //     int types[2] = {npy_tfloat,type}; \
+    //     PyObject* ufunc = PyUFunc_FromFuncAndData(0,0,0,0,1,1, \
+    //         PyUFunc_None,(char*)#name,(char*)doc,0); \
+    //     if (!ufunc) { \
+    //         goto fail; \
+    //     } \
+    //     if (PyUFunc_RegisterLoopForType((PyUFuncObject*)ufunc, \
+    //             npy_tfloat,tfloat_ufunc_##name,types,0)<0) { \
+    //         goto fail; \
+    //     } \
+    //     PyModule_AddObject(m,#name,(PyObject*)ufunc); \
+    // }
 
-    NEW_UNARY_UFUNC(provenance, npy_string, "get full array provenance")
+    // NEW_UNARY_UFUNC(provenance, npy_string, "get full array provenance")
 
     return m;
 
