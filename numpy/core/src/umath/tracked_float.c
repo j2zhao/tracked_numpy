@@ -115,7 +115,8 @@ make_tfloat_prov1(npy_float64 n, tracked_float a) {
     size_t p_size = sizeof(provenance);
     //tracked_float r;
     if ((size - 1) > 0) {
-        provenance overflow[size - 1];
+        provenance* overflow;
+        overflow = (provenance*) malloc((size - 1)*p_size);
         provenance p;
         memcpy(overflow, a.overflow, p_size*(size - 1));
         memcpy(&p, &a.p, p_size);
@@ -138,9 +139,10 @@ make_tfloat_prov2(npy_float64 n, tracked_float a, tracked_float b) {
     /* we have history */
     if (size >= 1) {
         provenance p;
-        provenance overflow[size - 1];
+        provenance* overflow;
         int offset = -1;
         size_t p_size = sizeof(provenance);
+        overflow = (provenance*) malloc((size - 1)*p_size);
         /*a has history*/
         if (size0 > 0) {
             memcpy(&p, &a.p, p_size);
@@ -293,6 +295,7 @@ pytfloat_richcompare(PyObject* a, PyObject* b, int op) {
     return PyBool_FromLong(result);
 }
 
+//does not work -> TODO think about fixing
 static char*
 provenance_repr(provenance p, provenance* overflow) {
     int rsize;
@@ -639,8 +642,9 @@ npytfloat_copyswap(void* dst, void* src, int swap, void* arr) {
     memcpy(r,src,sizeof(tracked_float));
     
     if (r -> overflow != NULL) {
-        size_t t = sizeof(*(r -> overflow))/sizeof(provenance);
-        provenance of[t];
+        int t = r-> size;
+        provenance* of;
+        of = (provenance*) malloc((t-1)*sizeof(provenance));
         memcpy(of, (r -> overflow), sizeof(provenance)*t);
         r -> overflow = of;
     }
@@ -651,9 +655,9 @@ npytfloat_copyswap(void* dst, void* src, int swap, void* arr) {
         byteswap(&r->size);
         if (r -> overflow != NULL) {
             provenance* of = r -> overflow;
-            int t = sizeof(*(r -> overflow))/sizeof(provenance);
+            int t = r -> size;
             int i;
-            for(i = 0; i < t; i++) {
+            for(i = 0; i < t -1; i++) {
                 byteswap_provenance(&of[i]);
             }
         }
@@ -673,8 +677,9 @@ npytfloat_copyswapn(void* dst_, npy_intp dstride, void* src_,
         for (i = 0; i < n; i++) {
             tracked_float* r = (tracked_float*)(dst+dstride*i);
             if (r -> overflow != NULL) {
-                size_t t = sizeof(*(r -> overflow))/sizeof(provenance);
-                provenance of[t];
+                int t = r-> size;
+                provenance* of;
+                of = (provenance*) malloc((t-1)*sizeof(provenance));
                 memcpy(of, r->overflow, sizeof(provenance)*(r -> size - 1));
                 r -> overflow = of;
             }
@@ -746,7 +751,8 @@ npytfloat_dot(void* ip0_, npy_intp is0, void* ip1_, npy_intp is1,
     }
 
     if (prov_size > 1) {
-        provenance of[prov_size - 1];
+        provenance* of;
+        of = (provenance*) malloc((prov_size - 1)*sizeof(provenance));
         tf.overflow = of;
     }
 
