@@ -1007,7 +1007,7 @@ tfloat_gufunc_matrix_multiply(char **args, npy_intp const *dimensions,
     }
 }
 
-//this gives a wierd memory error, and for the life of me, i don't know why
+//this gives a wierd memory error, and for the life of me, i don't know why -> idk if i fixed this?? whelp
 static PyObject*
 npytfloat_initialize(PyObject* self, PyObject *args) {
     PyArrayObject* array = (PyArrayObject*)PyTuple_GET_ITEM(args, 0);

@@ -215,6 +215,8 @@ def compression(prov_arr, separate_by_ids = True):
     # change this format based on whatever
     # need to change to -1 for compression
     # merge inputs
+    if len(prov_arr.shape) == 1:
+        prov_arr = np.reshape(prov_arr, (prov_arr.shape[0], 1))
     ids = set()
     cell_prov = np.zeros(prov_arr.shape, dtype=object)
     start = time.time()

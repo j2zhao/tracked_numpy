@@ -1,5 +1,3 @@
-from numpy.lib.arraysetops import isin
-from numpy.lib.npyio import save
 from compression import compression
 import numpy as np
 import numpy.core.tracked_float as tf
@@ -8,6 +6,24 @@ import json
 import copy
 import sys
 import constants
+
+
+def _check_equality():
+    pass
+
+def check_provenance(prov1, prov2):
+    if prov1 == constants.UNKNOWN or prov2 == constants.UNKNOWN:
+        return constants.UNKNOWN
+    new_prov = {}
+    for i in prov1:
+        if i not in prov2:
+            return constants.UNKNOWN
+        if len(prov1[i]) != len(prov2[i]):
+            return constants.UNKNOWN
+        for j in range(len(prov1[i])):
+            
+
+    
 
 # deal with list of arrays -> TODO later
 # arguments can't change type
@@ -35,36 +51,38 @@ class FunctionProvenance():
         self.m = m
 
     def _run_func(self, func, args, kwargs):
-
+        
         # initialize inputs
         oargs = []
         i = 0
-        for arr in enumerate(args):
-            if isinstance(arr, np.array):
-                oargs.append(tf.initialize(arr.astype(tf.tracked_float), i))
+        for arr in args:
+            if isinstance(arr, np.ndarray):
+                array = arr.astype(tf.tracked_float)
+                tf.initialize(array, i)
+                oargs.append(array)
                 i += 1
             else:
                 oargs.append(arr)
 
         okwargs = {}
-        for k, v in kwargs:
-            if isinstance(v, np.array):
+        for k, v in kwargs.items():
+            if isinstance(v, np.ndarray):
                 okwargs[k] = tf.initialize(v.astype(tf.tracked_float), i)
                 i += 1
             else:
                 okwargs[k] = v 
 
-        # run function
-
+        print(oargs[0].shape)
+        # run function        
         output = func(*oargs, **okwargs)
         return output
 
 
     def _new_function(self, func):
-        args = inspect.getfullargspec(func)
+        #args = inspect.getfullargspec(func)
         nfunc = func.__name__
         self.prov[nfunc] = {}
-        self.prov[nfunc]['args'] = args
+        #self.prov[nfunc]['args'] = args
         self.prov[nfunc]['provs'] = []
         self.prov[nfunc]['val_args'] = []
         self.prov[nfunc]['arb_args'] = []
@@ -76,74 +94,103 @@ class FunctionProvenance():
         #{ARRAY_ARGS: [(args_list, provenance, number of passes)]}
         self.prov[nfunc]['cur_provs'] = {}
 
+    # def _get_prov(self, nfunc, args, kwargs):
+    #     # update with shape
+    #     oargs = []
+    #     for arr in enumerate(args):
+    #         if isinstance(arr, np.ndarray):
+    #             oargs.append(arr.shape)
+    #         else:
+    #             oargs.append(arr)
+
+    #     fargs = {}
+    #     print(self.prov[nfunc]['args'])
+    #     dargs = self.prov[nfunc]['args'].args
+    #     vargs = self.prov[nfunc]['args'].varargs
+    #     vkwargs = self.prov[nfunc]['args'].varkw
+    #     defargs = self.prov[nfunc]['args'].defaults
+    #     kwdargs = self.prov[nfunc]['args'].kwonlyargs
+    #     defkwargs = self.prov[nfunc]['args'].kwonlydefaults
+
+    #     used_kw = []
+
+    #     if defargs != None:
+    #         default_start = len(dargs) - len(defargs)
+    #     else:
+    #         default_start = -1
+        
+    #     for i, arg in iter(dargs):
+    #         if i < len(oargs):
+    #             fargs[arg] = oargs[i]
+    #         elif arg in kwargs:
+    #             fargs[arg] = kwargs[arg]
+    #             used_kw.append(arg)
+    #         elif i >= default_start:
+    #             index = i - default_start
+    #             fargs[arg] = defargs[index]
+    #         else:
+    #             raise NameError('arguments do not match function')
+        
+    #     if len(oargs) > len(dargs):
+    #         if vargs == None:
+    #             raise NameError('arguments do not match function')
+    #         else:
+    #             fargs[vargs] = oargs[len(dargs):]
+    #     else:
+    #         fargs[vargs] = []
+
+    #     for k in kwdargs:
+    #         if k in kwargs:
+    #             fargs[k] = kwargs[k]
+    #             used_kw.append(k)
+    #         elif k in defkwargs:
+    #             fargs[k] = defkwargs[k]
+    #         else:
+    #             raise NameError('arguments do not match function')
+        
+    #     fargs[vkwargs] = {}
+    #     for k in kwargs:
+    #         if k not in used_kw:
+    #             fargs[vkwargs][k] = kwargs[k]
+        
+    #     arg_arrs = self.prov[nfunc]['arr_args']
+    #     arrs_shape = []
+    #     for key, val in fargs.items():
+    #         if isinstance(val, np.ndarray):
+    #             if key not in arg_arrs:
+    #                 arg_arrs.append(key)
+    #             arrs_shape.append((key, val.shape))
+    #             fargs[key] = constants.ARRAY
+    #     return fargs, tuple(arrs_shape)
+    
     def _get_prov(self, nfunc, args, kwargs):
         # update with shape
         oargs = []
         for arr in enumerate(args):
-            if isinstance(arr, np.array):
+            if isinstance(arr, np.ndarray):
                 oargs.append(arr.shape)
             else:
                 oargs.append(arr)
 
         fargs = {}
-        dargs = self.prov[nfunc]['args'].args
-        vargs = self.prov[nfunc]['args'].varargs
-        vkwargs = self.prov[nfunc]['args'].varkw
-        defargs = self.prov[nfunc]['args'].default
-        kwdargs = self.prov[nfunc]['args'].kwonlyargs
-        defkwargs = self.prov[nfunc]['args'].kwonlydefaults
-
         used_kw = []
-
-        if defargs != None:
-            default_start = len(dargs) - len(defargs)
-        else:
-            default_start = -1
         
-        for i, arg in iter(dargs.args):
-            if i < len(oargs):
-                fargs[arg] = oargs[i]
-            elif arg in kwargs:
-                fargs[arg] = kwargs[arg]
-                used_kw.append(arg)
-            elif i >= default_start:
-                index = i - default_start
-                fargs[arg] = defargs[index]
-            else:
-                raise NameError('arguments do not match function')
+        for i, arg in enumerate(args):
+            fargs[i] = arg
         
-        if len(oargs) > len(dargs):
-            if vargs == None:
-                raise NameError('arguments do not match function')
-            else:
-                fargs[vargs] = oargs[len(dargs):]
-        else:
-            fargs[vargs] = []
-
-        for k in kwdargs:
-            if k in kwargs:
-                fargs[k] = kwargs[k]
-                used_kw.append(k)
-            elif k in defkwargs:
-                fargs[k] = defkwargs[k]
-            else:
-                raise NameError('arguments do not match function')
-        
-        fargs[vkwargs] = {}
         for k in kwargs:
-            if k not in used_kw:
-                fargs[vkwargs][k] = kwargs[k]
+            fargs[k] = kwargs[k]
         
         arg_arrs = self.prov[nfunc]['arr_args']
         arrs_shape = []
-        for key, val in fargs:
+        for key, val in fargs.items():
             if isinstance(val, np.ndarray):
                 if key not in arg_arrs:
                     arg_arrs.append(key)
                 arrs_shape.append((key, val.shape))
                 fargs[key] = constants.ARRAY
         return fargs, tuple(arrs_shape)
-    
+
     def prov_function(self, func, args, kwargs):
         ''''
         Returns: output of function, compressed provenance (if existing), version in database
@@ -195,17 +242,17 @@ class FunctionProvenance():
 
         # if there isn't a match, we should run the full program
         if provenance == None:
-            output = self._run_func(self, func, args, kwargs)
+            output = self._run_func(func, args, kwargs)
             return arg_dic, arr_tup, output, None, 0, type
 
         # if there is a match but the number of times we've seen a program is < n, we should run the number program
         elif num_pass < self.n:
-            output = self._run_func(self, func, args, kwargs)
+            output = self._run_func(func, args, kwargs)
             return arg_dic, arr_tup, output, None, 1, type
 
         # if there is a match but we couldn't find a pattern
         elif provenance == constants.UNKNOWN:
-            output = self._run_func(self, func, args, kwargs)
+            output = self._run_func(func, args, kwargs)
             return arg_dic, arr_tup, output, None, 2, type
         
         # return just the function if there is a match
@@ -237,8 +284,13 @@ class FunctionProvenance():
         
         for tup in arr_tup:
             key, shape = tup
-            dict_arr[shape[0]] = key + '0'
-            dict_arr[shape[1]] = key + '1'
+            if shape[0] not in dict_arr:
+                dict_arr[shape[0]] = [shape[0]]
+            dict_arr[shape[0]].append(key + '0')
+
+            if shape[1] not in dict_arr:
+                dict_arr[shape[1]] = [shape[1]]
+            dict_arr[shape[1]].append(key + '1')
 
         for id in provenance:
             for i, val in enumerate(provenance[id]):
@@ -314,7 +366,6 @@ class FunctionProvenance():
     def save(self, file_name):
         with open(file_name) as f:
             json.dump(self.prov, f)
-    
 
     def _update_arbitrary(self, nfunc, arb_list):
         '''this function checks it with all the other ones

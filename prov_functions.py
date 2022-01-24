@@ -1,11 +1,14 @@
+import readline
+
+from torch import float64
 from prov_check import FunctionProvenance
 import csv
 import numpy as np
 import sklearn
 import random
 import constants
-
-srange = [0, 10000]
+import json
+srange = [1, 100]
 
 # run function and saves to update later
 def prov_function():
@@ -20,11 +23,12 @@ def prov_function2():
 def iterate_parameters(arr_num, other_args):
     arrays = []
     for _ in range(arr_num):
-        d1, d2 = random.randrange(srange[0], srange[1])
-        arrays.append(np.random.rand(d1, d2))
+        d1= random.randrange(srange[0], srange[1])
+        d2 = random.randrange(srange[0], srange[1])
+        arrays.append(np.random.rand(d1, d2).astype(np.float64))
 
     other = {}
-    for key, val in other_args:
+    for key, val in other_args.items():
         index = random.randrange(len(val))
         other[key] = val[index]
     return arrays, other
@@ -33,7 +37,7 @@ def generate_new_array(old_arrays):
     arrays = []
     for arr in range(len(old_arrays)):
         d1, d2 = arr.shape
-        arrays.append(np.random.rand(d1, d2))
+        arrays.append(np.random.rand(d1, d2).astype(np.float64))
     return arrays
 
 # run one run of experiments
@@ -62,6 +66,10 @@ def run(provenance, func, arrays, args, repetition, log):
         
         if prov == None:
             provenance, compressed = prov_obj.compress_function(output)
+            print(provenance)
+            print(compressed)
+            raise ValueError()
+
             if not compressed:
                 print('Not Compressed')
                 provenance = constants.UNKNOWN
@@ -70,28 +78,28 @@ def run(provenance, func, arrays, args, repetition, log):
             
             prov_obj.add_prov(provenance, func.__name__, arg_dic, arr_tup)
             prov_obj.add_log(0, 0, func.__name__, arg_dic, arr_tup, provenance)
+        raise ValueError()
 
 # given a csv of functions, generates a list of functions runs
 def run_functions(file = 'functions.csv', num = 5, rep = 3):
-    with open(file, 'w') as f:
-        reader = csv.reader(f)
-        for row in reader:
+    with open(file, 'r') as f:
+        row = f.readline()
+        while row:
+            row = json.loads(row)
             n = len(row)
             nfunc = row[0]
             arr_num = int(row[1])
             if n > 2:
-                other_args = row[2:]
+                other_args = row[2]
             else:
-                other_args = []
-            print(n)
+                other_args = {}
+            print(other_args)
             func = getattr(np, nfunc)
-            print(nfunc)
-            raise ValueError()
             provenance = None
             for i in range(num):
                 arrays, args = iterate_parameters(arr_num, other_args)
                 run(provenance, func, arrays, args, rep, './log/test.txt')
-
+            row = f.readline()
 
 if __name__ == '__main__':
     run_functions()
