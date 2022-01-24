@@ -276,35 +276,44 @@ pytfloat_richcompare(PyObject* a, PyObject* b, int op) {
 }
 
 //does not work -> TODO think about fixing
-static void
-provenance_repr(provenance p, provenance* overflow, int rsize, char* output) {
-    int offset = 0;
-    provenance q = p;
-    int x;
-    for (x = 0; x < rsize; x ++) {
-        offset += sprintf(output + offset, "[(%d,%d,%d)]", 
-            q.id, q.start_0, q.start_1);
-        if (x < rsize -1 ) {
-            offset += sprintf(output + offset, " , ");
-        }
-        if (x != rsize - 1) {
-            q = overflow[x];
-        }
-    }    
-}
+// static char*
+// provenance_repr(provenance p, provenance* overflow) {
+//     int rsize;
+//     if (overflow != NULL) {
+//         rsize = sizeof(*overflow)/sizeof(provenance) + 1;
+//     }
+//     else {
+//         rsize = 1;
+//     }
+//     char output[rsize*50];
+//     int offset = 0;
+//     provenance q = p;
+//     int x;
+//     for (x = 0; x < rsize; x ++) {
+//         offset += sprintf(output + offset, "[(%d,%d,%d,%d,%d,%d)]", 
+//             q.id, q.start_0, q.start_1, q.end_0, q.end_1, q.type);
+//         if (x > 0 && x < rsize -1 ) {
+//             offset += sprintf(output + offset, " , ");
+//         }
+//         if (x != rsize - 1) {
+//             q = overflow[x];
+//         }
+//     }
+//     return output;
+    
+// }
 
-static PyObject*
-pytfloat_repr(PyObject* self) {
-    tracked_float x = ((PyTFloat*)self)->f;
-    char output[x.size*50];
-    provenance_repr(x.p, x.overflow, x.size, output);
-    return PyUnicode_FromFormat("%d , [%s]", x.n, output);
-}
+// static PyObject*
+// pytfloat_repr(PyObject* self) {
+//     tracked_float x = ((PyTFloat*)self)->f;
+//     const char* c = provenance_repr(x.p, x.overflow);
+//     return PyUnicode_FromFormat("%d , %V", x.n, c);
+// }
 
-static PyObject*
-pytfloat_str(PyObject* self) {
-    return pytfloat_repr(self);
-}
+// static PyObject*
+// pytfloat_str(PyObject* self) {
+//     return pytfloat_repr(self);
+// }
 
 static npy_hash_t
 pytfloat_hash(PyObject* self) {
@@ -482,30 +491,30 @@ static PyGetSetDef pytfloat_getset[] = {
     {0} /* sentinel */
 };
 
-// static void pytfloat_dealloc(PyObject* self){
-//     if (((PyTFloat*)self)->f.overflow != NULL) {
-//         free(((PyTFloat*)self)->f.overflow);
-//     }
-//     Py_TYPE(self)->tp_free(self);
-// }
+static void pytfloat_dealloc(PyObject* self){
+    if (((PyTFloat*)self)->f.overflow != NULL) {
+        free(((PyTFloat*)self)->f.overflow);
+    }
+    Py_TYPE(self)->tp_free(self);
+}
 
 static PyTypeObject PyTFloat_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
     "numpy.core.tracked_float.tracked_float",  /* tp_name */
     sizeof(PyTFloat),                       /* tp_basicsize */
     0,                                        /* tp_itemsize -> am not sure if array counts as dynamic?? maybe not, but it might be more than a new object -> then again, we don't really see it*/
-    0,                         /* tp_dealloc */
+    pytfloat_dealloc,                         /* tp_dealloc */
     0,                                        /* tp_print */
     0,                                        /* tp_getattr */
     0,                                        /* tp_setattr */
     0,                                        /* tp_reserved */
-    pytfloat_repr,                                        /* tp_repr */
+    0,                                        /* TODO: FIX tp_repr */
     &pytfloat_as_number,                    /* tp_as_number */
     0,                                        /* tp_as_sequence */
     0,                                        /* tp_as_mapping */
     pytfloat_hash,                          /* tp_hash */
     0,                                        /* tp_call */
-    pytfloat_str,                           /* tp_str */
+    0,                           /* tp_str */
     0,                                        /* tp_getattro */
     0,                                        /* tp_setattro */
     0,                                        /* tp_as_buffer */
@@ -707,12 +716,7 @@ npytfloat_dot(void* ip0_, npy_intp is0, void* ip1_, npy_intp is1,
         void* op, npy_intp n, void* arr) {
     npy_float64 r = 0;
     tracked_float tf;
-
-    //index pointers to tracked float objects
-    const char *ip0 = (char*)ip0_;
-    const char *ip1 = (char*)ip1_;
-
-    //for loop interval
+    const char *ip0 = (char*)ip0_, *ip1 = (char*)ip1_;
     npy_intp i;
     npy_int prov_size = 0;
     //size of provenance
@@ -720,12 +724,10 @@ npytfloat_dot(void* ip0_, npy_intp is0, void* ip1_, npy_intp is1,
         prov_size += ((tracked_float*)ip0) -> size;
         prov_size += ((tracked_float*)ip1) -> size;
         r += (((tracked_float*)ip0) -> n) * (((tracked_float*)ip1) -> n);
-        //steps
         ip0 += is0;
         ip1 += is1;
     }
 
-    //allocate space
     if (prov_size > 1) {
         provenance* of;
         of = (provenance*) malloc((prov_size - 1)*sizeof(provenance));
@@ -738,21 +740,20 @@ npytfloat_dot(void* ip0_, npy_intp is0, void* ip1_, npy_intp is1,
     ip0 = (char*)ip0_;
     ip1 = (char*)ip1_;
     for (i = 0; i < n; i++) {
-        if (j==0){
+        if (!j){
             j += append_prov(&(tf.p), tf.overflow, (tracked_float*)ip0);
         } else {
-            j += append_prov_of(tf.overflow + j - 1, (tracked_float*)ip0);
+            j += append_prov_of(tf.overflow, (tracked_float*)ip0);
         }
-        
-        if (j==0){
+        if (!j){
             j += append_prov(&(tf.p), tf.overflow, (tracked_float*)ip1);
         } else {
-            j += append_prov_of(tf.overflow + j - 1, (tracked_float*)ip1);
+            j += append_prov_of(tf.overflow, (tracked_float*)ip1);
         }
         ip0 += is0;
         ip1 += is1;
     }
-    tf.size = j;
+
     *(tracked_float*)op = tf;
 }
 

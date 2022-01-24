@@ -27,3 +27,7 @@ def save_array_prov(array, path):
     np.save(path, prov)
 
 # arr = np.load('logs/1626725745.618419.npy', allow_pickle=True)
+
+
+def save_array(array, path):
+    np.save(path, array)

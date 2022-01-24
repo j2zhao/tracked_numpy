@@ -992,6 +992,13 @@ def configuration(parent_package='',top_path=None):
                     sources=[join('src', 'umath', 'tracked_float.c')])
 
     #######################################################################
+    #                   custom float dtype module fast                     #
+    #######################################################################
+
+    config.add_extension('tracked_float_fast',
+                    sources=[join('src', 'umath', 'tracked_float_fast.c')])
+
+    #######################################################################
     #                        struct_ufunc_test module                     #
     #######################################################################
 
