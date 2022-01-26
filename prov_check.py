@@ -8,22 +8,91 @@ import sys
 import constants
 
 
-def _check_equality():
-    pass
+def _check_equality(val1, val2):
+    if not isinstance(val1, list) and not isinstance(val2, list):
+        if val1 != val2:
+            return None
+        else:
+            return val1
+    elif isinstance(val1, list) and not isinstance(val2, list):
+        if val2 in val1:
+            return val2
+        else:
+            return None
+    elif not isinstance(val1, list) and isinstance(val2, list):
+        if val1 in val2:
+            return val1
+        else:
+            return None
+    else:
+        vals = []
+        for v1 in val1:
+            if v1 in val2:
+                vals.append(v1)
+        if len(vals) == 0:
+            return None
+        elif len(vals) == 1:
+            return vals[1]
+        else:
+            return vals
+
+def _check_equality2(val1, val2):
+    a = _check_equality(val1[0], val2[0])
+    b = _check_equality(val1[1], val2[1])
+    if a == None or b == None:
+        return None
+    else:
+        return (a, b)
+
+def _check_equality_prov(pr1, pr2):
+    if len(pr1) != len(pr2):
+        return None
+    pr = []
+    for i in range(len(pr1)):
+        p = _check_equality2(pr1[i], pr2[i])
+        if p == None:
+            return None
+        else:
+            pr.append(p)
+    return pr
 
 def check_provenance(prov1, prov2):
     if prov1 == constants.UNKNOWN or prov2 == constants.UNKNOWN:
         return constants.UNKNOWN
+    elif prov1 == prov2:
+        return prov1
+
     new_prov = {}
     for i in prov1:
         if i not in prov2:
             return constants.UNKNOWN
         if len(prov1[i]) != len(prov2[i]):
             return constants.UNKNOWN
+        new_prov[i] = []
         for j in range(len(prov1[i])):
-            
+            a1, b1, p1 = prov1[i][j]
+            a2, b2, p2 = prov2[i][j]
+            a = _check_equality2(a1, a2)
+            if a == None:
+                return constants.UNKNOWN
+            b = _check_equality2(b1, b2)
+            if b == None:
+                return constants.UNKNOWN
 
+            p = {}
+            for pname in p1:
+                if pname in p2:
+                    if p1[pname] == p2[pname]:
+                        p[pname] = p1[pname]
+                    else:
+                        temp = _check_equality_prov(p1[pname], p2[pname])
+                        if temp == None:
+                            return None
+                        p[pname] = temp
+            new_prov[i].append((a, b, p))
     
+    return new_prov
+
 
 # deal with list of arrays -> TODO later
 # arguments can't change type
@@ -93,75 +162,6 @@ class FunctionProvenance():
         # provenance tuple:
         #{ARRAY_ARGS: [(args_list, provenance, number of passes)]}
         self.prov[nfunc]['cur_provs'] = {}
-
-    # def _get_prov(self, nfunc, args, kwargs):
-    #     # update with shape
-    #     oargs = []
-    #     for arr in enumerate(args):
-    #         if isinstance(arr, np.ndarray):
-    #             oargs.append(arr.shape)
-    #         else:
-    #             oargs.append(arr)
-
-    #     fargs = {}
-    #     print(self.prov[nfunc]['args'])
-    #     dargs = self.prov[nfunc]['args'].args
-    #     vargs = self.prov[nfunc]['args'].varargs
-    #     vkwargs = self.prov[nfunc]['args'].varkw
-    #     defargs = self.prov[nfunc]['args'].defaults
-    #     kwdargs = self.prov[nfunc]['args'].kwonlyargs
-    #     defkwargs = self.prov[nfunc]['args'].kwonlydefaults
-
-    #     used_kw = []
-
-    #     if defargs != None:
-    #         default_start = len(dargs) - len(defargs)
-    #     else:
-    #         default_start = -1
-        
-    #     for i, arg in iter(dargs):
-    #         if i < len(oargs):
-    #             fargs[arg] = oargs[i]
-    #         elif arg in kwargs:
-    #             fargs[arg] = kwargs[arg]
-    #             used_kw.append(arg)
-    #         elif i >= default_start:
-    #             index = i - default_start
-    #             fargs[arg] = defargs[index]
-    #         else:
-    #             raise NameError('arguments do not match function')
-        
-    #     if len(oargs) > len(dargs):
-    #         if vargs == None:
-    #             raise NameError('arguments do not match function')
-    #         else:
-    #             fargs[vargs] = oargs[len(dargs):]
-    #     else:
-    #         fargs[vargs] = []
-
-    #     for k in kwdargs:
-    #         if k in kwargs:
-    #             fargs[k] = kwargs[k]
-    #             used_kw.append(k)
-    #         elif k in defkwargs:
-    #             fargs[k] = defkwargs[k]
-    #         else:
-    #             raise NameError('arguments do not match function')
-        
-    #     fargs[vkwargs] = {}
-    #     for k in kwargs:
-    #         if k not in used_kw:
-    #             fargs[vkwargs][k] = kwargs[k]
-        
-    #     arg_arrs = self.prov[nfunc]['arr_args']
-    #     arrs_shape = []
-    #     for key, val in fargs.items():
-    #         if isinstance(val, np.ndarray):
-    #             if key not in arg_arrs:
-    #                 arg_arrs.append(key)
-    #             arrs_shape.append((key, val.shape))
-    #             fargs[key] = constants.ARRAY
-    #     return fargs, tuple(arrs_shape)
     
     def _get_prov(self, nfunc, args, kwargs):
         # update with shape
@@ -172,9 +172,7 @@ class FunctionProvenance():
             else:
                 oargs.append(arr)
 
-        fargs = {}
-        used_kw = []
-        
+        fargs = {}        
         for i, arg in enumerate(args):
             fargs[i] = arg
         
@@ -286,11 +284,11 @@ class FunctionProvenance():
             key, shape = tup
             if shape[0] not in dict_arr:
                 dict_arr[shape[0]] = [shape[0]]
-            dict_arr[shape[0]].append(key + '0')
+            dict_arr[shape[0]].append(str(key) + '0')
 
             if shape[1] not in dict_arr:
                 dict_arr[shape[1]] = [shape[1]]
-            dict_arr[shape[1]].append(key + '1')
+            dict_arr[shape[1]].append(str(key) + '1')
 
         for id in provenance:
             for i, val in enumerate(provenance[id]):
@@ -319,11 +317,18 @@ class FunctionProvenance():
                 arb_args[arg] = constants.ARB
             else:
                 arb_args[arg] = args[arg]
+        raise ValueError()
         rel_prov = self.size_function(copy.deepcopy(provenance), arr_args)
+
+        print(rel_prov)
+        raise ValueError()
         for prov in provs:
             if prov[0] == arb_args:
-                if prov[1] != rel_prov:
+                equal = check_provenance(prov, rel_prov)
+                if equal == None:
                     prov[1] = constants.UNKNOWN
+                else:
+                    prov[1] = equal
                 prov[2] += 1
                 found == True
                 break
@@ -389,6 +394,8 @@ class FunctionProvenance():
                             unique = False
                             if prov2[1] != prov[1]:
                                 failed_args.append(arg)
+                                if arg not in self.prov[nfunc]['val_args']:
+                                    self.prov[nfunc]['val_args'].append(arg)
                                 failed = True
                                 break
                     if failed:

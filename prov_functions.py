@@ -67,9 +67,7 @@ def run(provenance, func, arrays, args, repetition, log):
         if prov == None:
             provenance, compressed = prov_obj.compress_function(output)
             print(provenance)
-            print(compressed)
             raise ValueError()
-
             if not compressed:
                 print('Not Compressed')
                 provenance = constants.UNKNOWN
@@ -77,6 +75,7 @@ def run(provenance, func, arrays, args, repetition, log):
                 print('Compressed')
             
             prov_obj.add_prov(provenance, func.__name__, arg_dic, arr_tup)
+            raise ValueError()
             prov_obj.add_log(0, 0, func.__name__, arg_dic, arr_tup, provenance)
         raise ValueError()
 
@@ -93,7 +92,6 @@ def run_functions(file = 'functions.csv', num = 5, rep = 3):
                 other_args = row[2]
             else:
                 other_args = {}
-            print(other_args)
             func = getattr(np, nfunc)
             provenance = None
             for i in range(num):
