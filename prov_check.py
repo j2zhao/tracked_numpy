@@ -6,7 +6,7 @@ import json
 import copy
 import sys
 import constants
-
+import os
 
 def _check_equality(val1, val2):
     if not isinstance(val1, list) and not isinstance(val2, list):
@@ -47,16 +47,17 @@ def _check_equality2(val1, val2):
 def _check_equality_prov(pr1, pr2):
     if len(pr1) != len(pr2):
         return None
+    
     pr = []
     for i in range(len(pr1)):
-        p = _check_equality2(pr1[i], pr2[i])
+        p = _check_equality(pr1[i], pr2[i])
         if p == None:
             return None
         else:
             pr.append(p)
     return pr
 
-def check_provenance(prov1, prov2):
+def check_eq_prov(prov1, prov2):
     if prov1 == constants.UNKNOWN or prov2 == constants.UNKNOWN:
         return constants.UNKNOWN
     elif prov1 == prov2:
@@ -78,17 +79,20 @@ def check_provenance(prov1, prov2):
             b = _check_equality2(b1, b2)
             if b == None:
                 return constants.UNKNOWN
-
-            p = {}
-            for pname in p1:
-                if pname in p2:
-                    if p1[pname] == p2[pname]:
-                        p[pname] = p1[pname]
-                    else:
-                        temp = _check_equality_prov(p1[pname], p2[pname])
-                        if temp == None:
-                            return None
-                        p[pname] = temp
+            p = []
+            for d in range(len(p1)):
+                p.append({})
+                for pname in p1[d]:
+                    if pname in p2[d]:
+                        if p1[d][pname] == p2[d][pname]:
+                            p[d][pname] = p1[d][pname]
+                        else:
+                            temp = _check_equality_prov(p1[d][pname], p2[d][pname])
+                            if temp != None:
+                                p[d][pname] = temp
+                if len(p[d]) == 0:
+                    return constants.UNKNOWN
+            
             new_prov[i].append((a, b, p))
     
     return new_prov
@@ -99,7 +103,7 @@ def check_provenance(prov1, prov2):
 class FunctionProvenance():
     """
     provenance tuple:
-    (args_list, provenance, number of passes)
+    [args_list, provenance, number of passes]
     
     """
     def __init__(self, log, n = 2, m = 2, ratio = 0.1, saved_prov = None):
@@ -114,6 +118,8 @@ class FunctionProvenance():
         else:
             self.prov = {}
         
+        if not os.path.exists(log):
+            with open(log, 'w'): pass
         self.log = log
         self.ratio = ratio
         self.n = n
@@ -140,8 +146,6 @@ class FunctionProvenance():
                 i += 1
             else:
                 okwargs[k] = v 
-
-        print(oargs[0].shape)
         # run function        
         output = func(*oargs, **okwargs)
         return output
@@ -163,7 +167,7 @@ class FunctionProvenance():
         #{ARRAY_ARGS: [(args_list, provenance, number of passes)]}
         self.prov[nfunc]['cur_provs'] = {}
     
-    def _get_prov(self, nfunc, args, kwargs):
+    def _get_args(self, nfunc, args, kwargs):
         # update with shape
         oargs = []
         for arr in enumerate(args):
@@ -207,7 +211,7 @@ class FunctionProvenance():
             self._new_function(func)
 
         # get argument and set with arbitrary values
-        arg_dic, arr_tup = self._get_prov(nfunc, args, kwargs)
+        arg_dic, arr_tup = self._get_args(nfunc, args, kwargs)
         
         provs = self.prov[nfunc]['provs']
         
@@ -277,30 +281,32 @@ class FunctionProvenance():
         else:
             return (a, b)
     
-    def size_function(self, provenance, arr_tup):
+    def arb_size(self, provenance, arr_tup):
+        if provenance == constants.UNKNOWN:
+            return provenance
         dict_arr = {}
-        
         for tup in arr_tup:
             key, shape = tup
-            if shape[0] not in dict_arr:
-                dict_arr[shape[0]] = [shape[0]]
-            dict_arr[shape[0]].append(str(key) + '0')
+            a = shape[0] - 1
+            if a not in dict_arr:
+                dict_arr[shape[0]-1] = [a]
+            dict_arr[a].append(str(key) + '0')
 
-            if shape[1] not in dict_arr:
-                dict_arr[shape[1]] = [shape[1]]
-            dict_arr[shape[1]].append(str(key) + '1')
+            b = shape[1] - 1
+            if b not in dict_arr:
+                dict_arr[b] = [b]
+            dict_arr[b].append(str(key) + '1')
 
         for id in provenance:
             for i, val in enumerate(provenance[id]):
                 w, h, prov = val 
                 w = self._gen_tup(w, dict_arr)
                 h = self._gen_tup(h, dict_arr)
-                for key in prov:
-                    for i, val in enumerate(prov[key]):
-                        a, b = val
-                        a = self._gen_tup(a, dict_arr)
-                        b = self._gen_tup(b, dict_arr)
-                        prov[key][i] = (a, b)
+                for d in range(len(prov)):
+                    for key in prov[d]:
+                        for i, val2 in enumerate(prov[d][key]):
+                            a = self._gen_tup(val2, dict_arr)
+                            prov[d][key][i] = a
                 provenance[id][i] = (w, h, prov)
         return provenance
 
@@ -317,14 +323,10 @@ class FunctionProvenance():
                 arb_args[arg] = constants.ARB
             else:
                 arb_args[arg] = args[arg]
-        raise ValueError()
-        rel_prov = self.size_function(copy.deepcopy(provenance), arr_args)
-
-        print(rel_prov)
-        raise ValueError()
+        rel_prov = self.arb_size(copy.deepcopy(provenance), arr_args)
         for prov in provs:
             if prov[0] == arb_args:
-                equal = check_provenance(prov, rel_prov)
+                equal = check_eq_prov(prov[1], rel_prov)
                 if equal == None:
                     prov[1] = constants.UNKNOWN
                 else:
@@ -333,7 +335,7 @@ class FunctionProvenance():
                 found == True
                 break
         if not found:
-            full_provenance = (arb_args, rel_prov, 1)
+            full_provenance = [arb_args, rel_prov, 1]
             self.prov[nfunc]['provs'].append(full_provenance)
 
         found_2 = False
@@ -346,14 +348,14 @@ class FunctionProvenance():
                     found_2 == True
                     break
             if not found_2:
-                full_provenance = (arb_args, provenance, 1)
+                full_provenance = [arb_args, provenance, 1]
                 self.prov[nfunc]['cur_provs'][arr_args].append(full_provenance)
         else:
-            full_provenance = (arb_args, provenance, 1)
+            full_provenance = [arb_args, provenance, 1]
             self.prov[nfunc]['cur_provs'][arr_args] = [full_provenance]
         
         if add_arb:
-            self.update_arbitrary(self, nfunc, arb_args, provenance)
+            self.update_arbitrary(nfunc, arb_args, provenance)
         return arb_args, found
     
     def add_log(self, line, arrays, nfunc, args, arr_tup, prov):
@@ -364,12 +366,12 @@ class FunctionProvenance():
         #     with open(self.log) as f:
         #         tup = (line, arrays, nfunc, args, array_name, 0)
         #         f.write(str(tup)) # does this work?  i might need to convert customly?
-        with open(self.log) as f:
-            tup = (line, arrays, nfunc, args, arr_tup, prov, 1)
+        with open(self.log, 'a') as f:
+            tup = (line, arrays, nfunc, args, arr_tup, prov)
             f.write(str(tup)) # does this work?  i might need to convert customly??
     
     def save(self, file_name):
-        with open(file_name) as f:
+        with open(file_name, 'a') as f:
             json.dump(self.prov, f)
 
     def _update_arbitrary(self, nfunc, arb_list):
@@ -387,12 +389,15 @@ class FunctionProvenance():
             for prov in provs:
                 if arg in prov[0]:
                     unique = True
-                    prov[arg] = constants.ARB
+                    prov_args = copy.deepcopy(prov[0])
+                    prov_args[arg] = constants.ARB
                     # this is the expensive check?
                     for prov2 in new_provs:
-                        if prov2[0] == prov[0]:
+                        if prov2[0] == prov_args:
                             unique = False
-                            if prov2[1] != prov[1]:
+                            prov_val = check_eq_prov(prov2[1], prov[1])
+                            prov2 = prov_val
+                            if prov_val == constants.UNKNOWN:
                                 failed_args.append(arg)
                                 if arg not in self.prov[nfunc]['val_args']:
                                     self.prov[nfunc]['val_args'].append(arg)
@@ -401,7 +406,7 @@ class FunctionProvenance():
                     if failed:
                         break
                     if unique:
-                        new_provs.append(prov)
+                        new_provs.append((prov_args, prov[1], prov[2]))
 
         # find new list of arbitrary args
         success = []
@@ -418,13 +423,14 @@ class FunctionProvenance():
             dup = False
             for prov2 in new_provs:
                 if prov[0] == prov2[0]:
+                    prov2[1] = check_eq_prov(prov2[1], prov[1])
                     dup = True
                     break
             if not dup:
                 new_provs.append(prov)
         
         self.prov[nfunc]['provs'] = new_provs
-        self.prov[nfunc]['arb_args'].append(success)
+        self.prov[nfunc]['arb_args'] += success
         return new_provs, success
 
     def update_arbitrary(self, nfunc, args, provenance):
@@ -432,10 +438,12 @@ class FunctionProvenance():
         provs = self.prov[nfunc]['provs']
         val_args = self.prov[nfunc]['val_args']
         arb_list = self.prov[nfunc]['arb_args']
-        arr_list = self.prov[nfunc]['arrs_args']
+        arr_list = self.prov[nfunc]['arr_args']
         arg_count = {}
+        
         for prov in provs:
-            if prov[1] == provenance:
+            p = check_eq_prov(prov[1], provenance)
+            if p != constants.UNKNOWN:
                 for k in args:
                     if k in val_args or k in arb_list or k in arr_list:
                         continue

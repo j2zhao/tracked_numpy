@@ -35,8 +35,8 @@ def iterate_parameters(arr_num, other_args):
         
 def generate_new_array(old_arrays):
     arrays = []
-    for arr in range(len(old_arrays)):
-        d1, d2 = arr.shape
+    for i in range(len(old_arrays)):
+        d1, d2 = old_arrays[i].shape
         arrays.append(np.random.rand(d1, d2).astype(np.float64))
     return arrays
 
@@ -67,7 +67,6 @@ def run(provenance, func, arrays, args, repetition, log):
         if prov == None:
             provenance, compressed = prov_obj.compress_function(output)
             print(provenance)
-            raise ValueError()
             if not compressed:
                 print('Not Compressed')
                 provenance = constants.UNKNOWN
@@ -75,9 +74,9 @@ def run(provenance, func, arrays, args, repetition, log):
                 print('Compressed')
             
             prov_obj.add_prov(provenance, func.__name__, arg_dic, arr_tup)
-            raise ValueError()
+            print(prov_obj.prov)
             prov_obj.add_log(0, 0, func.__name__, arg_dic, arr_tup, provenance)
-        raise ValueError()
+    return prov_obj.prov
 
 # given a csv of functions, generates a list of functions runs
 def run_functions(file = 'functions.csv', num = 5, rep = 3):
@@ -96,8 +95,11 @@ def run_functions(file = 'functions.csv', num = 5, rep = 3):
             provenance = None
             for i in range(num):
                 arrays, args = iterate_parameters(arr_num, other_args)
-                run(provenance, func, arrays, args, rep, './log/test.txt')
+                provenance = run(provenance, func, arrays, args, rep, './log/test.txt')
             row = f.readline()
+
+
+
 
 if __name__ == '__main__':
     run_functions()

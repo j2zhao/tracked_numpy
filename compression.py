@@ -5,6 +5,7 @@ import pickle
 import numpy.core.tracked_float as tf
 import time
 
+prov_types = ['abs', 'rel0', 'rel1']
 
 def sort_(prov):
     s = ''
@@ -45,7 +46,7 @@ def compress_input(prov_list):
         compressed_col[(temp_start, last_value)] = []
     compressed_col[(temp_start, last_value)].append(cur_row)
 
-    compressed = set()
+    compressed = []
     for col in compressed_col:
         temp_start = -1
         last_value = -1
@@ -60,44 +61,31 @@ def compress_input(prov_list):
                 temp_start = row
                 last_value = row
     
-        compressed.add(((temp_start, last_value), col))
+        compressed.append(((temp_start, last_value), col))
     
     return compressed
 
-prov_types = ('absabs', 'absrel', 'relabs', 'relrel')
-def prov_eq_simple(prov1, prov2):
-    prov = {}
-    for pt in prov_types:
-        if pt in prov1 and pt in prov2:
-            if prov1[pt] == prov2[pt]:
-                prov[pt] = copy.deepcopy(prov1[pt]) # maybe don't need deepcopy
-    return prov
+# to fix
+def prov_eq(prov1, prov2):
+    prov = []
 
-def prov_eq_ids(prov1, prov2):
-    prov = {}
-    if len(prov1) != len(prov2):
-        return {}
-    for id in prov1:
-        if id not in prov2:
-            return {}
-        else:
-            pr = prov_eq_simple(prov1[id], prov2[id])
-            if len(pr) == 0:
-                return {}
-            else:
-                prov[id] = pr
-    return prov
+    for i in range(len(prov1)):
+        prov.append({})
+        found = False
+        for t in prov1[i]:
+            if t in prov2[i] and prov2[i][t] == prov1[i][t]:
+                prov[i][t] = prov2[i][t]
+                found = True
+        if not found:
+            return ()
+    return tuple(prov)
 
-def prov_eq(prov1, prov2, merge_id = False):
-    if not merge_id:
-        return prov_eq_simple(prov1, prov2)
-    else:
-        return prov_eq_ids(prov1, prov2)
 
-def compress_output(prov_arr, merge_id = False, id = None):
+
+#to fix
+def compress_output(prov_arr, id):
     '''
-    if merge_id == True -> we compress with all ids
-    else: we compress by specified id -> requires id field
+    we compress by specified id -> requires id field
     '''
     compressed = []
     prev_compressed_col = None
@@ -109,7 +97,7 @@ def compress_output(prov_arr, merge_id = False, id = None):
         for col in range(prov_arr.shape[1]):
             # if previous interval is empty
             if prov1 == -1:
-                if id != None and id in prov_arr[row, col]:
+                if id in prov_arr[row, col]:
                     temp_start = col
                     last_value = col
                     prov1 = prov_arr[row, col][id]
@@ -119,14 +107,10 @@ def compress_output(prov_arr, merge_id = False, id = None):
                     prov1 = prov_arr[row, col]
             else:
                 # check for provenance and match
-                if id != None and id in prov_arr[row, col]:
-                    prov2 = prov_eq(prov1, prov_arr[row, col][id], merge_id)
-                elif id != None and id not in prov_arr[row, col]:
+                if id in prov_arr[row, col]:
+                    prov2 = prov_eq(prov1, prov_arr[row, col][id])
+                elif id not in prov_arr[row, col]:
                     prov2 = -1
-                elif len(prov_arr[row, col]) == 0:
-                    prov2 = -1
-                else:
-                    prov2 = prov_eq(prov1, prov_arr[row, col], merge_id)
                 # compression step
                 if prov2 == -1:
                     compressed_col.append(((row, row), (temp_start, last_value), prov1))
@@ -137,10 +121,8 @@ def compress_output(prov_arr, merge_id = False, id = None):
                     compressed_col.append(((row, row), (temp_start, last_value), prov1))
                     temp_start = col
                     last_value = col
-                    if id != None:
-                        prov1 = prov_arr[row, col][id]
-                    else:
-                        prov1 = prov_arr[row, col]
+                    prov1 = prov_arr[row, col][id]
+ 
                 else:
                     last_value = col
                     prov1 = prov2
@@ -163,7 +145,7 @@ def compress_output(prov_arr, merge_id = False, id = None):
                         compressed.append(prev)
                         prev_index +=1
                     elif prev[1][0] == interval[1][0]:
-                        prov = prov_eq(prev[2], interval[2], merge_id)
+                        prov = prov_eq(prev[2], interval[2])
                         if prev[1][1] == interval[1][1] and len(prov) != 0:
                             new_compressed_col.append(((prev[0][0], interval[0][1]), interval[1], prov))
                             prev_index +=1
@@ -195,17 +177,26 @@ def divide_by_id(prov):
     return prov_dict
 
 def convert_to_relative(prov_interval, row, col):
-    absabs = []
-    absrel = []
-    relabs = []
-    relrel = []
+    abs0 = []
+    abs1 = []
+
+    rel00 = []
+    rel01 = []
+
+    rel10 = []
+    rel11 = []
+
     for ((start0, end0), (start1, end1)) in prov_interval:
-        absabs.append(((start0, end0), (start1, end1)))
-        absrel.append(((start0, end0), (start1 - col, end1 - col)))
-        relabs.append(((start0 - row, end0 - row), (start1, end1)))
-        relrel.append(((start0 - row, end0 - row), (start1 - col, end1 -col)))
-    result = {'absabs': absabs, 'absrel': absrel, 'relabs': relabs, 'relrel': relrel}
-    return result
+        abs0.append((start0, end0))
+        rel00.append((start0 - row, end0 - row))
+        rel01.append((start0- col, end0 - col))
+
+        abs1.append((start1, end1))
+        rel10.append((start1 - row, end1 - row))
+        rel11.append((start1 - col, end1 - col))
+
+    return ({'abs': abs0, 'rel0': rel00, 'rel1':rel01}, {'abs': abs1, 'rel0': rel10, 'rel1':rel11})
+    #return {'abs': {0: abs0, 1: abs1}, 'rel0': {0:rel00, 1:rel10}, 'rel1': {0:rel01, 1:rel11}}
     
 def compression(prov_arr, separate_by_ids = True):
     '''
@@ -247,12 +238,9 @@ def compression(prov_arr, separate_by_ids = True):
     start = time.time()
     # print(start)
     # merge outputs
-    if separate_by_ids:
-        output = {}
-        for id in ids:
-            output[id] = compress_output(cell_prov, merge_id = False, id = id)
-    else:
-        output = compress_output(cell_prov, merge_id = True)
+    output = {}
+    for id in ids:
+        output[id] = compress_output(cell_prov, id = id)
     
     end = time.time()
     print('output compression: {}'.format(end - start))
