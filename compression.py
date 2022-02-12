@@ -1,3 +1,4 @@
+import re
 import numpy as np
 import copy
 import os
@@ -67,8 +68,9 @@ def compress_input(prov_list):
 
 # to fix
 def prov_eq(prov1, prov2):
+    if len(prov1) != len(prov2):
+        return ()
     prov = []
-
     for i in range(len(prov1)):
         prov.append({})
         found = False
@@ -83,7 +85,7 @@ def prov_eq(prov1, prov2):
 
 
 #to fix
-def compress_output(prov_arr, id):
+def compress_output(prov_arr, id, relative = True):
     '''
     we compress by specified id -> requires id field
     '''
@@ -108,7 +110,13 @@ def compress_output(prov_arr, id):
             else:
                 # check for provenance and match
                 if id in prov_arr[row, col]:
-                    prov2 = prov_eq(prov1, prov_arr[row, col][id])
+                    if relative:
+                        prov2 = prov_eq(prov1, prov_arr[row, col][id])
+                    else:
+                        if prov1 == prov_arr[row, col][id]:
+                            prov2 = prov1
+                        else:
+                            prov2 = ()
                 elif id not in prov_arr[row, col]:
                     prov2 = -1
                 # compression step
@@ -198,7 +206,7 @@ def convert_to_relative(prov_interval, row, col):
     return ({'abs': abs0, 'rel0': rel00, 'rel1':rel01}, {'abs': abs1, 'rel0': rel10, 'rel1':rel11})
     #return {'abs': {0: abs0, 1: abs1}, 'rel0': {0:rel00, 1:rel10}, 'rel1': {0:rel01, 1:rel11}}
     
-def compression(prov_arr, separate_by_ids = True):
+def compression(prov_arr, relative = True):
     '''
     separate_by_ids: if True, try to compress by different ids
     separate_by_ids: if False, try to compress all input arrays in separate lineage
@@ -224,24 +232,22 @@ def compression(prov_arr, separate_by_ids = True):
     print('cell level compression: {}'.format(end - start))
     # convert to relative -> only do this by dimension and id, not by interval
     
-    # attempt to alto
-    start = time.time()
-    for row in range(prov_arr.shape[0]):
-        for col in range(prov_arr.shape[1]):
-            for id in cell_prov[row, col]:
-                cell_prov[row, col][id] = convert_to_relative(cell_prov[row, col][id], row, col)
-    
-    #  print(start)
-    end = time.time()
-    print('conversion to relational: {}'.format(end - start))
+    # attempt to 
+    if relative:
+        start = time.time()
+        for row in range(prov_arr.shape[0]):
+            for col in range(prov_arr.shape[1]):
+                for id in cell_prov[row, col]:
+                    cell_prov[row, col][id] = convert_to_relative(cell_prov[row, col][id], row, col)
+        
+        #  print(start)
+        end = time.time()
+        print('conversion to relational: {}'.format(end - start))
 
     start = time.time()
-    # print(start)
-    # merge outputs
     output = {}
     for id in ids:
-        output[id] = compress_output(cell_prov, id = id)
-    
+        output[id] = compress_output(cell_prov, id = id, relative = relative)
     end = time.time()
     print('output compression: {}'.format(end - start))
     return output
@@ -260,5 +266,5 @@ if __name__ == '__main__':
     # prov = np.load('logs/1632433790.421791.npy', allow_pickle=True)
 
     prov = generate_array((1000000, 1))
-    compressed = compression(prov, separate_by_ids = True)
+    compressed = compression(prov)
     print(compressed)

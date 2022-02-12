@@ -36,8 +36,6 @@ def test5(arr):
     arr = np.tile(arr, (2, 2))
     return arr
 
-
-
 def test6(arr, arr2):
     #tests reduction/long provenance
     arr = np.dot(arr, arr2)
