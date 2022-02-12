@@ -153,7 +153,13 @@ def compress_output(prov_arr, id, relative = True):
                         compressed.append(prev)
                         prev_index +=1
                     elif prev[1][0] == interval[1][0]:
-                        prov = prov_eq(prev[2], interval[2])
+                        if relative:
+                            prov = prov_eq(prev[2], interval[2])
+                        else:
+                            if prev[2] == interval[2]:
+                                prov = prev[2]
+                            else:
+                                prov = ()
                         if prev[1][1] == interval[1][1] and len(prov) != 0:
                             new_compressed_col.append(((prev[0][0], interval[0][1]), interval[1], prov))
                             prev_index +=1
