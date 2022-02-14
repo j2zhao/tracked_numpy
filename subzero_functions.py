@@ -1,7 +1,17 @@
+'''
+Generate full provenance of pairs:
+
+((inputs), (outputs))
+
+Note: matrix multiplication has two implementations with subzero defination?
+
+'''
+
+
 import numpy as np
 import numpy.core.tracked_float as tf
 
-def test1(arr_size = (10, 1000000), ):
+def test1(arr_size = (10, 100000)):
     # basic test
     provenance = []
     for i in range(arr_size[0]):
@@ -10,7 +20,7 @@ def test1(arr_size = (10, 1000000), ):
             provenance.append(prov)
     return provenance
 
-def test2(arr = (10, 1000000), arr2 = (10, 1000000)):
+def test2(arr = (10, 100000), arr2 = (10, 100000)):
     # test 2 arrays
     provenance = []
     for i in range(arr[0]):
@@ -19,7 +29,7 @@ def test2(arr = (10, 1000000), arr2 = (10, 1000000)):
             provenance.append(prov)
     return provenance
 
-def test3(arr = (10, 1000000)):
+def test3(arr = (10, 100000)):
     # test reduction
     provenance = []
     for i in range(arr[0]):
@@ -31,7 +41,7 @@ def test3(arr = (10, 1000000)):
         provenance.append(pr)
     return provenance
 
-def test4(arr = (10, 1000000)):
+def test4(arr = (10, 100000)):
     #tests duplication (2x2)
     prov = []
     l = arr[0]
@@ -40,9 +50,9 @@ def test4(arr = (10, 1000000)):
         for j in range(arr[1]):
             pr = (((1, i, j)), ((2, i, j), (2, i + l, j), (2, i, j + w), (2, i + l, j + w)))
             prov.append(pr)
-    return pr
+    return prov
 
-def test5(arr = (10, 1000000)):
+def test5(arr = (10, 100000)):
     #tests duplication (3 x 1 )
     prov = []
     l = arr[0]
@@ -56,15 +66,22 @@ def test5(arr = (10, 1000000)):
 def test6(arr = (1000, 1000), arr2 = (1000, 1000)):
     #test matmul
     prov = []
-    
-    for j in range(arr[0]):
-        for i in range(arr2[1]):
-            pr = []
-            for k in range(arr[1]):
-                pr.append((2, j, k))
-                pr.append((3, k, i))
-                prov2 = ((1, j, i), tuple(pr))
-                prov.append(prov2)
+    for k in range(arr[0]):
+        out = []
+        for i in range(arr[1]):
+            out.append((2, k, i))
+        input = []
+        for j in range(arr2[1]):
+            input.append((1, k, j))
+        prov.append(tuple(input), tuple(out))
+    for k in range(arr2[1]):
+        out = []
+        for i in range(arr2[0]):
+            out.append((2, i, k))
+        input = []
+        for j in range(arr2[1]):
+            input.append((1, j, k))
+        prov.append(tuple(input), tuple(out))
     return prov
 
 def test7(arr = (10000000, 1), arr2 = (10000000, 1)):
@@ -81,14 +98,26 @@ def test7(arr = (10000000, 1), arr2 = (10000000, 1)):
 def test8(arr = (1000, 1000), arr2 = (1000, 1)):
     # test matrix*vector
     prov = []
-    
-    for j in range(arr[0]):
-        pr = []
+    for k in range(arr[0]):
+        out = []
         for i in range(arr[1]):
-            pr.append((2, j, i))
-            pr.append((3, i, 1))
-        prov2 = ((1, j, 1), tuple(pr))
-        prov.append(prov2)
+            out.append((2, k, i))
+        prov.append(((1, k, 1)), tuple(out))
+    
+    out = []
+    for i in range(arr2[0]):
+        out.append((2, i, 1))
+    input = []
+    for i in range(arr[0]):
+        input.append((1, i, 1))
+    prov.append(tuple(input), tuple(out))
+    # for j in range(arr[0]):
+    #     pr = []
+    #     for i in range(arr[1]):
+    #         pr.append((2, j, i))
+    #         pr.append((3, i, 1))
+    #     prov2 = ((1, j, 1), tuple(pr))
+    #     prov.append(prov2)
 
     return prov
 

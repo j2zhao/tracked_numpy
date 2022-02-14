@@ -73,16 +73,19 @@ def comp_rel_save(array, dir):
 
 
 if __name__ =="__main__":
-    arr = test1((100, 100))
+    arr = test7()
     #arr = aux(arr)
     # arr = subzero.test1()
-    start = time.time()
-    dir = 'compressed/col'
-    if not os.path.isdir(dir):
-        os.mkdir(dir)
-    column_save(arr, dir, dir, 1)
-    end = time.time()
-    size = get_size(dir)
-    print("Save time: {}".format(end - start))
-    print("size: {}".format(size))
+    # start = time.time()
+    # dir = 'compressed/col'
+    # if not os.path.isdir(dir):
+    #     os.mkdir(dir)
+    # temp_dir = 'compressed/temp_dir'
+    # if not os.path.isdir(temp_dir):
+    #     os.mkdir(temp_dir)
+    # column_save(arr, dir, temp_dir, 1)
+    # end = time.time()
+    # size = get_size(dir)
+    # print("Save time: {}".format(end - start))
+    # print("size: {}".format(size))
     

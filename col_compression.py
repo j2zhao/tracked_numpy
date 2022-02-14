@@ -1,12 +1,15 @@
 import numpy as np
 import os
-def to_column_1(array, temp_path, zeros= True):
+def to_column_1(array, temp_path, zeros= False):
     x1 = []
     x2 = []
     y1 = []
     y2 = []
+    print(array.shape)
+    a = 0
+    b = 0
     for i in range(array.shape[0]):
-        for j in range(array.shape[0]):
+        for j in range(array.shape[1]):
             if zeros:
                 if array[i, j].n == 0:
                     continue
@@ -18,6 +21,7 @@ def to_column_1(array, temp_path, zeros= True):
                 y2.append(y)
 
     x1 = np.array(x1)
+
     path = os.path.join(temp_path, 'x1.npy')
     np.save(path, x1)
 

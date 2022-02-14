@@ -260,8 +260,19 @@ def compression(prov_arr, relative = True):
 
 
 def generate_array(size = (1000, 1000)):
-    arr = np.random.random(size).astype(tf.tracked_float)
-    tf.initialize(arr, 0)
+    # arr = np.random.random(size).astype(tf.tracked_float)
+    # tf.initialize(arr, 0)
+    # arr2 = np.random.random(size).astype(tf.tracked_float)
+    # tf.initialize(arr2, 2)
+    # arr = np.dot(arr, arr2)
+
+    arr = np.random.random(arr).astype(tf.tracked_float)
+    tf.initialize(arr, 1)
+    arr2 = np.random.random(arr2).astype(tf.tracked_float)
+    tf.initialize(arr, 2)
+    np.reshape(arr, (10000000, ))
+    np.reshape(arr2, (10000000, ))
+    arr = np.dot(arr, arr2)
     return arr
 
 
@@ -271,6 +282,6 @@ if __name__ == '__main__':
     # base = './logs'
     # prov = np.load('logs/1632433790.421791.npy', allow_pickle=True)
 
-    prov = generate_array((1000000, 1))
+    prov = generate_array()
     compressed = compression(prov)
     print(compressed)
