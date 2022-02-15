@@ -1,7 +1,7 @@
 import numpy as np
 import numpy.core.tracked_float as tf
 
-def test1(arr_size = (10, 1000000)):
+def test1(arr_size = (10, 10000)):
     # basic test
     arr = np.random.random(arr_size).astype(tf.tracked_float)
     tf.initialize(arr, 1)
@@ -18,7 +18,7 @@ def test2(arr = (10, 1000000), arr2 = (10, 1000000)):
     arr = arr + arr2
     return arr
 
-def test3(arr = (10, 1000000)):
+def test3(arr = (1000, 1000)):
     # test reduction
     arr = np.random.random(arr).astype(tf.tracked_float)
     tf.initialize(arr, 1)
@@ -69,7 +69,7 @@ def test8(arr = (1000, 1000), arr2 = (1000, 1)):
     arr = np.dot(arr, arr2)
     return arr
 
-def test9(arr = (10,000,000, 1)):
+def test9(arr = (1000000, 1)):
     # tests filters
     arr = np.random.random(arr).astype(tf.tracked_float)
     tf.initialize(arr, 1)
@@ -80,9 +80,10 @@ def test9(arr = (10,000,000, 1)):
 def test10(arr = 10000000):
     x = np.arange(arr)
     std = arr/5
+    avg = arr/2
     y = np.random.normal(x, std)
     y = np.reshape(y, (arr,1)).astype(tf.tracked_float)
     tf.initialize(arr, i)
     out = np.zeros(y.shape).astype(tf.tracked_float)
-    out[y < 0.5] = arr[y < 0.5]
+    out[y < avg] = arr[y < avg]
     return out

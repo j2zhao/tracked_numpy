@@ -1,11 +1,10 @@
 import numpy as np
 import os
-def to_column_1(array, temp_path, zeros= False):
+def to_column_1(array, temp_path, zeros= True):
     x1 = []
     x2 = []
     y1 = []
     y2 = []
-    print(array.shape)
     a = 0
     b = 0
     for i in range(array.shape[0]):
@@ -19,9 +18,8 @@ def to_column_1(array, temp_path, zeros= False):
                 x2.append(j)
                 y1.append(x)
                 y2.append(y)
-
+    
     x1 = np.array(x1)
-
     path = os.path.join(temp_path, 'x1.npy')
     np.save(path, x1)
 
@@ -48,7 +46,7 @@ def to_column_2(array, temp_path, input_id = (1, 2), zeros= True):
     z1 = []
     z2 = []
     for i in range(array.shape[0]):
-        for j in range(array.shape[0]):
+        for j in range(array.shape[1]):
             if zeros:
                 if array[i, j].n == 0:
                     continue
@@ -64,9 +62,6 @@ def to_column_2(array, temp_path, input_id = (1, 2), zeros= True):
                     w2.append(j)
                     z1.append(x)
                     z2.append(y)
-                    z1.append(-1)
-                    z2.append(-1)
-
     x1 = np.array(x1)
     path = os.path.join(temp_path, 'x1.npy')
     np.save(path, x1)

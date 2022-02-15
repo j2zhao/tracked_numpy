@@ -44,6 +44,11 @@ def subzero_save(array, dir):
         json.dump(array,f)
 
 def column_save(array, dir, temp_path, num_arrays, input_id = (1, 2)):
+    if len(array.shape) == 0:
+        array = np.reshape(array, (1, 1))
+    
+    if len(array.shape) == 1:
+        array = np.reshape(array, (array.shape[0], 1))
 
     if num_arrays == 1:
         col_compression.to_column_1(array, temp_path, zeros = True)
@@ -73,19 +78,19 @@ def comp_rel_save(array, dir):
 
 
 if __name__ =="__main__":
-    arr = test7()
+    arr = test9()
     #arr = aux(arr)
     # arr = subzero.test1()
-    # start = time.time()
-    # dir = 'compressed/col'
-    # if not os.path.isdir(dir):
-    #     os.mkdir(dir)
-    # temp_dir = 'compressed/temp_dir'
-    # if not os.path.isdir(temp_dir):
-    #     os.mkdir(temp_dir)
-    # column_save(arr, dir, temp_dir, 1)
-    # end = time.time()
-    # size = get_size(dir)
-    # print("Save time: {}".format(end - start))
-    # print("size: {}".format(size))
+    start = time.time()
+    dir = 'compressed/col'
+    if not os.path.isdir(dir):
+        os.mkdir(dir)
+    temp_dir = 'compressed/temp_dir'
+    if not os.path.isdir(temp_dir):
+        os.mkdir(temp_dir)
+    column_save(arr, dir, temp_dir, 2)
+    end = time.time()
+    size = get_size(dir)
+    print("Save time: {}".format(end - start))
+    print("size: {}".format(size))
     

@@ -273,6 +273,7 @@ def generate_array(size = (1000, 1000)):
     np.reshape(arr, (10000000, ))
     np.reshape(arr2, (10000000, ))
     arr = np.dot(arr, arr2)
+    
     return arr
 
 
