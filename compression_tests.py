@@ -9,6 +9,7 @@ from compression import compression
 from compression_examples import *
 import col_compression 
 import time
+import shutil
 
 def get_size(start_path = '.'):
     total_size = 0
@@ -21,6 +22,11 @@ def get_size(start_path = '.'):
     return total_size
 
 def aux(array):
+    if len(array.shape) == 0:
+        array = np.reshape(array, (1, 1))
+    
+    if len(array.shape) == 1:
+        array = np.reshape(array, (array.shape[0], 1))
     prov = np.empty(array.shape, dtype=object)
     for i in range(array.shape[0]):
         for j in range(array.shape[1]):
@@ -28,11 +34,14 @@ def aux(array):
     return prov
  
 def raw_save(array, dir):
-    dir = os.path.join(dir, str(time.time())+ '.npy')
-    np.save(dir, array)
+    #dir = os.path.join(dir, str(time.time())+ '.npy')
+    np.save(dir + '.npy', array)
 
 def gzip_save(array, dir):
     com = gzip.compress(array)
+    array = gzip.decompress(com)
+    print(np.array(array))
+
     dir = os.path.join(dir, str(time.time())+ '.npy')
     with open(dir, 'wb') as f:
         f.write(com)
@@ -76,21 +85,26 @@ def comp_rel_save(array, dir):
     array = compression(array, relative = True)
     np.save(dir, array)
 
+def gzip_2(file_name, new_file):
+    with open(file_name, 'rb') as f_in:
+        with gzip.open(new_file, 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
 
 if __name__ =="__main__":
-    arr = test9()
-    #arr = aux(arr)
-    # arr = subzero.test1()
-    start = time.time()
-    dir = 'compressed/col'
-    if not os.path.isdir(dir):
-        os.mkdir(dir)
-    temp_dir = 'compressed/temp_dir'
-    if not os.path.isdir(temp_dir):
-        os.mkdir(temp_dir)
-    column_save(arr, dir, temp_dir, 2)
-    end = time.time()
-    size = get_size(dir)
-    print("Save time: {}".format(end - start))
-    print("size: {}".format(size))
+    gzip_2("compressed/raw.npy", "col/test.gzip")
+    # arr = test2()
+    # arr = aux(arr)
+    # # arr = subzero.test1()
+    # # start = time.time()
+    # dir = 'compressed/raw'
+    # if not os.path.isdir(dir):
+    #     os.mkdir(dir)
+    # temp_dir = 'compressed/temp_dir'
+    # if not os.path.isdir(temp_dir):
+    #     os.mkdir(temp_dir)
+    # raw_save(arr, dir)
+    # # end = time.time()
+    # size = get_size(dir)
+    # # print("Save time: {}".format(end - start))
+    # print("size: {}".format(size))
     
