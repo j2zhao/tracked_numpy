@@ -82,7 +82,28 @@ def prov_eq(prov1, prov2):
             return ()
     return tuple(prov)
 
+def convert_to_relative(prov_interval, row, col):
+    abs0 = []
+    abs1 = []
 
+    rel00 = []
+    rel01 = []
+
+    rel10 = []
+    rel11 = []
+
+    for ((start0, end0), (start1, end1)) in prov_interval:
+        abs0.append((start0, end0))
+        rel00.append((start0 - row, end0 - row))
+        rel01.append((start0- col, end0 - col))
+
+        abs1.append((start1, end1))
+        rel10.append((start1 - row, end1 - row))
+        rel11.append((start1 - col, end1 - col))
+
+    return ({'abs': abs0, 'rel0': rel00, 'rel1':rel01}, {'abs': abs1, 'rel0': rel10, 'rel1':rel11})
+    #return {'abs': {0: abs0, 1: abs1}, 'rel0': {0:rel00, 1:rel10}, 'rel1': {0:rel01, 1:rel11}}
+    
 
 #to fix
 def compress_output(prov_arr, id, relative = True):
@@ -102,16 +123,16 @@ def compress_output(prov_arr, id, relative = True):
                 if id in prov_arr[row, col]:
                     temp_start = col
                     last_value = col
-                    prov1 = prov_arr[row, col][id]
-                elif len(prov_arr[row, col]) != 0:
-                    temp_start = col
-                    last_value = col
-                    prov1 = prov_arr[row, col]
+                    if relative:
+                        prov1 = convert_to_relative(prov_arr[row, col][id], row, col)
+                    else:
+                        prov1 = prov_arr[row, col][id]
+                # need to check alternative??
             else:
                 # check for provenance and match
                 if id in prov_arr[row, col]:
                     if relative:
-                        prov2 = prov_eq(prov1, prov_arr[row, col][id])
+                        prov2 = prov_eq(prov1, convert_to_relative(prov_arr[row, col][id], row, col))
                     else:
                         if prov1 == prov_arr[row, col][id]:
                             prov2 = prov1
@@ -129,7 +150,10 @@ def compress_output(prov_arr, id, relative = True):
                     compressed_col.append(((row, row), (temp_start, last_value), prov1))
                     temp_start = col
                     last_value = col
-                    prov1 = prov_arr[row, col][id]
+                    if relative:
+                        prov1 = convert_to_relative(prov_arr[row, col][id], row, col)
+                    else:
+                        prov1 = prov_arr[row, col][id]
  
                 else:
                     last_value = col
@@ -190,28 +214,7 @@ def divide_by_id(prov):
         prov_dict[p[0]].append((p[1], p[2]))
     return prov_dict
 
-def convert_to_relative(prov_interval, row, col):
-    abs0 = []
-    abs1 = []
 
-    rel00 = []
-    rel01 = []
-
-    rel10 = []
-    rel11 = []
-
-    for ((start0, end0), (start1, end1)) in prov_interval:
-        abs0.append((start0, end0))
-        rel00.append((start0 - row, end0 - row))
-        rel01.append((start0- col, end0 - col))
-
-        abs1.append((start1, end1))
-        rel10.append((start1 - row, end1 - row))
-        rel11.append((start1 - col, end1 - col))
-
-    return ({'abs': abs0, 'rel0': rel00, 'rel1':rel01}, {'abs': abs1, 'rel0': rel10, 'rel1':rel11})
-    #return {'abs': {0: abs0, 1: abs1}, 'rel0': {0:rel00, 1:rel10}, 'rel1': {0:rel01, 1:rel11}}
-    
 def compression(prov_arr, relative = True):
     '''
     separate_by_ids: if True, try to compress by different ids
@@ -239,16 +242,16 @@ def compression(prov_arr, relative = True):
     # convert to relative -> only do this by dimension and id, not by interval
     
     # attempt to 
-    if relative:
-        start = time.time()
-        for row in range(prov_arr.shape[0]):
-            for col in range(prov_arr.shape[1]):
-                for id in cell_prov[row, col]:
-                    cell_prov[row, col][id] = convert_to_relative(cell_prov[row, col][id], row, col)
+    # if relative:
+    #     start = time.time()
+    #     for row in range(prov_arr.shape[0]):
+    #         for col in range(prov_arr.shape[1]):
+    #             for id in cell_prov[row, col]:
+    #                 cell_prov[row, col][id] = convert_to_relative(cell_prov[row, col][id], row, col)
         
-        #  print(start)
-        end = time.time()
-        print('conversion to relational: {}'.format(end - start))
+    #     #  print(start)
+    #     end = time.time()
+    #     print('conversion to relational: {}'.format(end - start))
 
     start = time.time()
     output = {}
@@ -266,13 +269,13 @@ def generate_array(size = (1000, 1000)):
     # tf.initialize(arr2, 2)
     # arr = np.dot(arr, arr2)
 
-    arr = np.random.random(arr).astype(tf.tracked_float)
+    arr = np.random.random(size).astype(tf.tracked_float)
     tf.initialize(arr, 1)
-    arr2 = np.random.random(arr2).astype(tf.tracked_float)
-    tf.initialize(arr, 2)
-    np.reshape(arr, (10000000, ))
-    np.reshape(arr2, (10000000, ))
-    arr = np.dot(arr, arr2)
+    # arr2 = np.random.random(arr2).astype(tf.tracked_float)
+    # tf.initialize(arr, 2)
+    # np.reshape(arr, (10000000, ))
+    # np.reshape(arr2, (10000000, ))
+    #arr = np.dot(arr, arr2)
     
     return arr
 
