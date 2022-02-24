@@ -78,12 +78,12 @@ def column_save(array, dir, temp_path, num_arrays, input_id = (1, 2)):
 
 def comp_save(array, dir):
     array = compression(array, relative = False)
-    dir = os.path.join(dir, 'raw.npy')
+    dir = os.path.join(dir, 'raw.pickle')
     with open(dir, 'wb') as f:
         pickle.dump(arr,f)
 
 def comp_rel_save(array, dir):
-    dir = os.path.join(dir, 'raw.npy')
+    dir = os.path.join(dir, 'raw.pickle')
     array = compression(array, relative = True)
     with open(dir, 'wb') as f:
         pickle.dump(arr,f)
@@ -109,7 +109,7 @@ if __name__ =="__main__":
     #raw_save(arr, dir)
     start = time.time()
     #gzip_2("compressed/raw.npy", "temp/test.gzip")
-    comp_rel_save(arr, dir)
+    comp_save(arr, dir)
     end = time.time()
     # size = get_size(dir)
     print("Save time: {}".format(end - start))
