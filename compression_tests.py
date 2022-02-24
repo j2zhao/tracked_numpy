@@ -10,6 +10,7 @@ from compression_examples import *
 import col_compression 
 import time
 import shutil
+import pickle
 
 def get_size(start_path = '.'):
     total_size = 0
@@ -48,7 +49,7 @@ def gzip_save(array, dir):
 
 def subzero_save(array, dir):
     """assume we already ran compression"""
-    dir = os.path.join(dir, str(time.time())+ '.npy')
+    dir = os.path.join(dir, 'raw.npy')
     with open(dir, 'wb') as f:
         json.dump(array,f)
 
@@ -77,13 +78,15 @@ def column_save(array, dir, temp_path, num_arrays, input_id = (1, 2)):
 
 def comp_save(array, dir):
     array = compression(array, relative = False)
-    dir = os.path.join(dir, str(time.time())+ '.npy')
-    np.save(dir, array)
+    dir = os.path.join(dir, 'raw.npy')
+    with open(dir, 'wb') as f:
+        pickle.dump(arr,f)
 
 def comp_rel_save(array, dir):
-    dir = os.path.join(dir, str(time.time())+ '.npy')
+    dir = os.path.join(dir, 'raw.npy')
     array = compression(array, relative = True)
-    np.save(dir, array)
+    with open(dir, 'wb') as f:
+        pickle.dump(arr,f)
 
 def gzip_2(file_name, new_file):
     with open(file_name, 'rb') as f_in:
@@ -93,7 +96,7 @@ def gzip_2(file_name, new_file):
 if __name__ =="__main__":
     # gzip_2("compressed/raw.npy", "col/test.gzip")
     arr = test7((100, 1))
-    arr = aux(arr)
+    #arr = aux(arr)
     # # arr = subzero.test1()
     
     dir = 'compressed'
@@ -103,9 +106,10 @@ if __name__ =="__main__":
     if not os.path.isdir(temp_dir):
         os.mkdir(temp_dir)
     #column_save(arr, dir, temp_dir, 1)
-    raw_save(arr, dir)
+    #raw_save(arr, dir)
     start = time.time()
-    gzip_2("compressed/raw.npy", "temp/test.gzip")
+    #gzip_2("compressed/raw.npy", "temp/test.gzip")
+    comp_rel_save(arr, dir)
     end = time.time()
     # size = get_size(dir)
     print("Save time: {}".format(end - start))
