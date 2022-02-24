@@ -99,7 +99,7 @@ if __name__ =="__main__":
     arr = test11()
     # for i in range(4):
     #     print(arr[i].provenance)
-    arr = aux(arr)
+    #arr = aux(arr)
     # # arr = subzero.test1()
     
     dir = 'compressed'
@@ -108,16 +108,16 @@ if __name__ =="__main__":
     temp_dir = 'temp'
     if not os.path.isdir(temp_dir):
         os.mkdir(temp_dir)
-    #column_save(arr, dir, temp_dir, 1)
-    raw_save(arr, dir)
+    column_save(arr, dir, temp_dir, 1)
+    #raw_save(arr, dir)
     #start = time.time()
     #arr = comp_rel_save(arr, dir)
     #print(arr)
-    gzip_2("compressed/raw.pickle", "temp/test.gzip")
+    #gzip_2("compressed/raw.npy", "temp/test.gzip")
     #end = time.time()
     size = get_size(dir)
     print("size: {}".format(size))
-    size = get_size(temp_dir)
+    #size = get_size(temp_dir)
     #print("Save time: {}".format(end - start))
-    print("size: {}".format(size))
+    #print("size: {}".format(size))
     
