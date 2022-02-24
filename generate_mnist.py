@@ -18,7 +18,8 @@ def upsize(data, size = (1000,1000)):
     data = np.reshape(data, (28,28))
     cv2.imshow("Input", data)
     resized = cv2.resize(data, (1000,1000))
-    return resized
+    img = np.reshape(resized, (-1, ))
+    return img
 
 if __name__ == "__main__":
     #train = pd.read_csv("train.csv")
