@@ -1,1 +1,1 @@
-["sum", 1, {"axis":[1, 0], "initial":[null]}]
+["append", [["a","b"], ["a", "c"]], {"axis": [1]}]

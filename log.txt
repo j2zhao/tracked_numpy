@@ -1,0 +1,129 @@
+{}
+Function ravel Run 0
+type: None
+No Match
+Compressed
+Function ravel Run 1
+type: specfic
+Not enough iterations
+Compressed
+Function ravel Run 2
+type: specfic
+Pattern Found
+{}
+Function ravel Run 0
+type: specfic
+Not enough iterations
+Compressed
+Function ravel Run 1
+type: specfic
+Not enough iterations
+Compressed
+Function ravel Run 2
+type: general
+Pattern Unknown
+Compressed
+{}
+Function ravel Run 0
+type: general
+Pattern Unknown
+Compressed
+Function ravel Run 1
+type: general
+Pattern Unknown
+Compressed
+Function ravel Run 2
+type: general
+Pattern Unknown
+Compressed
+{}
+Function ravel Run 0
+type: general
+Pattern Unknown
+Compressed
+Function ravel Run 1
+type: general
+Pattern Unknown
+Compressed
+Function ravel Run 2
+type: general
+Pattern Unknown
+Compressed
+{}
+Function ravel Run 0
+type: general
+Pattern Unknown
+Compressed
+Function ravel Run 1
+type: general
+Pattern Unknown
+Compressed
+Function ravel Run 2
+type: general
+Pattern Unknown
+Compressed
+{}
+Function ravel Run 0
+type: general
+Pattern Unknown
+Compressed
+Function ravel Run 1
+type: general
+Pattern Unknown
+Compressed
+Function ravel Run 2
+type: general
+Pattern Unknown
+Compressed
+{}
+Function ravel Run 0
+type: general
+Pattern Unknown
+Compressed
+Function ravel Run 1
+type: general
+Pattern Unknown
+Compressed
+Function ravel Run 2
+type: general
+Pattern Unknown
+Compressed
+{}
+Function ravel Run 0
+type: general
+Pattern Unknown
+Compressed
+Function ravel Run 1
+type: general
+Pattern Unknown
+Compressed
+Function ravel Run 2
+type: general
+Pattern Unknown
+Compressed
+{}
+Function ravel Run 0
+type: general
+Pattern Unknown
+Compressed
+Function ravel Run 1
+type: general
+Pattern Unknown
+Compressed
+Function ravel Run 2
+type: general
+Pattern Unknown
+Compressed
+{}
+Function ravel Run 0
+type: general
+Pattern Unknown
+Compressed
+Function ravel Run 1
+type: general
+Pattern Unknown
+Compressed
+Function ravel Run 2
+type: general
+Pattern Unknown
+Compressed

@@ -137,3 +137,72 @@ def test10(prov_arr, arr = (1000000, 1)):
             pr = ((0, i, 1), (2, i, 1))
             prov.append(pr)
     return prov 
+
+def test11(prov_arr):
+    # return first array not out array
+    prov0 = []
+    prov1 = []
+    prov2 = []
+    prov3 = []
+    for i in range(prov_arr.shape[0]):
+        if prov_arr[i].n <= 0.25:
+            prov0.append((1, i, 1))
+        elif prov_arr[i].n <= 0.5:
+            prov1.append((1, i, 1))
+        elif prov_arr[i].n <= 0.75:
+            prov2.append((1, i, 1))
+        else:
+            prov3.append((1, i, 1))
+
+    prov = []
+    pr = ((0, 0, 1), tuple(prov0))
+    prov.append(pr)
+    prov = []
+    pr = ((0, 1, 1), tuple(prov1))
+    prov.append(pr)
+    prov = []
+    pr = ((0, 2, 1), tuple(prov2))
+    prov.append(pr)
+    prov = []
+    pr = ((0, 3, 1), tuple(prov3))
+    prov.append(pr)
+    return prov 
+
+def test12(prov_arr):
+    # return first array not out array
+    prov0 = []
+    prov1 = []
+    prov2 = []
+    prov3 = []
+    for i in range(prov_arr.shape[0]):
+        if prov_arr[i].n <= 0.25:
+            prov0.append((1, i, 1))
+        elif prov_arr[i].n <= 0.5:
+            prov1.append((1, i, 1))
+        elif prov_arr[i].n <= 0.75:
+            prov2.append((1, i, 1))
+        else:
+            prov3.append((1, i, 1))
+
+    prov = []
+    pr = ((0, 0, 1), tuple(prov0))
+    prov.append(pr)
+    prov = []
+    pr = ((0, 1, 1), tuple(prov1))
+    prov.append(pr)
+    prov = []
+    pr = ((0, 2, 1), tuple(prov2))
+    prov.append(pr)
+    prov = []
+    pr = ((0, 3, 1), tuple(prov3))
+    prov.append(pr)
+    return prov 
+
+
+def test13(prov_arr):
+    prov = []
+    for i in range(prov_arr.shape[0]):
+        if prov_arr[i].n != 0:
+            pr = ((0, i, 1), (2, i, 1))
+            prov.append(pr)
+    return prov 

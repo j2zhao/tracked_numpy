@@ -38,6 +38,8 @@ def test5(arr):
 
 def test6(arr, arr2):
     #tests reduction/long provenance
-    arr = np.dot(arr, arr2)
+    #arr = np.dot(arr, arr2)
+    arr = tf.matrix_multiply(arr, arr2)
+    print(arr[0,0].provenance)
     #arr = np.reshape(arr,(1, arr.shape[0]))
     return arr

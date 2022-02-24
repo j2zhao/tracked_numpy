@@ -77,13 +77,61 @@ def test9(arr = (1000000, 1)):
     out[arr < 0.5] = arr[arr < 0.5]
     return out    
 
-def test10(arr = 10000000):
-    x = np.arange(arr)
-    std = arr/5
-    avg = arr/2
-    y = np.random.normal(x, std)
-    y = np.reshape(y, (arr,1)).astype(tf.tracked_float)
-    tf.initialize(arr, i)
-    out = np.zeros(y.shape).astype(tf.tracked_float)
-    out[y < avg] = arr[y < avg]
+def test10(arr = 1000000):
+    x = np.arange(arr)                                                                                                  
+    z = arr/2                                                                                                           
+    std = arr/10                                                                                                        
+    y = np.random.normal(x, std)                                                                                        
+    y = np.reshape(y, (arr,1)).astype(tf.tracked_float)                                                                 
+    tf.initialize(y, 1)                                                                                                 
+    out = np.zeros(y.shape).astype(tf.tracked_float)                                                                    
+    out[y < z] = y[y < z]                                                                                               
+    return out
+
+def test11(arr = 1000000, sorted = False):
+    '''hist'''
+    if sorted:
+        arr = np.sort(np.random.random(arr)).astype(tf.tracked_float)
+    else:
+        arr = np.random.random(arr).astype(tf.tracked_float)
+
+    tf.initialize(arr, 1)
+    out = np.zeros((4,)).astype(tf.tracked_float) 
+    for i in range(arr.shape[0]):
+        if arr[i] <= 0.25:
+            out[0] = out[0] + arr[i]
+        elif arr[i] <= 0.5:
+            out[1] = out[1] + arr[i]
+        elif arr[i] <= 0.75:
+            out[2] = out[2] + arr[i]
+        else:
+            out[2] = out[2] + arr[i]
+    return out
+
+def test12(arr = 1000000, sorted = True):
+    '''hist'''
+    if sorted:
+        arr = np.sort(np.random.random(arr)).astype(tf.tracked_float)
+    else:
+        arr = np.random.random(arr).astype(tf.tracked_float)
+
+    tf.initialize(arr, 1)
+    out = np.zeros((4,)).astype(tf.tracked_float) 
+    for i in range(arr.shape[0]):
+        if arr[i].n <= 0.25:
+            out[0] = out[0] + arr[i]
+        elif arr[i].n <= 0.5:
+            out[1] = out[1] + arr[i]
+        elif arr[i].n <= 0.75:
+            out[2] = out[2] + arr[i]
+        else:
+            out[2] = out[2] + arr[i]
+    return out, arr # need arr for subzero
+
+def test13(mnist = 'mnist.npy'):
+    '''filter'''
+    arr = np.load(mnist)
+    tf.initialize(arr, 1)
+    out = np.zeros(arr.shape).astype(tf.tracked_float)
+    out[arr > 0] = arr[arr > 0]
     return out

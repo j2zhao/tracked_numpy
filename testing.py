@@ -21,10 +21,10 @@ def meta_test_prov(funct, inputs = [(1, 100)], storage = './logs'):
     for input in inputs:
         arrs.append(np.random.random(input).astype(tf.tracked_float))
     
-    end = time.time()
-    print("initializing input array: {}".format(end-start))
+    #end = time.time()
+    #print("initializing input array: {}".format(end-start))
     #reset provenance
-    start = time.time()
+    #start = time.time()
     for i, arr in enumerate(arrs):
         tf.initialize(arr, i)
     end = time.time()
@@ -33,6 +33,7 @@ def meta_test_prov(funct, inputs = [(1, 100)], storage = './logs'):
     start = time.time()
     
     output = funct(*arrs)
+    print(output[0,0])
     end = time.time()
     print("running array function: {}".format(end - start))
 
@@ -74,9 +75,6 @@ def meta_test(funct, inputs = [(10000, 10000)]):
 
 if __name__ == '__main__':
     print(tf)
-    tim = 0
-    for i in range(5):
-        tim += meta_test_prov(test6, inputs= [(1, 1000000000), (1000000000, 1)])
+    meta_test_prov(test6, inputs= [(1, 100), (100, 1)])
     print('AVERAGE TIME')
-    print(tim/5)
     #meta_test(test1)

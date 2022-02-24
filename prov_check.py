@@ -32,7 +32,7 @@ def _check_equality(val1, val2):
         if len(vals) == 0:
             return None
         elif len(vals) == 1:
-            return vals[1]
+            return vals[0]
         else:
             return vals
 
@@ -103,10 +103,10 @@ def check_eq_prov(prov1, prov2):
 class FunctionProvenance():
     """
     provenance tuple:
-    [args_list, provenance, number of passes]
+    [args_list, provenance, number of passes, array_shapes]
     
     """
-    def __init__(self, log, n = 2, m = 2, ratio = 0.1, saved_prov = None):
+    def __init__(self, log, n = 2, m = 2, ratio = 0.1, saved_prov = None, new_cur = True):
         # if saved_function:
         #     with open(saved_function, 'r') as f:
         #         self.prov = json.load(f)
@@ -117,7 +117,9 @@ class FunctionProvenance():
             self.prov = saved_prov
         else:
             self.prov = {}
-        
+        if not new_cur:
+            for func in self.prov:
+                self.prov[func]['cur_provs'] = 0
         if not os.path.exists(log):
             with open(log, 'w'): pass
         self.log = log
@@ -146,7 +148,8 @@ class FunctionProvenance():
                 i += 1
             else:
                 okwargs[k] = v 
-        # run function        
+        # run function
+        #output = func(oargs, axis = 0) 
         output = func(*oargs, **okwargs)
         return output
 
@@ -169,13 +172,6 @@ class FunctionProvenance():
     
     def _get_args(self, nfunc, args, kwargs):
         # update with shape
-        oargs = []
-        for arr in enumerate(args):
-            if isinstance(arr, np.ndarray):
-                oargs.append(arr.shape)
-            else:
-                oargs.append(arr)
-
         fargs = {}        
         for i, arg in enumerate(args):
             fargs[i] = arg
@@ -220,7 +216,6 @@ class FunctionProvenance():
         for a in arbs:
             if a in aarg_dic:
                 aarg_dic[a] = constants.ARB
-        
         # try to find match in general provenance (linear right now -> probably good enough)
         provenance = None
         num_pass = 0
@@ -229,10 +224,11 @@ class FunctionProvenance():
                 provenance = prov[1]
                 num_pass = prov[2]
         
-        if provenance != None:
+        if provenance != None and num_pass > self.n and provenance != constants.UNKNOWN:
             type = 0
         # try to find match in specific provenance
         else:
+            provenance = None
             cur_provs = self.prov[nfunc]['cur_provs']
             if arr_tup in cur_provs:
                 for prov in cur_provs[arr_tup]:
@@ -265,10 +261,8 @@ class FunctionProvenance():
     # test if getsize of works
     def compress_function(self, prov):
         compress_prov = compression(prov)
-        if sys.getsizeof(compress_prov) > self.ratio*sys.getsizeof(prov):
-            return compress_prov, True
-        else:
-            return prov, False
+        return compress_prov
+
 
     def _gen_tup(self, tup, dict_arr):
         a, b = tup
@@ -299,14 +293,14 @@ class FunctionProvenance():
 
         for id in provenance:
             for i, val in enumerate(provenance[id]):
-                w, h, prov = val 
+                w, h, prov = val
                 w = self._gen_tup(w, dict_arr)
                 h = self._gen_tup(h, dict_arr)
                 for d in range(len(prov)):
                     for key in prov[d]:
-                        for i, val2 in enumerate(prov[d][key]):
+                        for j, val2 in enumerate(prov[d][key]):
                             a = self._gen_tup(val2, dict_arr)
-                            prov[d][key][i] = a
+                            prov[d][key][j] = a
                 provenance[id][i] = (w, h, prov)
         return provenance
 
@@ -331,11 +325,13 @@ class FunctionProvenance():
                     prov[1] = constants.UNKNOWN
                 else:
                     prov[1] = equal
-                prov[2] += 1
-                found == True
+                if arr_args not in prov[3]:
+                    prov[2] += 1
+                    prov[3].append(arr_args)
+                found = True
                 break
         if not found:
-            full_provenance = [arb_args, rel_prov, 1]
+            full_provenance = [arb_args, rel_prov, 1, [arr_args]]
             self.prov[nfunc]['provs'].append(full_provenance)
 
         found_2 = False
@@ -345,17 +341,17 @@ class FunctionProvenance():
                     if prov[1] != provenance:
                         prov[1] = constants.UNKNOWN
                     prov[2] += 1
-                    found_2 == True
+                    found_2 = True
                     break
             if not found_2:
                 full_provenance = [arb_args, provenance, 1]
                 self.prov[nfunc]['cur_provs'][arr_args].append(full_provenance)
         else:
-            full_provenance = [arb_args, provenance, 1]
+            full_provenance = [args, provenance, 1]
             self.prov[nfunc]['cur_provs'][arr_args] = [full_provenance]
         
         if add_arb:
-            self.update_arbitrary(nfunc, arb_args, provenance)
+            self.update_arbitrary(nfunc, arb_args, rel_prov)
         return arb_args, found
     
     def add_log(self, line, arrays, nfunc, args, arr_tup, prov):
@@ -406,14 +402,12 @@ class FunctionProvenance():
                     if failed:
                         break
                     if unique:
-                        new_provs.append((prov_args, prov[1], prov[2]))
-
+                        new_provs.append((prov_args, prov[1], prov[2], prov[3]))
         # find new list of arbitrary args
         success = []
         for arg in arb_list:
             if arg not in failed_args:
                 success.append(arg)
-        
         new_provs = []
         for prov in provs:
             for arg in prov[0]:
@@ -425,7 +419,8 @@ class FunctionProvenance():
                 if prov[0] == prov2[0]:
                     prov2[1] = check_eq_prov(prov2[1], prov[1])
                     dup = True
-                    break
+                    prov[3].extend(x for x in prov2[3] if x not in prov[3])
+                    prov[2] = len(prov[3])
             if not dup:
                 new_provs.append(prov)
         
@@ -452,12 +447,10 @@ class FunctionProvenance():
                             arg_count[k] += 1
                         else:
                             arg_count[k] = 1
-
         arb_list = []
         for arg in arg_count:
             if arg_count[arg] >= self.m:
                 arb_list.append(arg)
-        
         arb_list = self._update_arbitrary(nfunc, arb_list)
 
 

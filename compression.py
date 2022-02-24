@@ -6,7 +6,7 @@ import pickle
 import numpy.core.tracked_float as tf
 import time
 
-prov_types = ['abs', 'rel0', 'rel1']
+prov_types = ['a', '0', '1']
 
 def sort_(prov):
     s = ''
@@ -101,7 +101,7 @@ def convert_to_relative(prov_interval, row, col):
         rel10.append((start1 - row, end1 - row))
         rel11.append((start1 - col, end1 - col))
 
-    return ({'abs': abs0, 'rel0': rel00, 'rel1':rel01}, {'abs': abs1, 'rel0': rel10, 'rel1':rel11})
+    return ({'a': abs0, '0': rel00, '1':rel01}, {'a': abs1, '0': rel10, '1':rel11})
     #return {'abs': {0: abs0, 1: abs1}, 'rel0': {0:rel00, 1:rel10}, 'rel1': {0:rel01, 1:rel11}}
     
 
@@ -158,13 +158,14 @@ def compress_output(prov_arr, id, relative = True):
                 else:
                     last_value = col
                     prov1 = prov2
+        
         if prov1 != -1:
             compressed_col.append(((row, row), (temp_start, last_value), prov1))
-
+        
         if prev_compressed_col == None:
             prev_compressed_col = compressed_col
-
         else:
+            # print(prev_compressed_col)
             prev_index = 0
             new_compressed_col = []
             for interval in compressed_col:
@@ -188,6 +189,9 @@ def compress_output(prov_arr, id, relative = True):
                             new_compressed_col.append(((prev[0][0], interval[0][1]), interval[1], prov))
                             prev_index +=1
                         else:
+                            # print('test')
+                            # print(prev)
+                            # print('test2')
                             compressed.append(prev)
                             prev_index +=1
                             new_compressed_col.append(interval)
@@ -202,6 +206,7 @@ def compress_output(prov_arr, id, relative = True):
 
     if prev_compressed_col != None:
         compressed += prev_compressed_col
+    #print(compressed)
     return compressed
 
             
@@ -223,6 +228,8 @@ def compression(prov_arr, relative = True):
     # change this format based on whatever
     # need to change to -1 for compression
     # merge inputs
+    if len(prov_arr.shape) == 0:
+        prov_arr = np.reshape(prov_arr, (1, 1))
     if len(prov_arr.shape) == 1:
         prov_arr = np.reshape(prov_arr, (prov_arr.shape[0], 1))
     ids = set()
@@ -238,7 +245,7 @@ def compression(prov_arr, relative = True):
             cell_prov[row, col] = compress
     # print(start)
     end = time.time()
-    print('cell level compression: {}'.format(end - start))
+    #print('cell level compression: {}'.format(end - start))
     # convert to relative -> only do this by dimension and id, not by interval
     
     # attempt to 
@@ -258,7 +265,7 @@ def compression(prov_arr, relative = True):
     for id in ids:
         output[id] = compress_output(cell_prov, id = id, relative = relative)
     end = time.time()
-    print('output compression: {}'.format(end - start))
+    #print('output compression: {}'.format(end - start))
     return output
 
 
@@ -270,7 +277,10 @@ def generate_array(size = (1000, 1000)):
     # arr = np.dot(arr, arr2)
 
     arr = np.random.random(size).astype(tf.tracked_float)
+    print(arr[1,0].provenance)
     tf.initialize(arr, 1)
+    arr = np.moveaxis(arr, 1, 0)
+    print(arr[1,0].provenance)
     # arr2 = np.random.random(arr2).astype(tf.tracked_float)
     # tf.initialize(arr, 2)
     # np.reshape(arr, (10000000, ))
