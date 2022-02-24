@@ -45,7 +45,7 @@ def test6(arr = (1000, 1000), arr2 = (1000, 1000)):
     tf.initialize(arr, 1)
     arr2 = np.random.random(arr2).astype(tf.tracked_float)
     tf.initialize(arr2, 2)
-    arr = np.matmul(arr, arr2)
+    arr = np.dot(arr, arr2)
     return arr
 
 def test7(arr_shape = (1000000, 1)):

@@ -95,7 +95,7 @@ def gzip_2(file_name, new_file):
 
 if __name__ =="__main__":
     # gzip_2("compressed/raw.npy", "col/test.gzip")
-    arr = test1((10, 100000))
+    arr = test1()
     #arr = aux(arr)
     # # arr = subzero.test1()
     
