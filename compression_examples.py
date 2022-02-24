@@ -88,38 +88,78 @@ def test10(arr_size = 1000000):
     out[y < z] = y[y < z]                                                                                               
     return out
 
-def test11(arr = 1000000):
+def test11(arr_shape = 1000000):
     '''hist'''
-    arr = np.random.random((arr, 1)).astype(tf.tracked_float)
-
+    arr = np.random.random((arr_shape, 1)).astype(tf.tracked_float)
     tf.initialize(arr, 1)
-    out = np.zeros((4,)).astype(tf.tracked_float) 
-    for i in range(arr.shape[0]):
-        if arr[i,0].n <= 0.25:
-            out[0] = out[0] + arr[i,0]
-        elif arr[i,0].n <= 0.5:
-            out[1] = out[1] + arr[i,0]
-        elif arr[i,0].n <= 0.75:
-            out[2] = out[2] + arr[i,0]
-        else:
-            out[3] = out[3] + arr[i,0]
+
+    out = np.zeros((4,)).astype(tf.tracked_float)
+    arr_0 = np.zeros((arr_shape, 1)).astype(tf.tracked_float)
+    arr_0[arr <= 0.25] = arr[arr < 0.25]
+    out[0] = np.sum(arr_0, initial=None)
+
+    arr_1 = np.zeros((arr_shape, 1)).astype(tf.tracked_float)
+    index = np.logical_and((arr <= 0.5), (arr > 0.25))
+    arr_1[index] = arr[index]
+    out[1] = np.sum(arr_1, initial=None)
+
+    arr_2 = np.zeros((arr_shape, 1)).astype(tf.tracked_float)
+    index = np.logical_and((arr <= 0.75), (arr > 0.25))
+    arr_2[index] = arr[index]
+    out[2] = np.sum(arr_2, initial=None)
+
+    arr_3 = np.zeros((arr_shape, 1)).astype(tf.tracked_float)
+    index = (arr > 0.75)
+    arr_3[index] = arr[index]
+    out[3] = np.sum(arr_3, initial=None)
+
+    #for i in range(arr.shape[0]):
+
+
+        # if arr[i,0].n <= 0.25:
+        #     out[0] = out[0] + arr[i,0]
+        # elif arr[i,0].n <= 0.5:
+        #     out[1] = out[1] + arr[i,0]
+        # elif arr[i,0].n <= 0.75:
+        #     out[2] = out[2] + arr[i,0]
+        # else:
+        #     out[3] = out[3] + arr[i,0]
     return out
 
-def test12(arr = 1000000, sorted = True):
+def test12(arr_shape = 1000000, sorted = True):
     '''hist'''
     arr = np.sort(np.random.random((arr, 1))).astype(tf.tracked_float)
-
     tf.initialize(arr, 1)
-    out = np.zeros((4,)).astype(tf.tracked_float) 
-    for i in range(arr.shape[0]):
-        if arr[i,0].n <= 0.25:
-            out[0] = out[0] + arr[i,0]
-        elif arr[i,0].n <= 0.5:
-            out[1] = out[1] + arr[i,0]
-        elif arr[i,0].n <= 0.75:
-            out[2] = out[2] + arr[i,0]
-        else:
-            out[3] = out[3] + arr[i,0]
+
+    out = np.zeros((4,)).astype(tf.tracked_float)
+    arr_0 = np.zeros((arr_shape, 1)).astype(tf.tracked_float)
+    arr_0[arr <= 0.25] = arr[arr < 0.25]
+    out[0] = np.sum(arr_0, initial=None)
+
+    arr_1 = np.zeros((arr_shape, 1)).astype(tf.tracked_float)
+    index = np.logical_and((arr <= 0.5), (arr > 0.25))
+    arr_1[index] = arr[index]
+    out[1] = np.sum(arr_1, initial=None)
+
+    arr_2 = np.zeros((arr_shape, 1)).astype(tf.tracked_float)
+    index = np.logical_and((arr <= 0.75), (arr > 0.50))
+    arr_2[index] = arr[index]
+    out[2] = np.sum(arr_2, initial=None)
+
+    arr_3 = np.zeros((arr_shape, 1)).astype(tf.tracked_float)
+    index = (arr > 0.75)
+    arr_3[index] = arr[index]
+    out[3] = np.sum(arr_3, initial=None)
+    # out = np.zeros((4,)).astype(tf.tracked_float) 
+    # for i in range(arr.shape[0]):
+    #     if arr[i,0].n <= 0.25:
+    #         out[0] = out[0] + arr[i,0]
+    #     elif arr[i,0].n <= 0.5:
+    #         out[1] = out[1] + arr[i,0]
+    #     elif arr[i,0].n <= 0.75:
+    #         out[2] = out[2] + arr[i,0]
+    #     else:
+    #         out[3] = out[3] + arr[i,0]
     return out
 
 def test13(mnist = 'mnist.npy'):
