@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import os
 import openml
+import cv2
+
 
 
 def preprocess():
@@ -10,13 +12,18 @@ def preprocess():
     return Xy
 
 def split_train_test(data):
-    test = data[1]
+    test = data[1,:-1]
     return test
-
+def upsize(data, size = (1000,1000)):
+    data = np.reshape(data, (28,28))
+    cv2.imshow("Input", data)
+    resized = cv2.resize(data, (1000,1000))
+    return resized
 
 if __name__ == "__main__":
     #train = pd.read_csv("train.csv")
     #print(train.shape)
-    train = preprocess()
-    test = split_train_test(train)
-    np.save("mnist.npy", test)
+    img = preprocess()
+    img = split_train_test(img)
+    img = upsize(img)
+    np.save("mnist_2.npy", img)
