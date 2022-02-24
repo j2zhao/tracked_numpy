@@ -48,19 +48,19 @@ def test6(arr = (1000, 1000), arr2 = (1000, 1000)):
     arr = np.matmul(arr, arr2)
     return arr
 
-def test7(arr = (1000000, 1), arr2 = (1000000, 1)):
+def test7(arr_shape = (1000000, 1)):
     # test vector*vector
-    arr = np.random.random(arr).astype(tf.tracked_float)
+    arr = np.random.random(arr_shape).astype(tf.tracked_float)
     tf.initialize(arr, 1)
-    arr2 = np.random.random(arr2).astype(tf.tracked_float)
+    arr2 = np.random.random(arr_shape).astype(tf.tracked_float)
     tf.initialize(arr2, 2)
-    arr = np.reshape(arr, (1000000, ))
-    arr2 = np.reshape(arr2, (1000000, ))
+    arr = np.reshape(arr, (arr_shape[0], ))
+    arr2 = np.reshape(arr2, (arr_shape[0], ))
     arr = np.dot(arr, arr2)
     return arr
 
 def test8(arr = (1000, 1000), arr2 = (1000, 1)):
-    # test vector*vector
+    # test matrix*vector
     arr = np.random.random(arr).astype(tf.tracked_float)
     tf.initialize(arr, 1)
     arr2 = np.random.random(arr2).astype(tf.tracked_float)
