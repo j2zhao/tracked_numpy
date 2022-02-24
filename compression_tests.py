@@ -102,7 +102,7 @@ if __name__ =="__main__":
     #     print(arr[i].provenance)
     #arr = aux(arr)
     # # arr = subzero.test1()
-    arr = subzero_functions.test1()
+    arr = subzero_functions.test6()
     dir = 'compressed'
     if not os.path.isdir(dir):
         os.mkdir(dir)

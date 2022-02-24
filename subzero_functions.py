@@ -73,7 +73,7 @@ def test6(arr = (1000, 1000), arr2 = (1000, 1000)):
         input = []
         for j in range(arr2[1]):
             input.append((1, k, j))
-        prov.append(tuple(input), tuple(out))
+        prov.append((tuple(input), tuple(out)))
     for k in range(arr2[1]):
         out = []
         for i in range(arr2[0]):
@@ -81,7 +81,7 @@ def test6(arr = (1000, 1000), arr2 = (1000, 1000)):
         input = []
         for j in range(arr2[1]):
             input.append((1, j, k))
-        prov.append(tuple(input), tuple(out))
+        prov.append((tuple(input), tuple(out)))
     return prov
 
 def test7(arr = (10000000, 1)):
@@ -102,7 +102,7 @@ def test8(arr = (1000, 1000), arr2 = (1000, 1)):
         out = []
         for i in range(arr[1]):
             out.append((2, k, i))
-        prov.append(((1, k, 1)), tuple(out))
+        prov.append((((1, k, 1)), tuple(out)))
     
     out = []
     for i in range(arr2[0]):
@@ -110,7 +110,7 @@ def test8(arr = (1000, 1000), arr2 = (1000, 1)):
     input = []
     for i in range(arr[0]):
         input.append((1, i, 1))
-    prov.append(tuple(input), tuple(out))
+    prov.append((tuple(input), tuple(out)))
     # for j in range(arr[0]):
     #     pr = []
     #     for i in range(arr[1]):
