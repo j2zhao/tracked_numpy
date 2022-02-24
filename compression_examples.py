@@ -133,7 +133,7 @@ def test11(arr_shape = 1000000):
 
 def test12(arr_shape = 1000000, sorted = True):
     '''hist'''
-    arr = np.sort(np.random.random((arr, 1))).astype(tf.tracked_float)
+    arr = np.sort(np.random.random((arr_shape, 1))).astype(tf.tracked_float)
     tf.initialize(arr, 1)
     arr = arr.reshape((-1,))
 
