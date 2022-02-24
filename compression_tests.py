@@ -91,20 +91,21 @@ def gzip_2(file_name, new_file):
             shutil.copyfileobj(f_in, f_out)
 
 if __name__ =="__main__":
-    gzip_2("compressed/raw.npy", "col/test.gzip")
-    # arr = test2()
+    # gzip_2("compressed/raw.npy", "col/test.gzip")
+    arr = test3((1, 10000000))
     # arr = aux(arr)
     # # arr = subzero.test1()
-    # # start = time.time()
-    # dir = 'compressed/raw'
-    # if not os.path.isdir(dir):
-    #     os.mkdir(dir)
-    # temp_dir = 'compressed/temp_dir'
-    # if not os.path.isdir(temp_dir):
-    #     os.mkdir(temp_dir)
+    start = time.time()
+    dir = 'compressed'
+    if not os.path.isdir(dir):
+        os.mkdir(dir)
+    temp_dir = 'temp'
+    if not os.path.isdir(temp_dir):
+        os.mkdir(temp_dir)
+    column_save(arr, dir, temp_dir, 1)
     # raw_save(arr, dir)
-    # # end = time.time()
+    end = time.time()
     # size = get_size(dir)
-    # # print("Save time: {}".format(end - start))
+    print("Save time: {}".format(end - start))
     # print("size: {}".format(size))
     

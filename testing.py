@@ -33,7 +33,7 @@ def meta_test_prov(funct, inputs = [(1, 100)], storage = './logs'):
     start = time.time()
     
     output = funct(*arrs)
-    print(output[0,0])
+    #print(output[0,0])
     end = time.time()
     print("running array function: {}".format(end - start))
 
