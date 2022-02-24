@@ -1,7 +1,7 @@
 import numpy as np
 import numpy.core.tracked_float as tf
 
-def test1(arr_size = (10, 10000)):
+def test1(arr_size = (10, 100000)):
     # basic test
     arr = np.random.random(arr_size).astype(tf.tracked_float)
     tf.initialize(arr, 1)
@@ -9,7 +9,7 @@ def test1(arr_size = (10, 10000)):
     
     return arr
 
-def test2(arr = (10, 1000000), arr2 = (10, 1000000)):
+def test2(arr = (10, 100000), arr2 = (10, 100000)):
     # test 2 arrays
     arr = np.random.random(arr).astype(tf.tracked_float)
     tf.initialize(arr, 1)
@@ -25,14 +25,14 @@ def test3(arr = (1000, 1000)):
     arr = np.sum(arr, axis = 1, initial=None)
     return arr
 
-def test4(arr = (10, 1000000)):
+def test4(arr = (10, 100000)):
     #tests duplication
     arr = np.random.random(arr).astype(tf.tracked_float)
     tf.initialize(arr, 1)
     arr = np.tile(arr, (2, 2))
     return arr
 
-def test5(arr = (10, 1000000)):
+def test5(arr = (10, 100000)):
     #tests duplication
     arr = np.random.random(arr).astype(tf.tracked_float)
     tf.initialize(arr, 1)
