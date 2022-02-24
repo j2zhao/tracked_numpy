@@ -96,10 +96,10 @@ def gzip_2(file_name, new_file):
 
 if __name__ =="__main__":
     # gzip_2("compressed/raw.npy", "col/test.gzip")
-    arr = test11(100)
-    # for i in range(4):
-    #     print(len(arr[i].provenance))
-    # raise ValueError()
+    arr = test11(1000)
+    for i in range(4):
+        print(len(arr[i].provenance))
+    raise ValueError()
     #arr = aux(arr)
     # # arr = subzero.test1()
     
