@@ -96,7 +96,10 @@ def gzip_2(file_name, new_file):
 
 if __name__ =="__main__":
     # gzip_2("compressed/raw.npy", "col/test.gzip")
-    arr = test1()
+    arr = test12(100)
+    # for i in range(4):
+    #     print(arr[i].provenance)
+    raise ValueError()
     #arr = aux(arr)
     # # arr = subzero.test1()
     
@@ -110,6 +113,7 @@ if __name__ =="__main__":
     #raw_save(arr, dir)
     #start = time.time()
     arr = comp_rel_save(arr, dir)
+    print(arr)
     gzip_2("compressed/raw.pickle", "temp/test.gzip")
     #end = time.time()
     size = get_size(dir)
