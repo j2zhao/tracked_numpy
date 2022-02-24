@@ -74,7 +74,5 @@ def meta_test(funct, inputs = [(10000, 10000)]):
 
 
 if __name__ == '__main__':
-    print(tf)
-    meta_test_prov(test6, inputs= [(1, 100), (100, 1)])
-    print('AVERAGE TIME')
+    meta_test_prov(test1, inputs= [(1, 100)])
     #meta_test(test1)
