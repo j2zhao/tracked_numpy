@@ -84,7 +84,7 @@ def test6(arr = (1000, 1000), arr2 = (1000, 1000)):
         prov.append((tuple(input), tuple(out)))
     return prov
 
-def test7(arr = (10000000, 1)):
+def test7(arr = (1000000, 1)):
     # test vector*vector
     prov = []
     pr = []
@@ -125,7 +125,7 @@ def test9(prov_arr, arr = (1000000, 1)):
     # tests filters
     prov = []
     for i in range(arr[0]):
-        if prov_arr[i].n != 0:
+        if prov_arr[i, 0].n != 0:
             pr = ((0, i, 1), (2, i, 1))
             prov.append(pr)
     return prov    
@@ -133,7 +133,7 @@ def test9(prov_arr, arr = (1000000, 1)):
 def test10(prov_arr, arr = (1000000, 1)):
     prov = []
     for i in range(arr[0]):
-        if prov_arr[i].n != 0:
+        if prov_arr[i,0].n != 0:
             pr = ((0, i, 1), (2, i, 1))
             prov.append(pr)
     return prov 
