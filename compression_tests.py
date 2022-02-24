@@ -35,7 +35,7 @@ def aux(array):
  
 def raw_save(array, dir):
     #dir = os.path.join(dir, str(time.time())+ '.npy')
-    np.save(dir + '.npy', array)
+    np.save(dir + 'raw.npy', array)
 
 def gzip_save(array, dir):
     com = gzip.compress(array)
@@ -93,17 +93,19 @@ def gzip_2(file_name, new_file):
 if __name__ =="__main__":
     # gzip_2("compressed/raw.npy", "col/test.gzip")
     arr = test7((100, 1))
-    # arr = aux(arr)
+    arr = aux(arr)
     # # arr = subzero.test1()
-    start = time.time()
+    
     dir = 'compressed'
     if not os.path.isdir(dir):
         os.mkdir(dir)
     temp_dir = 'temp'
     if not os.path.isdir(temp_dir):
         os.mkdir(temp_dir)
-    column_save(arr, dir, temp_dir, 1)
-    # raw_save(arr, dir)
+    #column_save(arr, dir, temp_dir, 1)
+    raw_save(arr, dir)
+    start = time.time()
+    gzip_2("compressed/raw.npy", "temp/test.gzip")
     end = time.time()
     # size = get_size(dir)
     print("Save time: {}".format(end - start))
