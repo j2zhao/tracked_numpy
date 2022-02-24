@@ -129,7 +129,7 @@ def test11(arr_shape = 1000000):
         #     out[2] = out[2] + arr[i,0]
         # else:
         #     out[3] = out[3] + arr[i,0]
-    return out
+    return out, arr
 
 def test12(arr_shape = 1000000, sorted = True):
     '''hist'''
@@ -162,7 +162,7 @@ def test12(arr_shape = 1000000, sorted = True):
     arr_3[index] = arr[index]
     arr_33 = np.zeros((arr_shape, )).astype(tf.tracked_float)
     out[3] = np.dot(arr_3, arr_33)
-    return out
+    return out, arr
 
 def test13(mnist = 'mnist.npy'):
     '''filter'''

@@ -20,7 +20,7 @@ def test1(arr_size = (10, 100000)):
             provenance.append(prov)
     return provenance
 
-def test2(arr = (10, 100000), arr2 = (10, 100000)):
+def test2(arr = (10, 100000)):
     # test 2 arrays
     provenance = []
     for i in range(arr[0]):
@@ -84,7 +84,7 @@ def test6(arr = (1000, 1000), arr2 = (1000, 1000)):
         prov.append(tuple(input), tuple(out))
     return prov
 
-def test7(arr = (10000000, 1), arr2 = (10000000, 1)):
+def test7(arr = (10000000, 1)):
     # test vector*vector
     prov = []
     pr = []

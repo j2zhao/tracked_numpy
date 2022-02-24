@@ -8,6 +8,7 @@ import col_compression
 from compression import compression
 from compression_examples import *
 import col_compression 
+import subzero_functions
 import time
 import shutil
 import pickle
@@ -51,7 +52,7 @@ def subzero_save(array, dir):
     """assume we already ran compression"""
     dir = os.path.join(dir, 'raw.npy')
     with open(dir, 'wb') as f:
-        json.dump(array,f)
+        pickle.dump(array,f)
 
 def column_save(array, dir, temp_path, num_arrays, input_id = (1, 2)):
     if len(array.shape) == 0:
@@ -96,19 +97,20 @@ def gzip_2(file_name, new_file):
 
 if __name__ =="__main__":
     # gzip_2("compressed/raw.npy", "col/test.gzip")
-    arr = test11()
+    # _, arr = test11()
     # for i in range(4):
     #     print(arr[i].provenance)
     #arr = aux(arr)
     # # arr = subzero.test1()
-    
+    arr = subzero_functions.test1()
     dir = 'compressed'
     if not os.path.isdir(dir):
         os.mkdir(dir)
     temp_dir = 'temp'
     if not os.path.isdir(temp_dir):
         os.mkdir(temp_dir)
-    column_save(arr, dir, temp_dir, 1)
+    subzero_save(arr, dir)
+    #column_save(arr, dir, temp_dir, 1)
     #raw_save(arr, dir)
     #start = time.time()
     #arr = comp_rel_save(arr, dir)
