@@ -80,13 +80,14 @@ def comp_save(array, dir):
     array = compression(array, relative = False)
     dir = os.path.join(dir, 'raw.pickle')
     with open(dir, 'wb') as f:
-        pickle.dump(arr,f)
+        pickle.dump(array,f)
 
 def comp_rel_save(array, dir):
     dir = os.path.join(dir, 'raw.pickle')
     array = compression(array, relative = True)
     with open(dir, 'wb') as f:
-        pickle.dump(arr,f)
+        pickle.dump(array,f)
+    return array
 
 def gzip_2(file_name, new_file):
     with open(file_name, 'rb') as f_in:
@@ -96,6 +97,8 @@ def gzip_2(file_name, new_file):
 if __name__ =="__main__":
     # gzip_2("compressed/raw.npy", "col/test.gzip")
     arr = test1()
+    # for i in range(4):
+    #     print(arr[i].provenance)
     #arr = aux(arr)
     # # arr = subzero.test1()
     
@@ -109,7 +112,7 @@ if __name__ =="__main__":
     #raw_save(arr, dir)
     #start = time.time()
     #gzip_2("compressed/raw.npy", "temp/test.gzip")
-    comp_save(arr, dir)
+    arr = comp_save(arr, dir)
     #end = time.time()
     size = get_size(dir)
     #print("Save time: {}".format(end - start))

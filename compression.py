@@ -58,7 +58,7 @@ def compress_input(prov_list):
             elif last_value == row - 1:
                 last_value = row
             else:
-                compressed.add(((temp_start, last_value), col))
+                compressed.append(((temp_start, last_value), col))
                 temp_start = row
                 last_value = row
     

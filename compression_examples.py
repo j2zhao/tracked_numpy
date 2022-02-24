@@ -69,68 +69,63 @@ def test8(arr = (1000, 1000), arr2 = (1000, 1)):
     arr = np.dot(arr, arr2)
     return arr
 
-def test9(arr = (1000000, 1)):
+def test9(arr_size = (1000000, 1)):
     # tests filters
-    arr = np.random.random(arr).astype(tf.tracked_float)
+    arr = np.random.random(arr_size).astype(tf.tracked_float)
     tf.initialize(arr, 1)
     out = np.zeros(arr.shape).astype(tf.tracked_float)
     out[arr < 0.5] = arr[arr < 0.5]
     return out    
 
-def test10(arr = 1000000):
-    x = np.arange(arr)                                                                                                  
-    z = arr/2                                                                                                           
-    std = arr/10                                                                                                        
+def test10(arr_size = 1000000):
+    x = np.arange(arr_size)                                                                                              
+    z = arr_size/2                                                                                                           
+    std = arr_size/10                                                                                                      
     y = np.random.normal(x, std)                                                                                        
-    y = np.reshape(y, (arr,1)).astype(tf.tracked_float)                                                                 
+    y = np.reshape(y, (arr_size,1)).astype(tf.tracked_float)                                                             
     tf.initialize(y, 1)                                                                                                 
     out = np.zeros(y.shape).astype(tf.tracked_float)                                                                    
     out[y < z] = y[y < z]                                                                                               
     return out
 
-def test11(arr = 1000000, sorted = False):
+def test11(arr = 1000000):
     '''hist'''
-    if sorted:
-        arr = np.sort(np.random.random(arr)).astype(tf.tracked_float)
-    else:
-        arr = np.random.random(arr).astype(tf.tracked_float)
+    arr = np.random.random((arr, 1)).astype(tf.tracked_float)
 
     tf.initialize(arr, 1)
     out = np.zeros((4,)).astype(tf.tracked_float) 
     for i in range(arr.shape[0]):
-        if arr[i] <= 0.25:
-            out[0] = out[0] + arr[i]
-        elif arr[i] <= 0.5:
-            out[1] = out[1] + arr[i]
-        elif arr[i] <= 0.75:
-            out[2] = out[2] + arr[i]
+        if arr[i,0].n <= 0.25:
+            out[0] = out[0] + arr[i,0]
+        elif arr[i,0].n <= 0.5:
+            out[1] = out[1] + arr[i,0]
+        elif arr[i,0].n <= 0.75:
+            out[2] = out[2] + arr[i,0]
         else:
-            out[2] = out[2] + arr[i]
+            out[3] = out[3] + arr[i,0]
     return out
 
 def test12(arr = 1000000, sorted = True):
     '''hist'''
-    if sorted:
-        arr = np.sort(np.random.random(arr)).astype(tf.tracked_float)
-    else:
-        arr = np.random.random(arr).astype(tf.tracked_float)
+    arr = np.sort(np.random.random((arr, 1))).astype(tf.tracked_float)
 
     tf.initialize(arr, 1)
     out = np.zeros((4,)).astype(tf.tracked_float) 
     for i in range(arr.shape[0]):
-        if arr[i].n <= 0.25:
-            out[0] = out[0] + arr[i]
-        elif arr[i].n <= 0.5:
-            out[1] = out[1] + arr[i]
-        elif arr[i].n <= 0.75:
-            out[2] = out[2] + arr[i]
+        if arr[i,0].n <= 0.25:
+            out[0] = out[0] + arr[i,0]
+        elif arr[i,0].n <= 0.5:
+            out[1] = out[1] + arr[i,0]
+        elif arr[i,0].n <= 0.75:
+            out[2] = out[2] + arr[i,0]
         else:
-            out[2] = out[2] + arr[i]
-    return out, arr # need arr for subzero
+            out[3] = out[3] + arr[i,0]
+    return out
 
 def test13(mnist = 'mnist.npy'):
     '''filter'''
     arr = np.load(mnist)
+    arr = np.reshape(arr, (arr.shape[0], 1)).astype(tf.tracked_float)
     tf.initialize(arr, 1)
     out = np.zeros(arr.shape).astype(tf.tracked_float)
     out[arr > 0] = arr[arr > 0]
