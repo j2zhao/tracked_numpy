@@ -9,9 +9,6 @@ def to_column_1(array, temp_path, zeros= True):
     b = 0
     for i in range(array.shape[0]):
         for j in range(array.shape[1]):
-            if zeros:
-                if array[i, j].n == 0:
-                    continue
             provenance = array[i, j].provenance
             for id, x, y in provenance:
                 x1.append(i)
