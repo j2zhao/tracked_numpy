@@ -95,7 +95,7 @@ def gzip_2(file_name, new_file):
 
 if __name__ =="__main__":
     # gzip_2("compressed/raw.npy", "col/test.gzip")
-    arr = test7((100, 1))
+    arr = test1((10, 100000))
     #arr = aux(arr)
     # # arr = subzero.test1()
     
@@ -107,11 +107,11 @@ if __name__ =="__main__":
         os.mkdir(temp_dir)
     #column_save(arr, dir, temp_dir, 1)
     #raw_save(arr, dir)
-    start = time.time()
+    #start = time.time()
     #gzip_2("compressed/raw.npy", "temp/test.gzip")
     comp_save(arr, dir)
-    end = time.time()
-    # size = get_size(dir)
-    print("Save time: {}".format(end - start))
-    # print("size: {}".format(size))
+    #end = time.time()
+    size = get_size(dir)
+    #print("Save time: {}".format(end - start))
+    print("size: {}".format(size))
     
