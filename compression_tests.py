@@ -34,8 +34,8 @@ def aux(array):
     return prov
  
 def raw_save(array, dir):
-    #dir = os.path.join(dir, str(time.time())+ '.npy')
-    np.save(dir + 'raw.npy', array)
+    dir = os.path.join(dir, 'raw.npy')
+    np.save(dir, array)
 
 def gzip_save(array, dir):
     com = gzip.compress(array)
