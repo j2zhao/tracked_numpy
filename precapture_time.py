@@ -56,8 +56,8 @@ def run_base_functions(arr_size, nfunc, args):
     return end - start
 
 if __name__ == '__main__':
-    nfunc = 'reshape' # reshape
-    args = {'newshape': (50, 2)} # ()
+    nfunc = 'negative' # reshape
+    args = {} # ()
     #args = {}
     tim1 = 0
     tim2 = 0
