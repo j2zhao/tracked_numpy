@@ -4,7 +4,7 @@ import numpy.core.tracked_float as tf
 import inspect
 import json
 import copy
-import sys
+import sys 
 import constants
 import os
 
@@ -134,13 +134,13 @@ class FunctionProvenance():
         i = 0
         for arr in args:
             if isinstance(arr, np.ndarray):
+                print(arr.shape)
                 array = arr.astype(tf.tracked_float)
                 tf.initialize(array, i)
                 oargs.append(array)
                 i += 1
             else:
                 oargs.append(arr)
-
         okwargs = {}
         for k, v in kwargs.items():
             if isinstance(v, np.ndarray):
@@ -148,6 +148,7 @@ class FunctionProvenance():
                 i += 1
             else:
                 okwargs[k] = v 
+        
         # run function
         #output = func(oargs, axis = 0) 
         output = func(*oargs, **okwargs)
@@ -237,6 +238,7 @@ class FunctionProvenance():
                         num_pass = prov[2]
             if provenance != None:
                 type = 1
+        #raise ValueError()
 
         # if there isn't a match, we should run the full program
         if provenance == None:
