@@ -23,24 +23,29 @@ def run_functions(arr_size, nfunc, args):
     prov_obj = FunctionProvenance(log = './log/test.txt')
 
     for j in range(3):
-        shape  = [(10, 20), (30, 40), (50, 60)]
+        shape  = [(50, 10), (30, 30), (40, 20)]
         # arg = [(2, 100), (400, 3), (20, 150)]
         for i in range(3):
-            arr = np.random.random(arr_size)
+            arrs = []
+            arrs.append(np.random.random(shape[i]))
+            #arrs.append(np.random.random(shape[i]))
             #args_ = {'newshape': arg[i]}
-            arg_dic, arr_tup, output, prov, t1, t2 = prov_obj.prov_function(func, [arr], args)
+            arg_dic, arr_tup, output, prov, t1, t2 = prov_obj.prov_function(func, arrs, args)
             
             if prov == None:
-                provenance = prov_obj.compress_function(output)                
+                provenance = prov_obj.compress_function(output) 
                 prov_obj.add_prov(provenance, func.__name__, arg_dic, arr_tup)
                 prov_obj.add_log(0, 0, func.__name__, arg_dic, arr_tup, provenance)
             
     
     tim = 0
     for i in range(100):
-        arr = np.random.random((arr_size)).astype(np.float64)
+        arrs = []
+        for size in arr_size:
+            arr = np.random.random(size).astype(np.float64)
+            arrs.append(arr)
         start = time.time()
-        arg_dic, arr_tup, output, prov, t1, t2 = prov_obj.prov_function(func, [arr], args)
+        arg_dic, arr_tup, output, prov, t1, t2 = prov_obj.prov_function(func, arrs, args)
         end = time.time()
         tim += (end - start)
         print(t1)
@@ -48,10 +53,13 @@ def run_functions(arr_size, nfunc, args):
     return tim
 
 def run_base_functions(arr_size, nfunc, args):
-    arr = np.random.random(arr_size).astype(np.float64)
+    arrs = []
+    for size in arr_size:
+        arr = np.random.random(size).astype(np.float64)
+        arrs.append(arr)
     func = getattr(np, nfunc)
     start = time.time()
-    func(arr, **args)
+    func(*arrs, **args)
     end = time.time()
     return end - start
 
@@ -61,8 +69,8 @@ if __name__ == '__main__':
     #args = {}
     tim1 = 0
     tim2 = 0
-    tim1 = run_functions((1, 100), nfunc, args)
-    for i in range(100):
-        tim2 += run_base_functions((1, 100), nfunc, args)
+    tim1 = run_functions([(100, 1)], nfunc, args)
+    # for i in range(100):
+    #     tim2 += run_base_functions(((100, ), (100, )), nfunc, args)
     print(tim1/100)
     print(tim2/100)

@@ -50,7 +50,7 @@ def _check_equality_prov(pr1, pr2):
     
     pr = []
     for i in range(len(pr1)):
-        p = _check_equality(pr1[i], pr2[i])
+        p = _check_equality2(pr1[i], pr2[i])
         if p == None:
             return None
         else:
@@ -62,7 +62,6 @@ def check_eq_prov(prov1, prov2):
         return constants.UNKNOWN
     elif prov1 == prov2:
         return prov1
-
     new_prov = {}
     for i in prov1:
         if i not in prov2:
@@ -135,7 +134,14 @@ class FunctionProvenance():
         for arr in args:
             if isinstance(arr, np.ndarray):
                 array = arr.astype(tf.tracked_float)
-                tf.initialize(array, i)
+                if len(array.shape) == 0:
+                    array  = np.reshape(array, (1,1))
+                    tf.initialize(array, i)
+                    array = np.reshape(array, ())
+                elif len(array.shape) == 1:
+                    array  = np.reshape(array, (-1,1))
+                    tf.initialize(array, i)
+                    array = np.reshape(array, (-1, ))
                 oargs.append(array)
                 i += 1
             else:
@@ -282,15 +288,17 @@ class FunctionProvenance():
         dict_arr = {}
         for tup in arr_tup:
             key, shape = tup
-            a = shape[0] - 1
-            if a not in dict_arr:
-                dict_arr[shape[0]-1] = [a]
-            dict_arr[a].append(str(key) + '0')
+            if len(shape) >=1:
+                a = shape[0] - 1
+                if a not in dict_arr:
+                    dict_arr[shape[0]-1] = [a]
+                dict_arr[a].append(str(key) + '0')
 
-            b = shape[1] - 1
-            if b not in dict_arr:
-                dict_arr[b] = [b]
-            dict_arr[b].append(str(key) + '1')
+            if len(shape) >=2:
+                b = shape[1] - 1
+                if b not in dict_arr:
+                    dict_arr[b] = [b]
+                dict_arr[b].append(str(key) + '1')
 
         for id in provenance:
             for i, val in enumerate(provenance[id]):
@@ -334,7 +342,6 @@ class FunctionProvenance():
         if not found:
             full_provenance = [arb_args, rel_prov, 1, [arr_args]]
             self.prov[nfunc]['provs'].append(full_provenance)
-
         found_2 = False
         if arr_args in cur_provs:
             for prov in cur_provs[arr_args]:
