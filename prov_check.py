@@ -91,9 +91,7 @@ def check_eq_prov(prov1, prov2):
                                 p[d][pname] = temp
                 if len(p[d]) == 0:
                     return constants.UNKNOWN
-            
             new_prov[i].append((a, b, p))
-    
     return new_prov
 
 
@@ -142,6 +140,8 @@ class FunctionProvenance():
                     array  = np.reshape(array, (-1,1))
                     tf.initialize(array, i)
                     array = np.reshape(array, (-1, ))
+                else:
+                    tf.initialize(array, i)
                 oargs.append(array)
                 i += 1
             else:
@@ -153,7 +153,6 @@ class FunctionProvenance():
                 i += 1
             else:
                 okwargs[k] = v 
-        
         # run function
         #output = func(oargs, axis = 0) 
         output = func(*oargs, **okwargs)
@@ -246,7 +245,6 @@ class FunctionProvenance():
         #raise ValueError()
         # if there isn't a match, we should run the full program
         if provenance == None:
-            print('test')
             output = self._run_func(func, args, kwargs)
             return arg_dic, arr_tup, output, None, 0, type
 
