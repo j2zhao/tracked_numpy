@@ -134,7 +134,6 @@ class FunctionProvenance():
         i = 0
         for arr in args:
             if isinstance(arr, np.ndarray):
-                print(arr.shape)
                 array = arr.astype(tf.tracked_float)
                 tf.initialize(array, i)
                 oargs.append(array)
@@ -239,9 +238,9 @@ class FunctionProvenance():
             if provenance != None:
                 type = 1
         #raise ValueError()
-
         # if there isn't a match, we should run the full program
         if provenance == None:
+            print('test')
             output = self._run_func(func, args, kwargs)
             return arg_dic, arr_tup, output, None, 0, type
 
