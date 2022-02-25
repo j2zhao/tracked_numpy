@@ -26,9 +26,9 @@ def run_functions(arr_size, nfunc, args):
         shape  = [(10, 20), (30, 40), (50, 60)]
         # arg = [(2, 100), (400, 3), (20, 150)]
         for i in range(3):
-            arr = np.random.random(shape[i])
+            arr = np.random.random(arr_size)
             #args_ = {'newshape': arg[i]}
-            arg_dic, arr_tup, output, prov, t1, t2 = prov_obj.prov_function(func, [arr], {})
+            arg_dic, arr_tup, output, prov, t1, t2 = prov_obj.prov_function(func, [arr], args)
             
             if prov == None:
                 provenance = prov_obj.compress_function(output)                
@@ -56,9 +56,9 @@ def run_base_functions(arr_size, nfunc, args):
     return end - start
 
 if __name__ == '__main__':
-    nfunc = 'negative' # reshape
-    #args = {'newshape': (50, 2)} # ()
-    args = {}
+    nfunc = 'reshape' # reshape
+    args = {'newshape': (50, 2)} # ()
+    #args = {}
     tim1 = 0
     tim2 = 0
     tim1 = run_functions((1, 100), nfunc, args)
