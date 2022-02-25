@@ -23,11 +23,11 @@ def run_functions(arr_size, nfunc, args):
     prov_obj = FunctionProvenance(log = './log/test.txt')
 
     for j in range(3):
-        shape  = [(50, 20), (30, 50), (40, 100)]
+        #shape  = [(50, 20), (30, 50), (40, 100)]
         # arg = [(2, 100), (400, 3), (20, 150)]
         for i in range(3):
             arrs = []
-            arrs.append(np.random.random(shape[i]))
+            arrs.append(np.random.random(arr_size[0]))
             #arrs.append(np.random.random(shape[i]))
             #args_ = {'newshape': arg[i]}
             arg_dic, arr_tup, output, prov, t1, t2 = prov_obj.prov_function(func, arrs, args)
