@@ -27,9 +27,8 @@ def run_functions(arr_size, nfunc, args):
         # arg = [(2, 100), (400, 3), (20, 150)]
         for i in range(3):
             arrs = []
-            #arrs.append(np.random.random(shape[i]))
-            #arrs.append(np.random.random(shape[i]))
-            #args_ = {'newshape': arg[i]}
+            arrs.append(np.random.random(shape[i]))
+            arrs.append(np.random.random(shape[i]))
             # for size in arr_size:
             #     arr = np.random.random(size).astype(np.float64)
             #     arrs.append(arr)
@@ -39,7 +38,7 @@ def run_functions(arr_size, nfunc, args):
                 prov_obj.add_prov(provenance, func.__name__, arg_dic, arr_tup)
                 prov_obj.add_log(0, 0, func.__name__, arg_dic, arr_tup, provenance)
     tim = 0
-    for i in range(1):
+    for i in range(100):
         arrs = []
         for size in arr_size:
             arr = np.random.random(size).astype(np.float64)
@@ -64,7 +63,7 @@ def run_base_functions(arr_size, nfunc, args):
     return end - start
 
 if __name__ == '__main__':
-    nfunc = 'negative' # reshape
+    nfunc = 'dot' # reshape
     args = {} # ()
     #args = {}
     tim1 = 0
