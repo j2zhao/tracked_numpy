@@ -27,8 +27,8 @@ def run_functions(arr_size, nfunc, args):
         # arg = [(2, 100), (400, 3), (20, 150)]
         for i in range(3):
             arrs = []
-            arrs.append(np.random.random(shape[i]))
-            arrs.append(np.random.random(shape[i]))
+            arrs.append(np.random.random(arr_size[0]))
+            arrs.append(np.random.random(arr_size[1]))
             # for size in arr_size:
             #     arr = np.random.random(size).astype(np.float64)
             #     arrs.append(arr)
