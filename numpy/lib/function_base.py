@@ -1585,7 +1585,8 @@ def unwrap(p, discont=None, axis=-1, *, period=2*pi):
         interval_high = period / 2
         boundary_ambiguous = True
     interval_low = -interval_high
-    ddmod = mod(dd - interval_low, period) + interval_low
+    #ddmod = mod(dd - interval_low, period) + interval_low
+    ddmod = dd - interval_low + interval_low
     if boundary_ambiguous:
         # for `mask = (abs(dd) == period/2)`, the above line made
         # `ddmod[mask] == -period/2`. correct these such that
@@ -1594,7 +1595,8 @@ def unwrap(p, discont=None, axis=-1, *, period=2*pi):
                    where=(ddmod == interval_low) & (dd > 0))
     ph_correct = ddmod - dd
     _nx.copyto(ph_correct, 0, where=abs(dd) < discont)
-    up = array(p, copy=True, dtype=dtype)
+    #up = array(p, copy=True, dtype=dtype)
+    up = array(p, copy=True)
     up[slice1] = p[slice1] + ph_correct.cumsum(axis)
     return up
 
@@ -3483,7 +3485,8 @@ def sinc(x):
 
     """
     x = np.asanyarray(x)
-    y = pi * where(x == 0, 1.0e-20, x)
+    #y = pi * where(x == 0, 1.0e-20, x)
+    y = x
     return sin(y)/y
 
 

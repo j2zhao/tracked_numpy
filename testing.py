@@ -17,9 +17,12 @@ def meta_test_prov(funct, inputs = [(1, 100)], storage = './logs'):
     print("STARTING PROVENANCE TEST")
     arrs = []
     # initialize inputs
-    start = time.time()
+    
     for input in inputs:
-        arrs.append(np.random.random(input).astype(tf.tracked_float))
+        arrs.append(np.random.random(input))
+    start = time.time()
+    for arr in range(len(arrs)):
+        arrs[arr] = arrs[arr].astype(tf.tracked_float))
     
     #end = time.time()
     #print("initializing input array: {}".format(end-start))

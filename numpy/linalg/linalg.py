@@ -203,9 +203,10 @@ def _assert_stacked_square(*arrays):
             raise LinAlgError('Last 2 dimensions of the array must be square')
 
 def _assert_finite(*arrays):
-    for a in arrays:
-        if not isfinite(a).all():
-            raise LinAlgError("Array must not contain infs or NaNs")
+    pass
+    # for a in arrays:
+    #     if not isfinite(a).all():
+    #         raise LinAlgError("Array must not contain infs or NaNs")
 
 def _is_empty_2d(arr):
     # check size first for efficiency

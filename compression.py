@@ -15,6 +15,7 @@ def sort_(prov):
     return int(s)
 
 def compress_input(prov_list):
+    prov_list = list(set(prov_list))
     prov_list.sort(key=sort_)
     compressed_col = {}
     temp_start = -1
@@ -34,7 +35,7 @@ def compress_input(prov_list):
             last_value = prov[1]
             cur_row = prov[0]
 
-        elif last_value == prov[1] -1:
+        elif last_value == prov[1] - 1:
             last_value = prov[1]
         else:
             if (temp_start, last_value) not in compressed_col:

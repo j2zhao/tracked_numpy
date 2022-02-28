@@ -36,32 +36,32 @@ if nt.dtype(nt.longdouble) != nt.dtype(nt.double):
 # avoid keyword arguments to speed up parsing, saves about 15%-20% for very
 # small reductions
 def _amax(a, axis=None, out=None, keepdims=False,
-          initial=_NoValue, where=True):
+          initial=None, where=True):
     return umr_maximum(a, axis, None, out, keepdims, initial, where)
 
 def _amin(a, axis=None, out=None, keepdims=False,
-          initial=_NoValue, where=True):
+          initial=None, where=True):
     return umr_minimum(a, axis, None, out, keepdims, initial, where)
 
 def _sum(a, axis=None, dtype=None, out=None, keepdims=False,
-         initial=_NoValue, where=True):
+         initial=None, where=True):
     return umr_sum(a, axis, dtype, out, keepdims, initial, where)
 
 def _prod(a, axis=None, dtype=None, out=None, keepdims=False,
-          initial=_NoValue, where=True):
+          initial=None, where=True):
     return umr_prod(a, axis, dtype, out, keepdims, initial, where)
 
 def _any(a, axis=None, dtype=None, out=None, keepdims=False, *, where=True):
     # Parsing keyword arguments is currently fairly slow, so avoid it for now
     if where is True:
-        return umr_any(a, axis, dtype, out, keepdims)
-    return umr_any(a, axis, dtype, out, keepdims, where=where)
+        return umr_any(a, axis, dtype, out, keepdims, initial = None)
+    return umr_any(a, axis, dtype, out, keepdims, where=where, initial = None)
 
 def _all(a, axis=None, dtype=None, out=None, keepdims=False, *, where=True):
     # Parsing keyword arguments is currently fairly slow, so avoid it for now
     if where is True:
-        return umr_all(a, axis, dtype, out, keepdims)
-    return umr_all(a, axis, dtype, out, keepdims, where=where)
+        return umr_all(a, axis, dtype, out, keepdims, initial = None)
+    return umr_all(a, axis, dtype, out, keepdims, where=where, initial = None)
 
 def _count_reduce_items(arr, axis, keepdims=False, where=True):
     # fast-path for the default case
@@ -82,7 +82,7 @@ def _count_reduce_items(arr, axis, keepdims=False, where=True):
         from numpy.lib.stride_tricks import broadcast_to
         # count True values in (potentially broadcasted) boolean mask
         items = umr_sum(broadcast_to(where, arr.shape), axis, nt.intp, None,
-                        keepdims)
+                        keepdims, initial = None)
     return items
 
 # Numpy 1.17.0, 2019-02-24
@@ -165,7 +165,7 @@ def _mean(a, axis=None, dtype=None, out=None, keepdims=False, *, where=True):
     is_float16_result = False
 
     rcount = _count_reduce_items(arr, axis, keepdims=keepdims, where=where)
-    if rcount == 0 if where is True else umr_any(rcount == 0, axis=None):
+    if rcount == 0 if where is True else umr_any(rcount == 0, axis=None, initial = None):
         warnings.warn("Mean of empty slice.", RuntimeWarning, stacklevel=2)
 
     # Cast bool, unsigned int, and int to float64 by default
@@ -176,7 +176,7 @@ def _mean(a, axis=None, dtype=None, out=None, keepdims=False, *, where=True):
             dtype = mu.dtype('f4')
             is_float16_result = True
 
-    ret = umr_sum(arr, axis, dtype, out, keepdims, where=where)
+    ret = umr_sum(arr, axis, dtype, out, keepdims, where=where, initial = None)
     if isinstance(ret, mu.ndarray):
         ret = um.true_divide(
                 ret, rcount, out=ret, casting='unsafe', subok=False)
@@ -186,7 +186,8 @@ def _mean(a, axis=None, dtype=None, out=None, keepdims=False, *, where=True):
         if is_float16_result:
             ret = arr.dtype.type(ret / rcount)
         else:
-            ret = ret.dtype.type(ret / rcount)
+            ret = ret / rcount
+            #ret = ret.dtype.type(ret / rcount)
     else:
         ret = ret / rcount
 
@@ -209,7 +210,7 @@ def _var(a, axis=None, dtype=None, out=None, ddof=0, keepdims=False, *,
     # Compute the mean.
     # Note that if dtype is not of inexact type then arraymean will
     # not be either.
-    arrmean = umr_sum(arr, axis, dtype, keepdims=True, where=where)
+    arrmean = umr_sum(arr, axis, dtype, keepdims=True, where=where, initial = None)
     # The shape of rcount has to match arrmean to not change the shape of out
     # in broadcasting. Otherwise, it cannot be stored back to arrmean.
     if rcount.ndim == 0:
@@ -239,19 +240,21 @@ def _var(a, axis=None, dtype=None, out=None, ddof=0, keepdims=False, *,
     # Most general case; includes handling object arrays containing imaginary
     # numbers and complex types with non-native byteorder
     else:
-        x = um.multiply(x, um.conjugate(x), out=x).real
-
-    ret = umr_sum(x, axis, dtype, out, keepdims=keepdims, where=where)
+        x = x*x
+        #x = um.multiply(x, um.conjugate(x), out=x).real
+    print('test')
+    ret = umr_sum(x, axis, dtype, out, keepdims=keepdims, where=where, initial = None)
 
     # Compute degrees of freedom and make sure it is not negative.
     rcount = um.maximum(rcount - ddof, 0)
-
+    print('test2')
     # divide by degrees of freedom
     if isinstance(ret, mu.ndarray):
         ret = um.true_divide(
                 ret, rcount, out=ret, casting='unsafe', subok=False)
     elif hasattr(ret, 'dtype'):
-        ret = ret.dtype.type(ret / rcount)
+        #ret = ret.dtype.type(ret / rcount)
+        ret = ret / rcount
     else:
         ret = ret / rcount
 
@@ -261,11 +264,12 @@ def _std(a, axis=None, dtype=None, out=None, ddof=0, keepdims=False, *,
          where=True):
     ret = _var(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
                keepdims=keepdims, where=where)
-
+    return ret
     if isinstance(ret, mu.ndarray):
         ret = um.sqrt(ret, out=ret)
     elif hasattr(ret, 'dtype'):
-        ret = ret.dtype.type(um.sqrt(ret))
+        #ret = ret.dtype.type(um.sqrt(ret))
+        ret = um.sqrt(ret)
     else:
         ret = um.sqrt(ret)
 
@@ -273,8 +277,8 @@ def _std(a, axis=None, dtype=None, out=None, ddof=0, keepdims=False, *,
 
 def _ptp(a, axis=None, out=None, keepdims=False):
     return um.subtract(
-        umr_maximum(a, axis, None, out, keepdims),
-        umr_minimum(a, axis, None, None, keepdims),
+        umr_maximum(a, axis, None, out, keepdims, initial = None),
+        umr_minimum(a, axis, None, None, keepdims, initial = None),
         out
     )
 

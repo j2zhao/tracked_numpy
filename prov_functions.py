@@ -9,6 +9,7 @@ import random
 import constants
 import json
 import pickle
+from precapture_args import *
 srange = [1, 100]
 
 # run function and saves to update later
@@ -43,9 +44,10 @@ def iterate_parameters(pattern):
                     prob = random.random()
     arrays = []
     for tup in arrs:
-        d1= dict_args[tup[0]]
-        d2 = dict_args[tup[1]]
-        arrays.append(np.random.rand(d1, d2).astype(np.float64))
+        d = []
+        for i in range(len(tup)):
+            d.append(dict_args[tup[i]])
+        arrays.append(np.random.random(d).astype(np.float64))
 
     other = {}
     # other['axis'] = random.randrange(2)
@@ -53,6 +55,8 @@ def iterate_parameters(pattern):
     for key, val in other_args.items():
         index = random.randrange(len(val))
         other[key] = val[index]
+        if val[index] == "custom":
+            other[key] = random.randrange(dict_args[tup[1]])
         # #other[key] = (d1, 10)
         # if index == 2:
         #     other[key] = (dict_args['b'], dict_args['a'])
@@ -61,8 +65,8 @@ def iterate_parameters(pattern):
 def generate_new_array(old_arrays):
     arrays = []
     for i in range(len(old_arrays)):
-        d1, d2 = old_arrays[i].shape
-        arrays.append(np.random.rand(d1, d2).astype(np.float64))
+        #d1, d2 = old_arrays[i].shape
+        arrays.append(np.random.random(old_arrays[i].shape).astype(np.float64))
     return arrays
 
 # run one run of experiments
@@ -90,7 +94,9 @@ def run(provenance, func, arrays, args, repetition, log):
             print('Pattern Found')
         
         if prov == None:
-            provenance = prov_obj.compress_function(output)  
+            provenance = prov_obj.compress_function(output)
+            print('hello')
+            print(provenance)
             prov_obj.add_prov(provenance, func.__name__, arg_dic, arr_tup)
             #print(prov_obj.prov)
             prov_obj.add_log(0, 0, func.__name__, arg_dic, arr_tup, provenance)
