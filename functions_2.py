@@ -22,7 +22,10 @@ def test3(arr):
     # test reduction
     #arr = np.random.random(arr).astype(tf.tracked_float)
     #tf.initialize(arr, 1)
-    arr = np.sum(arr, axis = 1, initial=None)
+    #arr = np.sum(arr, axis = 1, initial=None)
+    arr2 = np.reshape(arr, (arr.shape[0], ))
+    arr2 = np.ones((arr.shape[0], ))
+    arr = np.dot(arr, arr2)
     return arr
 
 def test4(arr):
