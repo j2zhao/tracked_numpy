@@ -23,7 +23,7 @@ def test3(arr):
     #arr = np.random.random(arr).astype(tf.tracked_float)
     #tf.initialize(arr, 1)
     #arr = np.sum(arr, axis = 1, initial=None)
-    arr2 = np.ones((arr.shape[0], ))
+    arr2 = np.ones((arr.shape[1], ))
     arr = np.dot(arr, arr2)
     return arr
 
@@ -73,7 +73,7 @@ def test8(arr, arr2):
 
 def test9_gen(arr_size = 1000000):
     arr = np.random.random(arr_size)
-    return arr
+    return (arr,)
 
 def test9_tf(arr):
     # Includes initalization
@@ -82,7 +82,7 @@ def test9_tf(arr):
     #if tracked_float:
     out = np.zeros(arr.shape).astype(tf.tracked_float)
     out[arr < 0.5] = arr[arr < 0.5]
-    return out    
+    return out   
 
 def test9(arr):
     # Includes initalization
@@ -97,7 +97,7 @@ def test10_gen(arr_size = 1000000):
     std = arr_size/10
     y = np.random.normal(x, std)
     y = np.reshape(y, (arr_size,1))
-    return y, z
+    return (y, z)
 
 def test10_tf(y, z):
     y = y.astype(tf.tracked_float)                                                             
@@ -113,7 +113,7 @@ def test10(y, z):
 
 def test11_gen(arr_shape = 1000000):
     arr = np.random.random((arr_shape, 1))
-    return arr
+    return (arr,)
 
 def test11_tf(arr):
     '''hist'''
@@ -180,7 +180,7 @@ def test11(arr):
 
 def test12_gen(arr_shape = 1000000):
     arr = np.sort(np.random.random((arr_shape,)))
-    return arr
+    return (arr,)
 
 def test12_tf(arr):
     '''hist'''
@@ -245,10 +245,10 @@ def test12(arr):
 
     return out, arr
 
-def test13(mnist = 'mnist_2.npy'):
+def test13_gen(mnist = 'mnist_2.npy'):
     arr = np.load(mnist)
     arr = np.reshape(arr, (arr.shape[0], 1))
-    return arr
+    return (arr,)
 
 def test13_tf(arr):
     '''filter''' 

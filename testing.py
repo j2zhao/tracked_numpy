@@ -48,6 +48,34 @@ def meta_test_prov(funct, inputs = [(1, 100)], storage = './logs'):
     # print("FINISHED TEST")
     return end-start
 
+def meta_test_custom(funct_gen, funct):
+    """
+    inputs -> size of arrays?
+    """
+    print("STARTING PROVENANCE TEST")
+    # initialize inputs
+    #end = time.time()
+    #print("initializing input array: {}".format(end-start))
+    #reset provenance
+    #start = time.time()
+    args = funct_gen()
+    #end = time.time()
+    #print("resetting array provenance: {}".format(end - start))
+    # run function
+    start = time.time()
+    output = funct(*args)
+    #print(output[0,0])
+    end = time.time()
+    print("running array function: {}".format(end - start))
+
+    # # start = time.time()
+    # # save_array_prov(output, storage)
+    # # end = time.time()
+    # print('saving array provenance: {}'.format(end - start))
+
+    # print("FINISHED TEST")
+    return end-start
+
 
         
 
@@ -78,4 +106,4 @@ def meta_test(funct, inputs = [(10000, 10000)]):
 
 if __name__ == '__main__':
     meta_test_prov(test3, inputs= [(1000, 1000)])
-    meta_test(test3, inputs= [(1000, 1000)])
+    meta_test(test3, inputs= [(, 1000000)])
