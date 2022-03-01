@@ -77,5 +77,5 @@ def meta_test(funct, inputs = [(10000, 10000)]):
 
 
 if __name__ == '__main__':
-    meta_test_prov(test1, inputs= [(10, 100000)])
-    meta_test(test1)
+    meta_test_prov(test3, inputs= [(1000, 1000)])
+    meta_test(test3, inputs= [(1000, 1000)])
