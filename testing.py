@@ -4,7 +4,8 @@ testing.py defines time testing functions for TrackedObj over numpy ndarrays.
 """
 import numpy.core.tracked_float as tf
 from aux_functions import *
-from example_functions import *
+#from example_functions import *
+from functions_2 import *
 import random
 import time
 import uuid
@@ -22,18 +23,17 @@ def meta_test_prov(funct, inputs = [(1, 100)], storage = './logs'):
         arrs.append(np.random.random(input))
     start = time.time()
     for arr in range(len(arrs)):
-        arrs[arr] = arrs[arr].astype(tf.tracked_float))
-    
+        arrs[arr] = arrs[arr].astype(tf.tracked_float)
     #end = time.time()
     #print("initializing input array: {}".format(end-start))
     #reset provenance
     #start = time.time()
     for i, arr in enumerate(arrs):
         tf.initialize(arr, i)
-    end = time.time()
-    print("resetting array provenance: {}".format(end - start))
+    #end = time.time()
+    #print("resetting array provenance: {}".format(end - start))
     # run function
-    start = time.time()
+    # start = time.time()
     
     output = funct(*arrs)
     #print(output[0,0])
@@ -59,13 +59,13 @@ def meta_test(funct, inputs = [(10000, 10000)]):
     print("STARTING REGULAR TEST")
     arrs = []
     # initialize inputs
-    start = time.time()
+    #start = time.time()
     for input in inputs:
         arr = np.random.random(input)
         arrs.append(arr)
     
-    end = time.time()
-    print("initializing input array: {}".format(end-start))
+    # end = time.time()
+    # print("initializing input array: {}".format(end-start))
 
     # run function
     start = time.time()
@@ -77,5 +77,5 @@ def meta_test(funct, inputs = [(10000, 10000)]):
 
 
 if __name__ == '__main__':
-    meta_test_prov(test1, inputs= [(1, 100)])
-    #meta_test(test1)
+    meta_test_prov(test1, inputs= [(10, 100000)])
+    meta_test(test1)
