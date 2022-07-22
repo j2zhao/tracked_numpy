@@ -258,7 +258,7 @@ def test13_tf(arr):
     out[arr > 0] = arr[arr > 0]
     return out
 
-def test13_tf(arr):
+def test13(arr):
     '''filter''' 
     out = np.zeros(arr.shape)
     out[arr > 0] = arr[arr > 0]

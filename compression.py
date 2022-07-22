@@ -106,7 +106,7 @@ def convert_to_relative(prov_interval, row, col):
     #return {'abs': {0: abs0, 1: abs1}, 'rel0': {0:rel00, 1:rel10}, 'rel1': {0:rel01, 1:rel11}}
     
 
-#to fix
+#to fix? what was i supposed to fix lol
 def compress_output(prov_arr, id, relative = True):
     '''
     we compress by specified id -> requires id field
@@ -270,7 +270,7 @@ def compression(prov_arr, relative = True):
     return output
 
 
-def generate_array(size = (1000, 1000)):
+def generate_array(size = (100, 100)):
     # arr = np.random.random(size).astype(tf.tracked_float)
     # tf.initialize(arr, 0)
     # arr2 = np.random.random(size).astype(tf.tracked_float)
@@ -278,10 +278,11 @@ def generate_array(size = (1000, 1000)):
     # arr = np.dot(arr, arr2)
 
     arr = np.random.random(size).astype(tf.tracked_float)
-    print(arr[1,0].provenance)
+    #print(arr[1,0].provenance)
     tf.initialize(arr, 1)
-    arr = np.moveaxis(arr, 1, 0)
-    print(arr[1,0].provenance)
+    #arr = np.moveaxis(arr, 1, 0)
+    arr = np.tile(arr, (2,2))
+    #print(arr[1,0].provenance)
     # arr2 = np.random.random(arr2).astype(tf.tracked_float)
     # tf.initialize(arr, 2)
     # np.reshape(arr, (10000000, ))
@@ -299,4 +300,5 @@ if __name__ == '__main__':
 
     prov = generate_array()
     compressed = compression(prov)
-    print(compressed)
+    with open("test.npy", 'wb') as f:
+        pickle.dump(compressed, f)

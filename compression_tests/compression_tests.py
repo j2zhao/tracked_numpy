@@ -5,23 +5,15 @@ import os
 import gzip
 import json
 import col_compression
-from compression import compression
-from compression_examples import *
+from compression_tests.compression import compression
+from compression_tests_2.compression_examples import *
 import col_compression 
 import subzero_functions
 import time
 import shutil
 import pickle
 
-def get_size(start_path = '.'):
-    total_size = 0
-    for dirpath, dirnames, filenames in os.walk(start_path):
-        for f in filenames:
-            fp = os.path.join(dirpath, f)
-            # skip if it is symbolic link
-            if not os.path.islink(fp):
-                total_size += os.path.getsize(fp)
-    return total_size
+
 
 def aux(array):
     if len(array.shape) == 0:
@@ -47,6 +39,11 @@ def gzip_save(array, dir):
     dir = os.path.join(dir, str(time.time())+ '.npy')
     with open(dir, 'wb') as f:
         f.write(com)
+
+def gzip_2(file_name, new_file):
+    with open(file_name, 'rb') as f_in:
+        with gzip.open(new_file, 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
 
 def subzero_save(array, dir):
     """assume we already ran compression"""
@@ -90,10 +87,7 @@ def comp_rel_save(array, dir):
         pickle.dump(array,f)
     return array
 
-def gzip_2(file_name, new_file):
-    with open(file_name, 'rb') as f_in:
-        with gzip.open(new_file, 'wb') as f_out:
-            shutil.copyfileobj(f_in, f_out)
+
 
 if __name__ =="__main__":
     # gzip_2("compressed/raw.npy", "col/test.gzip")

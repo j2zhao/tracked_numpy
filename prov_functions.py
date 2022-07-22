@@ -9,7 +9,7 @@ import random
 import constants
 import json
 import pickle
-from precapture_args import *
+#from precapture_args import *
 srange = [1, 100]
 
 # run function and saves to update later

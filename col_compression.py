@@ -1,6 +1,6 @@
 import numpy as np
 import os
-def to_column_1(array, temp_path, zeros= True):
+def to_column_1(array, temp_path, zeros = True):
     x1 = []
     x2 = []
     y1 = []
@@ -16,19 +16,19 @@ def to_column_1(array, temp_path, zeros= True):
                 y1.append(x)
                 y2.append(y)
     
-    x1 = np.array(x1)
+    x1 = np.array(x1).astype(np.intc).flatten(order='F') 
     path = os.path.join(temp_path, 'x1.npy')
     np.save(path, x1)
 
-    x2 = np.array(x2)
+    x2 = np.array(x2).astype(np.intc).flatten(order='F') 
     path = os.path.join(temp_path, 'x2.npy')
     np.save(path, x2)
 
-    y1 = np.array(y1)
+    y1 = np.array(y1).astype(np.intc).flatten(order='F') 
     path = os.path.join(temp_path, 'y1.npy')
     np.save(path, y1)
 
-    y2 = np.array(y2)
+    y2 = np.array(y2).astype(np.intc).flatten(order='F') 
     path = os.path.join(temp_path, 'y2.npy')
     np.save(path, y2)
 
@@ -59,35 +59,35 @@ def to_column_2(array, temp_path, input_id = (1, 2), zeros= True):
                     w2.append(j)
                     z1.append(x)
                     z2.append(y)
-    x1 = np.array(x1)
+    x1 = np.array(x1).astype(np.intc).flatten(order='F') 
     path = os.path.join(temp_path, 'x1.npy')
     np.save(path, x1)
 
-    x2 = np.array(x2)
+    x2 = np.array(x2).astype(np.intc).flatten(order='F') 
     path = os.path.join(temp_path, 'x2.npy')
     np.save(path, x2)
 
-    y1 = np.array(y1)
+    y1 = np.array(y1).astype(np.intc).flatten(order='F') 
     path = os.path.join(temp_path, 'y1.npy')
     np.save(path, y1)
 
 
-    y2 = np.array(y2)
+    y2 = np.array(y2).astype(np.intc).flatten(order='F') 
     path = os.path.join(temp_path, 'y2.npy')
     np.save(path, y2)
 
-    w1 = np.array(w1)
+    w1 = np.array(w1).astype(np.intc).flatten(order='F') 
     path = os.path.join(temp_path, 'w1.npy')
     np.save(path, w1)
 
-    w2 = np.array(w2)
+    w2 = np.array(w2).astype(np.intc).flatten(order='F') 
     path = os.path.join(temp_path, 'w2.npy')
     np.save(path, w2)
 
-    z1 = np.array(z1)
+    z1 = np.array(z1).astype(np.intc).flatten(order='F') 
     path = os.path.join(temp_path, 'z1.npy')
     np.save(path, z1)
 
-    z2 = np.array(z2)
+    z2 = np.array(z2).astype(np.intc).flatten(order='F') 
     path = os.path.join(temp_path, 'z2.npy')
     np.save(path, z2)

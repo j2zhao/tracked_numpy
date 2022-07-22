@@ -1,3 +1,8 @@
+# Jinjin's Gitignore
+
+compression_tests_2/*.pickle
+
+
 # Editor temporary/working/backup files #
 #########################################
 .#*

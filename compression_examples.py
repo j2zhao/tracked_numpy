@@ -1,12 +1,20 @@
 import numpy as np
 import numpy.core.tracked_float as tf
+import pandas as pd
+from compression_array import array_compression
+from relational_operations import *
+import pickle
+
+
+class DummyProv(object):
+    def __init__(self, prov):
+        self.provenance = prov
 
 def test1(arr_size = (10, 100000)):
     # basic test
     arr = np.random.random(arr_size).astype(tf.tracked_float)
     tf.initialize(arr, 1)
     arr = np.negative(arr)
-    
     return arr
 
 def test2(arr = (10, 100000), arr2 = (10, 100000)):
@@ -70,7 +78,7 @@ def test8(arr = (1000, 1000), arr2 = (1000, 1)):
     return arr
 
 def test9(arr_size = (1000000, 1)):
-    # tests filters
+    # tests random filters
     arr = np.random.random(arr_size).astype(tf.tracked_float)
     tf.initialize(arr, 1)
     out = np.zeros(arr.shape).astype(tf.tracked_float)
@@ -78,6 +86,7 @@ def test9(arr_size = (1000000, 1)):
     return out    
 
 def test10(arr_size = 1000000):
+    # test sorted filters
     x = np.arange(arr_size)                                                                                              
     z = arr_size/2                                                                                                           
     std = arr_size/10                                                                                                      
@@ -89,7 +98,7 @@ def test10(arr_size = 1000000):
     return out
 
 def test11(arr_shape = 1000000):
-    '''hist'''
+    '''random hist'''
     arr = np.random.random((arr_shape, 1)).astype(tf.tracked_float)
     tf.initialize(arr, 1)
     arr = arr.reshape((-1,))
@@ -132,7 +141,7 @@ def test11(arr_shape = 1000000):
     return out, arr
 
 def test12(arr_shape = 1000000, sorted = True):
-    '''hist'''
+    '''sorted hist'''
     arr = np.sort(np.random.random((arr_shape,)))
     arr = arr.astype(tf.tracked_float)
     arr = arr.reshape((-1, 1))
@@ -165,10 +174,103 @@ def test12(arr_shape = 1000000, sorted = True):
     return out, arr
 
 def test13(mnist = 'mnist.npy'):
-    '''filter'''
+    '''image filter'''
     arr = np.load(mnist)
     arr = np.reshape(arr, (arr.shape[0], 1)).astype(tf.tracked_float)
     tf.initialize(arr, 1)
     out = np.zeros(arr.shape).astype(tf.tracked_float)
     out[arr > 0] = arr[arr > 0]
     return out
+
+def test14(afile = './compression_tests_2/example_lime.npy', provenance = False):
+    """
+    LIME explainations
+    """
+    arr = np.load(afile)
+    ar2 = np.zeros(arr.shape)
+    ar2[arr > 0.5] = 1
+    if provenance == False:
+        return ar2
+    else:
+        prov = np.empty(arr.shape,dtype = object)
+        for i in range(arr.shape[0]):
+            for j in range(arr.shape[1]):
+                if ar2[i, j] == 1:
+                    p = DummyProv([(1, i, j)])
+                    prov[i, j] = p
+                else:
+                    p = DummyProv([])
+                    prov[i, j] = p
+        return prov
+
+def test15(afile = './compression_tests_2/example_drise.npy', provenance = False):
+    """
+    DRISE explainations
+    """
+    arr = np.load(afile)
+    ar2 = np.zeros(arr.shape)
+    ar2[arr > 9] = 1
+    if provenance == False:
+        return ar2
+    else:
+        prov = np.empty(arr.shape,dtype = object)
+        for i in range(arr.shape[0]):
+            for j in range(arr.shape[1]):
+                if ar2[i, j] == 1:
+                    p = DummyProv([(1, i, j)])
+                    prov[i, j] = p
+                else:
+                    p = DummyProv([])
+                    prov[i, j] = p
+        return prov
+
+def test16(data = './compression_tests_2/group_by_pandas.pickle', col_name = 'startYear', agg_name = 'isAdult'):
+    """
+    Groupby UnSorted
+    """
+    #data = pd.read_csv(data)
+    with open(data, 'rb') as f:
+        data = pickle.load(f, encoding='latin1')
+    print(data.head(10))
+    data = groupby_prov(data, col_name, agg_name)
+    return data
+
+def test17(data = './compression_tests_2/group_by_pandas.pickle', col_name = 'startYear', agg_name = 'isAdult'):
+    """
+    Groupby Sorted
+    """
+    #data = pd.read_csv(data)
+    with open(data, 'rb') as f:
+        data = pickle.load(f, encoding='latin1')
+        data = data.head(1000000)
+        data = data.sort_values(by='startYear', ignore_index= True)
+    data = groupby_prov(data, col_name, agg_name)
+    return data
+
+def test18(data_left = './compression_tests_2/left_join_pandas.pickle', data_right = './compression_tests_2/right_join_pandas.pickle', column1 = 'tconst', column2 = 'tconst'):
+    """
+    Join Sorted
+    """
+    #df1 = pd.read_csv(data_left)
+    #df2 = pd.read_csv(data_right)
+    with open(data_left, 'rb') as f:
+        df1 = pickle.load(f, encoding='latin1')
+    with open(data_right, 'rb') as f:
+        df2 = pickle.load(f, encoding='latin1')
+    data = join_prov(df1, df2, column1, column2)
+    return data
+
+def test19(data_left = './compression_tests_2/left_join_pandas.pickle', data_right = './compression_tests_2/right_join_pandas.pickle', column1 = 'tconst', column2 = 'parentTconst'):
+    """
+    Join UnSorted
+    """
+    with open(data_left, 'rb') as f:
+        df1 = pickle.load(f, encoding='latin1')
+    with open(data_right, 'rb') as f:
+        df2 = pickle.load(f, encoding='latin1')
+    data = join_prov(df1, df2, column1, column2)
+    return data
+
+if __name__ == '__main__':
+    arr = test18()
+    print(arr)
