@@ -15,6 +15,8 @@ import pyarrow as pa
 import pandas as pd
 from compression_array import array_compression
 import pyarrow.parquet as pq
+import shutil
+
 
 def get_size(start_path = '.'):
     total_size = 0
@@ -153,12 +155,15 @@ def column_save(array, path, name, temp_path = './temp', ids = [1]):
         col_compression.to_column_2(array, temp_path, ids, zeros = True)
     turbo_dir = "./turbo/Turbo-Range-Coder/turborc"
     turbo_param = "-20"
+    tb_h = '-H'
     file_names = ['x1.npy', 'x2.npy', 'y1.npy', 'y2.npy']
     for temp in file_names:
         p1 = os.path.join(temp_path, temp)
         p2 = os.path.join(path, name + str(ids[0]))
+        if not os.path.isdir(p2):
+            os.mkdir(p2)
         p2 = os.path.join(p2, temp)
-        command = " ".join([turbo_dir, turbo_param, p1, p2])
+        command = " ".join([turbo_dir, tb_h, turbo_param, p1, p2])
         print(command)
         os.system(command)
 
@@ -167,6 +172,8 @@ def column_save(array, path, name, temp_path = './temp', ids = [1]):
         for i, temp in enumerate(temp_names):
             p1 = os.path.join(temp_path, temp)
             p2 = os.path.join(path, name + str(ids[0]))
+            if not os.path.isdir(p2):
+                os.mkdir(p2)
             p2 = os.path.join(p2, file_names[i])
             command = " ".join([turbo_dir, turbo_param, p1, p2])
             os.system(command)
@@ -260,6 +267,21 @@ def comp_save(array, path, name, ids = [1], arrow = True):
 
 
 if __name__ == '__main__':
-    arr = test1((10, 10))
+    try:
+        shutil.rmtree('./storage')
+    except OSError as e:
+        pass
+
+    os.mkdir('./storage')
+    if not os.path.isdir('./temp'):
+        os.mkdir('./temp')
+
+
+    arr = test1()
+    #start = time.time()
     #comp_rel_save(arr, './storage', 'step0_', ids = [1], arrow = True)
     column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1])
+    #end = time.time()
+    print('compression size')
+    size = get_size(start_path = './storage')
+    print(size)

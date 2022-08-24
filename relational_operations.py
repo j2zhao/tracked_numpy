@@ -3,7 +3,7 @@ import numpy as np
 from tracked_object import TrackedObj
 import pickle
 
-def groupby_prov(df, col_name, agg_name, id1 = 1, id2 = 2, limit = 1000000):
+def groupby_prov(df, col_name, agg_name, id1 = 1, id2 = 2, limit = 1000):
     """
     Sum group by with col_name, on aggregation_name
     """
@@ -40,10 +40,12 @@ def join_prov(df1, df2, column_name1, column_name2,  id1 = 1, id2 = 2, limit = 1
     df2 = df2.head(limit)
     array = []
     col1 = list(df1.columns)
+    print(col1)
     col1_dict = {}
     for i, c in enumerate(col1):
         col1_dict[c] = i
     col2 = list(df2.columns)
+    print(col2)
     col2_dict = {}
     for i, c in enumerate(col2):
         col2_dict[c] = i
@@ -51,13 +53,9 @@ def join_prov(df1, df2, column_name1, column_name2,  id1 = 1, id2 = 2, limit = 1
     u1 = set(df1[column_name1].unique())
     u2 = set(df2[column_name2].unique())
     u = u1.intersection(u2)
-    print(len(u))
     for val in u:
         df1_sub = df1.loc[df1[column_name1] == val]
         df2_sub = df2.loc[df2[column_name2] == val]
-        print(val)
-        print(df1_sub.shape)
-        print(df2_sub.shape)
         for i, row1 in df1_sub.iterrows():
             for j, row2 in df2_sub.iterrows():
                 row = []
@@ -72,7 +70,6 @@ def join_prov(df1, df2, column_name1, column_name2,  id1 = 1, id2 = 2, limit = 1
                     row.append(obj)
                 
                 array.append(row)
-
     return np.asarray(array, dtype=object)
                 
 

@@ -231,21 +231,21 @@ def test16(data = './compression_tests_2/group_by_pandas.pickle', col_name = 'st
     #data = pd.read_csv(data)
     with open(data, 'rb') as f:
         data = pickle.load(f, encoding='latin1')
-    print(data.head(10))
+        
     data = groupby_prov(data, col_name, agg_name)
     return data
 
-def test17(data = './compression_tests_2/group_by_pandas.pickle', col_name = 'startYear', agg_name = 'isAdult'):
-    """
-    Groupby Sorted
-    """
-    #data = pd.read_csv(data)
-    with open(data, 'rb') as f:
-        data = pickle.load(f, encoding='latin1')
-        data = data.head(1000000)
-        data = data.sort_values(by='startYear', ignore_index= True)
-    data = groupby_prov(data, col_name, agg_name)
-    return data
+# def test17(data = './compression_tests_2/group_by_pandas.pickle', col_name = 'startYear', agg_name = 'isAdult'):
+#     """
+#     Groupby Sorted
+#     """
+#     #data = pd.read_csv(data)
+#     with open(data, 'rb') as f:
+#         data = pickle.load(f, encoding='latin1')
+#         data = data.head(1000000)
+#         data = data.sort_values(by='startYear', ignore_index= True)
+#     data = groupby_prov(data, col_name, agg_name)
+#     return data
 
 def test18(data_left = './compression_tests_2/left_join_pandas.pickle', data_right = './compression_tests_2/right_join_pandas.pickle', column1 = 'tconst', column2 = 'tconst'):
     """
@@ -255,21 +255,23 @@ def test18(data_left = './compression_tests_2/left_join_pandas.pickle', data_rig
     #df2 = pd.read_csv(data_right)
     with open(data_left, 'rb') as f:
         df1 = pickle.load(f, encoding='latin1')
+        df1 = df1.head(1000000)
     with open(data_right, 'rb') as f:
         df2 = pickle.load(f, encoding='latin1')
+        df2 = df2.head(1000000)
     data = join_prov(df1, df2, column1, column2)
     return data
 
-def test19(data_left = './compression_tests_2/left_join_pandas.pickle', data_right = './compression_tests_2/right_join_pandas.pickle', column1 = 'tconst', column2 = 'parentTconst'):
-    """
-    Join UnSorted
-    """
-    with open(data_left, 'rb') as f:
-        df1 = pickle.load(f, encoding='latin1')
-    with open(data_right, 'rb') as f:
-        df2 = pickle.load(f, encoding='latin1')
-    data = join_prov(df1, df2, column1, column2)
-    return data
+# def test19(data_left = './compression_tests_2/left_join_pandas.pickle', data_right = './compression_tests_2/right_join_pandas.pickle', column1 = 'tconst', column2 = 'parentTconst'):
+#     """
+#     Join UnSorted
+#     """
+#     with open(data_left, 'rb') as f:
+#         df1 = pickle.load(f, encoding='latin1')
+#     with open(data_right, 'rb') as f:
+#         df2 = pickle.load(f, encoding='latin1')
+#     data = join_prov(df1, df2, column1, column2)
+#     return data
 
 if __name__ == '__main__':
     arr = test18()

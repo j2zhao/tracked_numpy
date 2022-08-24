@@ -24,7 +24,7 @@ def resize_aux(arr, w, h, prov = False):
     x = w_org//w
     y = h_org//h
     if prov:
-        new_arr = np.zeros((w, h)).astype(tf.tracked_float)
+        new_arr = np.zeros((w, h), dtype=np.float64).astype(tf.tracked_float)
     else:
         new_arr = np.zeros((w, h))
     
@@ -40,9 +40,10 @@ def resize_aux(arr, w, h, prov = False):
                 y2 = h_org
             else:
                 y2 = y*(j + 1)
-            new_arr[i, j] = np.sum(arr[x1:x2, y1:y2])
+            total = (x2 - x1)*(y2 - y1)
+            new_arr[i, j] = np.sum(arr[x1:x2, y1:y2], initial= None)//total
     
-    return arr
+    return new_arr
 def resize_img(array, w = 416, h = 416):
     w_org = array.shape[0]
     h_org = array.shape[1]
@@ -84,26 +85,27 @@ def flip_img(array):
     return array, prov_array   
 
 if __name__ == '__main__': 
-    folder = ''
-    image_dire = ''
+    folder = 'compression_tests_2/image_pipeline'
+    image_dire = 'compression_tests_2/VIRAT_S_000101_10.jpeg'
     image = np.asarray(cv2.imread(image_dire))
     
-    # Resize Image - TODO
+    # Resize Image
     image, prov_arr = resize_img(image)
     dire = os.path.join(folder, 'step1.npy')
     np.save(dire, prov_arr)
-    # Change Luminosity - TODO
+    # Change Luminosity
     image, prov_arr = lum_img(image)
     dire = os.path.join(folder, 'step2.npy')
     np.save(dire, prov_arr)
-    # Rotate Image - TODO
+    # Rotate Image
     image, prov_arr = rotate_img(image)
     dire = os.path.join(folder, 'step3.npy')
     np.save(dire, prov_arr)
-    # flip image - TODO
-    image, prov_arr = rotate_img(image)
+    # flip image
+    image, prov_arr = flip_img(image)
     dire = os.path.join(folder, 'step4.npy')
     np.save(dire, prov_arr)
     # Use Lime
-    dire = os.path.join(folder, 'lime_input.npy')
-    np.save(dire, image)
+    dire = os.path.join(folder, 'lime_input.jpg')
+    cv2.imwrite(dire, image)
+    #np.save(dire, image)
