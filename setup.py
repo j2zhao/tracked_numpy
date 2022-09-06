@@ -57,8 +57,6 @@ FULLVERSION = '1.22.0.dev0+1033.g1eae2a229'
 ISRELEASED = re.search(r'(dev|\+)', FULLVERSION) is None
 MAJOR, MINOR, MICRO = re.match(r'(\d+)\.(\d+)\.(\d+)', FULLVERSION).groups()
 VERSION = '{}.{}.{}'.format(MAJOR, MINOR, MICRO)
-print(VERSION)
-raise ValueError()
 # The first version not in the `Programming Language :: Python :: ...` classifiers above
 if sys.version_info >= (3, 10):
     fmt = "NumPy {} may not yet support Python {}.{}."
@@ -405,7 +403,8 @@ def setup_package():
         classifiers=[_f for _f in CLASSIFIERS.split('\n') if _f],
         platforms=["Windows", "Linux", "Solaris", "Mac OS-X", "Unix"],
         test_suite='pytest',
-        version=versioneer.get_version(),
+        #version=versioneer.get_version(),
+        version = FULLVERSION,
         cmdclass=cmdclass,
         python_requires='>=3.8',
         zip_safe=False,
