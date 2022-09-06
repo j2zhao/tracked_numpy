@@ -337,6 +337,7 @@ def get_config_from_root(root):
         parser.read_file(f)
     VCS = parser.get("versioneer", "VCS")  # mandatory
     print('testin testin')
+    print(VCS)
     print(type(VCS))
     def get(parser, name):
         if parser.has_option("versioneer", name):
