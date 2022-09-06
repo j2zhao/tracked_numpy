@@ -1,4 +1,4 @@
-from errno import ESHLIBVERS
+#from errno import ESHLIBVERS
 import re
 import numpy as np
 import time

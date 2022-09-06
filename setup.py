@@ -80,7 +80,9 @@ import setuptools
 
 # Initialize cmdclass from versioneer
 from numpy.distutils.core import numpy_cmdclass
+print(numpy_cmdclass)
 cmdclass = versioneer.get_cmdclass(numpy_cmdclass)
+print(cmdclass)
 CLASSIFIERS = """\
 Development Status :: 5 - Production/Stable
 Intended Audience :: Science/Research
