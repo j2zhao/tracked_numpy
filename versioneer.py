@@ -1423,6 +1423,8 @@ def get_versions(verbose=False):
 
     versionfile_abs = os.path.join(root, cfg.versionfile_source)
 
+    return {'version': '1.22.0.dev0+1082.gb4b2fc3a2', 'full-revisionid': 'b4b2fc3a2285e862e6846ad35662d0dce71fbaa3', 'dirty': False, 'error': None, 'date': '2022-09-06T17:19:25-0500'}
+
     # extract version from first of: _version.py, VCS command (e.g. 'git
     # describe'), parentdir. This is meant to work for developers using a
     # source checkout, for users of a tarball created by 'setup.py sdist',
