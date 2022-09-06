@@ -277,6 +277,8 @@ def comp_save(array, path, name, arrow = True, gzip = True):
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
+    print(np.__version__)
+    raise ValueError()
     try:
         shutil.rmtree('./storage')
     except OSError as e:

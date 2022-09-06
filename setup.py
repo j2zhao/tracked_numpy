@@ -57,7 +57,8 @@ FULLVERSION = '1.22.0.dev0+1033.g1eae2a229'
 ISRELEASED = re.search(r'(dev|\+)', FULLVERSION) is None
 MAJOR, MINOR, MICRO = re.match(r'(\d+)\.(\d+)\.(\d+)', FULLVERSION).groups()
 VERSION = '{}.{}.{}'.format(MAJOR, MINOR, MICRO)
-
+print(VERSION)
+raise ValueError()
 # The first version not in the `Programming Language :: Python :: ...` classifiers above
 if sys.version_info >= (3, 10):
     fmt = "NumPy {} may not yet support Python {}.{}."
