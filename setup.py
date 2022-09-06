@@ -47,8 +47,8 @@ builtins.__NUMPY_SETUP__ = True
 # Needed for backwards code compatibility below and in some CI scripts.
 # The version components are changed from ints to strings, but only VERSION
 # seems to matter outside of this module and it was already a str.
-#FULLVERSION = versioneer.get_version()
-FULLVERSION = '1.22.0.dev0+1033.g1eae2a229'
+FULLVERSION = versioneer.get_version()
+#FULLVERSION = '1.22.0.dev0+1033.g1eae2a229'
 # Capture the version string:
 # 1.22.0.dev0+ ... -> ISRELEASED == False, VERSION == 1.22.0
 # 1.22.0rc1+ ... -> ISRELEASED == False, VERSION == 1.22.0
@@ -81,7 +81,6 @@ import setuptools
 # Initialize cmdclass from versioneer
 from numpy.distutils.core import numpy_cmdclass
 cmdclass = versioneer.get_cmdclass(numpy_cmdclass)
-
 CLASSIFIERS = """\
 Development Status :: 5 - Production/Stable
 Intended Audience :: Science/Research
@@ -403,8 +402,8 @@ def setup_package():
         classifiers=[_f for _f in CLASSIFIERS.split('\n') if _f],
         platforms=["Windows", "Linux", "Solaris", "Mac OS-X", "Unix"],
         test_suite='pytest',
-        #version=versioneer.get_version(),
-        version = FULLVERSION,
+        version=versioneer.get_version(),
+        #version = FULLVERSION,
         cmdclass=cmdclass,
         python_requires='>=3.8',
         zip_safe=False,
