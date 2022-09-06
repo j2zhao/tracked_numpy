@@ -336,7 +336,8 @@ def get_config_from_root(root):
     with open(setup_cfg, "r") as f:
         parser.read_file(f)
     VCS = parser.get("versioneer", "VCS")  # mandatory
-
+    print('testin testin')
+    print(type(VCS))
     def get(parser, name):
         if parser.has_option("versioneer", name):
             return parser.get("versioneer", name)
@@ -1477,7 +1478,7 @@ def get_versions(verbose=False):
 
 def get_version():
     """Get the short version string for this project."""
-    return get_versions()["version"]
+    return get_versions(verbose=True)["version"]
 
 
 def get_cmdclass(cmdclass=None):
