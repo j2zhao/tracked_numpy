@@ -237,6 +237,7 @@ def compression(prov_arr, relative = True):
     cell_prov = np.zeros(prov_arr.shape, dtype=object)
     start = time.time()
     for row in range(prov_arr.shape[0]):
+        print(row)
         for col in range(prov_arr.shape[1]):
             prov_dict = divide_by_id(prov_arr[row, col].provenance)
             compress = {}
@@ -244,7 +245,7 @@ def compression(prov_arr, relative = True):
                 compress[id] = compress_input(prov_dict[id])
                 ids.add(id)
             cell_prov[row, col] = compress
-    # print(start)
+    print('done step 1')
     end = time.time()
     #print('cell level compression: {}'.format(end - start))
     # convert to relative -> only do this by dimension and id, not by interval
@@ -266,6 +267,7 @@ def compression(prov_arr, relative = True):
     for id in ids:
         output[id] = compress_output(cell_prov, id = id, relative = relative)
     end = time.time()
+    print('done step 2')
     #print('output compression: {}'.format(end - start))
     return output
 

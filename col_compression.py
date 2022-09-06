@@ -45,7 +45,7 @@ def to_column_2(array, temp_path, input_id = (1, 2), zeros= True):
     for i in range(array.shape[0]):
         for j in range(array.shape[1]):
             if zeros:
-                if array[i, j].n == 0:
+                if len(array[i, j].provenance) == 0:
                     continue
             provenance = array[i, j].provenance
             for id, x, y in provenance:

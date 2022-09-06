@@ -32,7 +32,7 @@ def groupby_prov(df, col_name, agg_name, id1 = 1, id2 = 2, limit = 1000):
 
 
 
-def join_prov(df1, df2, column_name1, column_name2,  id1 = 1, id2 = 2, limit = 1000000):
+def join_prov(df1, df2, column_name1, column_name2,  id1 = 1, id2 = 2, limit = 100000):
     """
     Inner join on column_name over dataset1 and dataset 2
     """
@@ -53,7 +53,12 @@ def join_prov(df1, df2, column_name1, column_name2,  id1 = 1, id2 = 2, limit = 1
     u1 = set(df1[column_name1].unique())
     u2 = set(df2[column_name2].unique())
     u = u1.intersection(u2)
+    print(len(u))
+    a = 0
     for val in u:
+        if a%1000 == 0:
+            print(val)
+            print(a)
         df1_sub = df1.loc[df1[column_name1] == val]
         df2_sub = df2.loc[df2[column_name2] == val]
         for i, row1 in df1_sub.iterrows():
@@ -70,6 +75,7 @@ def join_prov(df1, df2, column_name1, column_name2,  id1 = 1, id2 = 2, limit = 1
                     row.append(obj)
                 
                 array.append(row)
+        a += 1
     return np.asarray(array, dtype=object)
                 
 

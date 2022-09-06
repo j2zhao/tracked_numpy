@@ -138,7 +138,7 @@ def test11(arr_shape = 1000000):
         #     out[2] = out[2] + arr[i,0]
         # else:
         #     out[3] = out[3] + arr[i,0]
-    return out, arr
+    return out
 
 def test12(arr_shape = 1000000, sorted = True):
     '''sorted hist'''
@@ -171,16 +171,20 @@ def test12(arr_shape = 1000000, sorted = True):
     arr_3[index] = arr[index]
     arr_33 = np.zeros((arr_shape, )).astype(tf.tracked_float)
     out[3] = np.dot(arr_3, arr_33)
-    return out, arr
+    return out
 
-def test13(mnist = 'mnist.npy'):
+def test13(mnist = './compression_tests_2/mnist.npy', provenance = False):
     '''image filter'''
     arr = np.load(mnist)
-    arr = np.reshape(arr, (arr.shape[0], 1)).astype(tf.tracked_float)
-    tf.initialize(arr, 1)
-    out = np.zeros(arr.shape).astype(tf.tracked_float)
-    out[arr > 0] = arr[arr > 0]
-    return out
+    if provenance:
+        arr = np.reshape(arr, (arr.shape[0], 1)).astype(tf.tracked_float)
+        tf.initialize(arr, 1)
+        out = np.zeros(arr.shape).astype(tf.tracked_float)
+        out[arr > 0] = arr[arr > 0]
+        return out
+    else:
+        arr[arr > 0] = 1
+        return arr
 
 def test14(afile = './compression_tests_2/example_lime.npy', provenance = False):
     """
@@ -209,7 +213,7 @@ def test15(afile = './compression_tests_2/example_drise.npy', provenance = False
     """
     arr = np.load(afile)
     ar2 = np.zeros(arr.shape)
-    ar2[arr > 9] = 1
+    ar2[arr > 0.5] = 1
     if provenance == False:
         return ar2
     else:
@@ -232,7 +236,7 @@ def test16(data = './compression_tests_2/group_by_pandas.pickle', col_name = 'st
     with open(data, 'rb') as f:
         data = pickle.load(f, encoding='latin1')
         
-    data = groupby_prov(data, col_name, agg_name)
+    data = groupby_prov(data, col_name, agg_name, limit = 1000000)
     return data
 
 # def test17(data = './compression_tests_2/group_by_pandas.pickle', col_name = 'startYear', agg_name = 'isAdult'):
@@ -247,7 +251,7 @@ def test16(data = './compression_tests_2/group_by_pandas.pickle', col_name = 'st
 #     data = groupby_prov(data, col_name, agg_name)
 #     return data
 
-def test18(data_left = './compression_tests_2/left_join_pandas.pickle', data_right = './compression_tests_2/right_join_pandas.pickle', column1 = 'tconst', column2 = 'tconst'):
+def test18(limit = 1000000, data_left = './compression_tests_2/left_join_pandas.pickle', data_right = './compression_tests_2/right_join_pandas.pickle', column1 = 'tconst', column2 = 'tconst'):
     """
     Join Sorted
     """
@@ -255,11 +259,11 @@ def test18(data_left = './compression_tests_2/left_join_pandas.pickle', data_rig
     #df2 = pd.read_csv(data_right)
     with open(data_left, 'rb') as f:
         df1 = pickle.load(f, encoding='latin1')
-        df1 = df1.head(1000000)
+        #df1 = df1.head(1000000)
     with open(data_right, 'rb') as f:
         df2 = pickle.load(f, encoding='latin1')
-        df2 = df2.head(1000000)
-    data = join_prov(df1, df2, column1, column2)
+        #df2 = df2.head(1000000)
+    data = join_prov(df1, df2, column1, column2, limit = limit)
     return data
 
 # def test19(data_left = './compression_tests_2/left_join_pandas.pickle', data_right = './compression_tests_2/right_join_pandas.pickle', column1 = 'tconst', column2 = 'parentTconst'):

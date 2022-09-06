@@ -80,7 +80,6 @@ class TrackedObj(object):
             self.provenance = [id]
 
 
-
     def __hash__(self) -> int:
         return hash((self.value, self.id))
     
@@ -107,9 +106,9 @@ class TrackedObj(object):
     def __add__(self, other):
         return self.value + other
     
-    @add_provenance_copy
-    def __bool__(self):
-        return bool(self.value)
+    # @add_provenance_copy
+    # def __bool__(self):
+    #     return bool(self.value)
 
     @add_provenance_copy
     def __divmod__(self, other):

@@ -22,7 +22,7 @@ def compress_output(prov_arr, value = 1):
                 if prov_arr[row, col] == value:
                     temp_start = col
                     last_value = col
-                    prov1 = ({'0': [0]}, {'1': [0]})
+                    prov1 = ({'0': [(0, 0)]}, {'1': [(0, 0)]})
                 # need to check alternative??
             else:
                 # check for provenance and match

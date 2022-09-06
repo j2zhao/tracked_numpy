@@ -113,7 +113,7 @@ def inverted_list(array, path, name, ids = [1], batch_size = 10000, arrow = True
                     if batch_size - index <= len(temps[id])*2:
                         dire = os.path.join(path, name +  str(id) + '_' + str(temp_array[id]) + '.npy')
                         np.save(dire, temp_batches[id])
-                        temp_batches = np.empty((batch_size))
+                        temp_batches[id] = np.empty((batch_size))
                         index = 0
                         temp_array[id] += 1
 
@@ -155,7 +155,7 @@ def column_save(array, path, name, temp_path = './temp', ids = [1]):
         col_compression.to_column_2(array, temp_path, ids, zeros = True)
     turbo_dir = "./turbo/Turbo-Range-Coder/turborc"
     turbo_param = "-20"
-    tb_h = '-H'
+    tb_h = '-FH'
     file_names = ['x1.npy', 'x2.npy', 'y1.npy', 'y2.npy']
     for temp in file_names:
         p1 = os.path.join(temp_path, temp)
@@ -163,6 +163,7 @@ def column_save(array, path, name, temp_path = './temp', ids = [1]):
         if not os.path.isdir(p2):
             os.mkdir(p2)
         p2 = os.path.join(p2, temp)
+        print(p2)
         command = " ".join([turbo_dir, tb_h, turbo_param, p1, p2])
         print(command)
         os.system(command)
@@ -174,21 +175,25 @@ def column_save(array, path, name, temp_path = './temp', ids = [1]):
             p2 = os.path.join(path, name + str(ids[0]))
             if not os.path.isdir(p2):
                 os.mkdir(p2)
-            p2 = os.path.join(p2, file_names[i])
-            command = " ".join([turbo_dir, turbo_param, p1, p2])
+            p2 = os.path.join(p2, temp_names[i])
+            command = " ".join([turbo_dir, tb_h, turbo_param, p1, p2])
             os.system(command)
     
 # (array, path, name,ids = [1], arrow = True)
-def comp_rel_save(array, path, name, ids = [1], image = False, arrow = True):
+def comp_rel_save(array, path, name, image = False, arrow = True, gzip = True):
     # import compression
     if image:
-        provenance = array_compression(array)
+        provenance = {}
+        provenance[1] = array_compression(array)
     else:
         provenance = compression(array, relative = True)
+    print(provenance)
     for id in provenance:
         prov = provenance[id]
         vals = []
+        i = 0
         for tup in prov:
+            i +=1
             # insert input values
             x1, x2  = tup[0]
             y1, y2  = tup[1]
@@ -223,7 +228,7 @@ def comp_rel_save(array, path, name, ids = [1], image = False, arrow = True):
                         val.append(None)
 
                 vals.append(val)
-                if i < max_i:
+                if i >= max_i - 1:
                     break
                 i += 1
         df = pd.DataFrame(vals, columns= ["output_x1", "output_x2", "output_y1", "output_y2", \
@@ -231,16 +236,18 @@ def comp_rel_save(array, path, name, ids = [1], image = False, arrow = True):
                 "input_x2_a", "input_x2_1", "input_x2_2",  \
                 "input_y1_a", "input_y1_1", "input_y1_2", \
                 "input_y2_a", "input_y2_1", "input_y2_2"])
-
         if not arrow:
             dire = os.path.join(path, name + str(id) + '.csv' )
             df.to_csv(dire)
         else:
             table = pa.Table.from_pandas(df, preserve_index=False)
             dire = os.path.join(path, name + str(id) + '.parquet')
-            pq.write_table(table, dire, compression='gzip')
+            if gzip:
+                pq.write_table(table, dire, compression='gzip')
+            else: 
+                pq.write_table(table, dire)
 
-def comp_save(array, path, name, ids = [1], arrow = True):
+def comp_save(array, path, name, arrow = True, gzip = True):
     provenance = compression(array, relative = False)
     for id in provenance:
         prov = provenance[id]
@@ -263,24 +270,52 @@ def comp_save(array, path, name, ids = [1], arrow = True):
         else:
             table = pa.Table.from_pandas(df, preserve_index=False)
             dire = os.path.join(path, name + str(id) + '.parquet')
-            pq.write_table(table, dire, compression='gzip')
-
+            if gzip:
+                pq.write_table(table, dire, compression='gzip')
+            else: 
+                pq.write_table(table, dire)
+import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     try:
         shutil.rmtree('./storage')
     except OSError as e:
         pass
-
+    try:
+        shutil.rmtree('./temp')
+    except OSError as e:
+        pass
     os.mkdir('./storage')
-    if not os.path.isdir('./temp'):
-        os.mkdir('./temp')
+    os.mkdir('./temp')
+    #arr = test17()
+    #print(arr[0].provenance)
+    
 
+    # with open ('./compression_tests_2/join_output.pickle', 'rb') as f:
+    #     arr = pickle.load(f)
+    arr = test6()
+    print('done')
+    comp_rel_save(arr, './storage', 'step0_', arrow = True, gzip=False)
+    # print('hello')
+    #column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1, 2])
+    #raw_save(arr, './storage', 'step0_', ids = [1, 2], arrow = False)
+    # for i in range(900, 1000):
+    #     print(i)
+    #     column_save(arr[i], './storage', 'step0_{}'.format(i), temp_path = './temp', ids = [1,2])
+    #     # raw_save(arr[i], './storage', 'step0_{}'.format(i), ids = [1, 2], arrow = False)
+    # print('generated array')
+    # print(arr.shape)
+    # with open( './compression_tests_2/join_output.pickle', 'wb') as f:
+    #     pickle.dump(arr, f)
+    # with open ('./temp/join_output_2.pickle', 'rb') as f:
+    #     arr = pickle.load(f)
+    # for i in range(100, 200):
+    #     print(i)
+        # raw_save(arr[i], './storage', 'step0_{}'.format(i), ids = [1, 2], arrow = False)
 
-    arr = test1()
     #start = time.time()
     #comp_rel_save(arr, './storage', 'step0_', ids = [1], arrow = True)
-    column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1])
+    #column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1])
     #end = time.time()
     print('compression size')
     size = get_size(start_path = './storage')
