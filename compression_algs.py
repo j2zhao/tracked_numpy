@@ -277,7 +277,7 @@ def comp_save(array, path, name, arrow = True, gzip = True):
 import matplotlib.pyplot as plt
 
 
-array_size = [(1, 100), (1, 1000) (1, 10000), (1, 100000), (1, 1000000), (1, 10000000), (1, 100000000)]
+array_size = [(1, 100), (1, 1000), (1, 10000), (1, 100000), (1, 1000000), (1, 10000000), (1, 100000000)]
 
 if __name__ == '__main__':
     for size in array_size:
@@ -318,7 +318,7 @@ if __name__ == '__main__':
         raw_save(arr, './storage', 'step0_', ids = [1], arrow = True)
         #comp_rel_save(arr, './storage', 'step0_', image = True, arrow = True, gzip=True)
         end = time.time()
-        print('compression size')
+        print('compression time')
         print(size)
         print(end - start)
         # print('compression size')
