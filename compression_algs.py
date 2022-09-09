@@ -299,7 +299,7 @@ if __name__ == '__main__':
         # print('done')
         
         # print('hello')
-        #olumn_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1])
+        #column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1])
         #gzip_save(arr, './storage', 'step0_', ids = [1], arrow = True)
         # for i in range(900, 1000):
         #     print(i)
@@ -315,7 +315,8 @@ if __name__ == '__main__':
         #     print(i)
             # raw_save(arr[i], './storage', 'step0_{}'.format(i), ids = [1, 2], arrow = False)
         start = time.time()
-        gzip_save(arr, './storage', 'step0_', ids = [1], arrow = True)
+        column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1])
+        #gzip_save(arr, './storage', 'step0_', ids = [1], arrow = True)
         #comp_rel_save(arr, './storage', 'step0_', image = True, arrow = True, gzip=True)
         end = time.time()
         print('compression time')
