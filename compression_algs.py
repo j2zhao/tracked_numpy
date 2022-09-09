@@ -276,49 +276,51 @@ def comp_save(array, path, name, arrow = True, gzip = True):
                 pq.write_table(table, dire)
 import matplotlib.pyplot as plt
 
+
+array_size = [(1, 100), (1, 1000) (1, 10000), (1, 100000), (1, 1000000), (1, 10000000), (1, 100000000)]
+
 if __name__ == '__main__':
-    # print(np.__version__)
-    # raise ValueError()
-    try:
-        shutil.rmtree('./storage')
-    except OSError as e:
-        pass
-    try:
-        shutil.rmtree('./temp')
-    except OSError as e:
-        pass
-    os.mkdir('./storage')
-    os.mkdir('./temp')
-    #arr = test17()
-    #print(arr[0].provenance)
-    
-
-    # with open ('./compression_tests_2/join_output.pickle', 'rb') as f:
-    #     arr = pickle.load(f)
-    arr = test6()
-    print('done')
-    comp_rel_save(arr, './storage', 'step0_', arrow = True, gzip=False)
-    # print('hello')
-    #column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1, 2])
-    #raw_save(arr, './storage', 'step0_', ids = [1, 2], arrow = False)
-    # for i in range(900, 1000):
-    #     print(i)
-    #     column_save(arr[i], './storage', 'step0_{}'.format(i), temp_path = './temp', ids = [1,2])
-    #     # raw_save(arr[i], './storage', 'step0_{}'.format(i), ids = [1, 2], arrow = False)
-    # print('generated array')
-    # print(arr.shape)
-    # with open( './compression_tests_2/join_output.pickle', 'wb') as f:
-    #     pickle.dump(arr, f)
-    # with open ('./temp/join_output_2.pickle', 'rb') as f:
-    #     arr = pickle.load(f)
-    # for i in range(100, 200):
-    #     print(i)
-        # raw_save(arr[i], './storage', 'step0_{}'.format(i), ids = [1, 2], arrow = False)
-
-    #start = time.time()
-    #comp_rel_save(arr, './storage', 'step0_', ids = [1], arrow = True)
-    #column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1])
-    #end = time.time()
-    print('compression size')
-    size = get_size(start_path = './storage')
-    print(size)
+    for size in array_size:
+        try:
+            shutil.rmtree('./storage')
+        except OSError as e:
+            pass
+        try:
+            shutil.rmtree('./temp')
+        except OSError as e:
+            pass
+        os.mkdir('./storage')
+        os.mkdir('./temp')        
+        # with open ('./compression_tests_2/join_output.pickle', 'rb') as f:
+        #     arr = pickle.load(f)
+        arr = test1(arr_size=size)
+        #imgplot = plt.imshow(arr)
+        #plt.show()
+        # print('done')
+        
+        # print('hello')
+        #olumn_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1])
+        #gzip_save(arr, './storage', 'step0_', ids = [1], arrow = True)
+        # for i in range(900, 1000):
+        #     print(i)
+        #     column_save(arr[i], './storage', 'step0_{}'.format(i), temp_path = './temp', ids = [1,2])
+        #     # raw_save(arr[i], './storage', 'step0_{}'.format(i), ids = [1, 2], arrow = False)
+        # print('generated array')
+        # print(arr.shape)
+        # with open( './compression_tests_2/join_output.pickle', 'wb') as f:
+        #     pickle.dump(arr, f)
+        # with open ('./temp/join_output_2.pickle', 'rb') as f:
+        #     arr = pickle.load(f)
+        # for i in range(100, 200):
+        #     print(i)
+            # raw_save(arr[i], './storage', 'step0_{}'.format(i), ids = [1, 2], arrow = False)
+        start = time.time()
+        raw_save(arr, './storage', 'step0_', ids = [1], arrow = True)
+        #comp_rel_save(arr, './storage', 'step0_', image = True, arrow = True, gzip=True)
+        end = time.time()
+        print('compression size')
+        print(size)
+        print(end - start)
+        # print('compression size')
+        # size = get_size(start_path = './storage')
+        # print(size)

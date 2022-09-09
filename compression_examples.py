@@ -6,6 +6,31 @@ from relational_operations import *
 import pickle
 
 
+def array_upscale(arr, factor = 10):
+    if len(arr.shape) == 2:
+        x = arr.shape[0]*factor
+        y = arr.shape[1]*factor
+        arr_2 = np.zeros((x, y), dtype=arr.dtype)
+        
+        for i in range(arr.shape[0]):
+            for j in range(arr.shape[1]):
+                for a in range(factor):
+                    for b in range(factor):
+                        arr_2[(i*factor + a), (j*factor + b)] = arr[i, j]
+        
+        return arr_2
+    else:
+        x = arr.shape[0]*factor
+        arr_2 = np.zeros((x), dtype=arr.dtype)
+        
+        for i in range(arr.shape[0]):
+                for a in range(factor):
+                    arr_2[(i*factor + a)] = arr[i]
+        
+        return arr_2
+
+
+
 class DummyProv(object):
     def __init__(self, prov):
         self.provenance = prov
@@ -173,9 +198,11 @@ def test12(arr_shape = 1000000, sorted = True):
     out[3] = np.dot(arr_3, arr_33)
     return out
 
-def test13(mnist = './compression_tests_2/mnist.npy', provenance = False):
+def test13(mnist = './compression_tests_2/mnist.npy', upscale = 1000, provenance = False):
     '''image filter'''
     arr = np.load(mnist)
+    if upscale != 0:
+        arr = array_upscale(arr, factor = upscale)
     if provenance:
         arr = np.reshape(arr, (arr.shape[0], 1)).astype(tf.tracked_float)
         tf.initialize(arr, 1)
@@ -186,11 +213,13 @@ def test13(mnist = './compression_tests_2/mnist.npy', provenance = False):
         arr[arr > 0] = 1
         return arr
 
-def test14(afile = './compression_tests_2/example_lime.npy', provenance = False):
+def test14(afile = './compression_tests_2/example_lime.npy', upscale = 10, provenance = False):
     """
     LIME explainations
     """
     arr = np.load(afile)
+    if upscale != 0:
+        arr = array_upscale(arr, factor = upscale)
     ar2 = np.zeros(arr.shape)
     ar2[arr > 0.5] = 1
     if provenance == False:
@@ -207,11 +236,13 @@ def test14(afile = './compression_tests_2/example_lime.npy', provenance = False)
                     prov[i, j] = p
         return prov
 
-def test15(afile = './compression_tests_2/example_drise.npy', provenance = False):
+def test15(afile = './compression_tests_2/example_drise.npy', upscale = 10, provenance = False):
     """
     DRISE explainations
     """
     arr = np.load(afile)
+    if upscale != 0:
+        arr = array_upscale(arr, factor = upscale)
     ar2 = np.zeros(arr.shape)
     ar2[arr > 0.5] = 1
     if provenance == False:

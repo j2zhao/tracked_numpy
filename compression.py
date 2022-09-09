@@ -237,7 +237,6 @@ def compression(prov_arr, relative = True):
     cell_prov = np.zeros(prov_arr.shape, dtype=object)
     start = time.time()
     for row in range(prov_arr.shape[0]):
-        print(row)
         for col in range(prov_arr.shape[1]):
             prov_dict = divide_by_id(prov_arr[row, col].provenance)
             compress = {}
