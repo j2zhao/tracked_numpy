@@ -33,7 +33,7 @@ def aux(array, ids = [1]):
         array = np.reshape(array, (1, 1))
     if len(array.shape) == 1:
         array = np.reshape(array, (array.shape[0], 1))
-
+    print(array.shape)
     provs = {}
     for id in ids:
         provs[id] = []
@@ -42,7 +42,7 @@ def aux(array, ids = [1]):
             for p in array[i, j].provenance:
                 id, x, y = p
                 provs[id].append([i, j, x, y])
-
+                print(len(provs[id]))
     results = {}
     for id in ids:
         results[id] = pd.DataFrame(provs[id], columns=['output_x', 'output_y', 'input_x', 'input_y'])
