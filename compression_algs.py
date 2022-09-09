@@ -33,7 +33,6 @@ def aux(array, ids = [1]):
         array = np.reshape(array, (1, 1))
     if len(array.shape) == 1:
         array = np.reshape(array, (array.shape[0], 1))
-    print(array.shape)
     provs = {}
     for id in ids:
         provs[id] = []
@@ -42,7 +41,6 @@ def aux(array, ids = [1]):
             for p in array[i, j].provenance:
                 id, x, y = p
                 provs[id].append([i, j, x, y])
-                print(len(provs[id]))
     results = {}
     for id in ids:
         results[id] = pd.DataFrame(provs[id], columns=['output_x', 'output_y', 'input_x', 'input_y'])
@@ -278,7 +276,7 @@ def comp_save(array, path, name, arrow = True, gzip = True):
 import matplotlib.pyplot as plt
 
 
-array_size = [(1, 100), (1, 1000), (1, 10000), (1, 100000), (1, 1000000), (1, 10000000), (1, 100000000)]
+array_size = [(100, 1), (1000, 1), (10000, 1), (100000, 1), (1000000, 1), (10000000, 1), (100000000, 1)]
 
 if __name__ == '__main__':
     for size in array_size:
@@ -294,7 +292,7 @@ if __name__ == '__main__':
         os.mkdir('./temp')        
         # with open ('./compression_tests_2/join_output.pickle', 'rb') as f:
         #     arr = pickle.load(f)
-        arr = test3(arr=size)
+        arr = test7(arr_shape=size)
         #imgplot = plt.imshow(arr)
         #plt.show()
         # print('done')
