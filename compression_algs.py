@@ -315,7 +315,7 @@ if __name__ == '__main__':
         #     print(i)
             # raw_save(arr[i], './storage', 'step0_{}'.format(i), ids = [1, 2], arrow = False)
         start = time.time()
-        raw_save(arr, './storage', 'step0_', ids = [1], arrow = True)
+        gzip_save(arr, './storage', 'step0_', ids = [1], arrow = True)
         #comp_rel_save(arr, './storage', 'step0_', image = True, arrow = True, gzip=True)
         end = time.time()
         print('compression time')
