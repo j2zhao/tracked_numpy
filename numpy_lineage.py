@@ -65,7 +65,7 @@ if __name__ == '__main__':
             shutil.rmtree(folder_)
         except OSError as e:
             pass
-        os.mkdir(array)
+        os.mkdir(folder_)
 
         for i, f in enumerate(func2):
             array = run_function(array, f[0], f[1])
