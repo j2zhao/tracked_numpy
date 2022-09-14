@@ -51,6 +51,7 @@ if __name__ == '__main__':
             func.append(json.loads(lines[i]))
     # choose functions
     for i in range(100):
+        print(i)
         n = len(func)
         indices = [random.randrange(0, n) for i in range(size)]
         #indices = list(range(n))
