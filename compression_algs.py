@@ -391,7 +391,7 @@ if __name__ == '__main__':
     #start = time.time()
     #column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1, 2])
     #gzip_save(arr, './storage', 'step0_', ids = [1, 2], arrow = True)
-    comp_rel_save(arr, './storage', 'step0_', arrow = True, gzip=False)
+    comp_rel_save(arr, './storage', 'step0_', arrow = True, gzip=True)
     #end = time.time()
     print('compression time')
     #print(size)
