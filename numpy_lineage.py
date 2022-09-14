@@ -1,4 +1,5 @@
 
+from copyreg import pickle
 import numpy as np
 import os
 import numpy.core.tracked_float as tf
@@ -6,9 +7,24 @@ import json
 import sys
 import random
 import shutil
+import pickle
+
+
+class DummyProv(object):
+    def __init__(self, prov):
+        self.provenance = prov
+
+def convert_array(array):
+    if len(array.shape) == 0:
+        array  = np.reshape(array, (1,1))
+    elif len(array.shape) == 1:
+        array  = np.reshape(array, (-1,1))
+    arr2 = np.zeros(array.shape, dtype=object)
+    for i in range(array.shape[0]):
+        for j in range(array.shape[1]):
+            arr2[i, j] = DummyProv(array[i,j].provenance)
 
 def convert_functions(func):
-    print(func)
     kwargs = {}
     if len(func) < 2:
         return (getattr(np, func[0]), {})
@@ -24,7 +40,6 @@ def convert_functions(func):
         else:
             index = random.randrange(len(val))
             kwargs[key] = val[index]
-    print(kwargs)
     return (getattr(np, func[0]), kwargs)
 
 def run_function(array, f, kwargs):
@@ -42,7 +57,8 @@ def run_function(array, f, kwargs):
 if __name__ == '__main__':
     folder = 'compression_tests_2/numpy_pipeline'
     func_list = 'compression_tests_2/single_functions.txt'
-    size = int(sys.argv[1])
+    size = 5
+    exp = sys.argv[1]
     # read function list
     func = []
     with open(func_list, 'r') as f:
@@ -50,24 +66,25 @@ if __name__ == '__main__':
         for i in range(len(lines)):
             func.append(json.loads(lines[i]))
     # choose functions
-    for i in range(100):
-        print(i)
-        n = len(func)
-        indices = [random.randrange(0, n) for i in range(size)]
-        #indices = list(range(n))
-        func2 = []
-        for i in indices:
-            func2.append(convert_functions(func[i]))
-        # run functions
-        array = np.random.rand(1000, 1000)
-        folder_ = folder + str(i)
-        try:
-            shutil.rmtree(folder_)
-        except OSError as e:
-            pass
-        os.mkdir(folder_)
-
-        for i, f in enumerate(func2):
-            array = run_function(array, f[0], f[1])
-            dire = os.path.join(folder_, 'step{}.npy'.format(i))
-            np.save(dire, array)
+    n = len(func)
+    indices = [random.randrange(0, n) for i in range(size)]
+    #indices = [66]
+    func2 = []
+    for i in indices:
+        func2.append(convert_functions(func[i]))
+    # run functions
+    array = np.random.rand(1000, 1000).astype(tf.tracked_float)
+    folder_ = folder + exp
+    print(folder_)
+    try:
+        shutil.rmtree(folder_)
+    except OSError as e:
+        pass
+    os.mkdir(folder_)
+    for i, f in enumerate(func2):
+        print(f)
+        array = run_function(array, f[0], f[1])
+        array_saved = convert_array(array)
+        dire = os.path.join(folder_, 'step{}.pickle'.format(i))
+        with open(dire, 'wb') as file:
+            pickle.dump(array_saved, file)
