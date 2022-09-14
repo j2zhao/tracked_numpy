@@ -67,7 +67,6 @@ def join_prov(df1, df2, column_name1, column_name2,  id1 = 1, id2 = 2, limit = 1
                 for name, value in row1.items():
                     obj = TrackedObj(value, (id1, col1_dict[name], i))
                     row.append(obj)
-
                 for name, value in row2.items():
                     if name == column_name2:
                         continue

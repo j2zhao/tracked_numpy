@@ -50,7 +50,7 @@ def load_temp():
     tables['step0_1'] = table
     return tables
 
-def query_one2one(pranges, folder, tnames, dtype = 'arrow'):
+def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
     """
     type: 'arrow' or 'turbo' or 'csv' -> right now only support  arrow and turbo
 
@@ -79,10 +79,16 @@ def query_one2one(pranges, folder, tnames, dtype = 'arrow'):
         for row in query_rows:
         # print('hello')
             # print(con.fetchall())
-            con.execute('SELECT input_x, input_y FROM arrow_table WHERE output_x = ? AND output_y = ?', row)
-            sql_results = con.fetchdf()
-            for _, row in sql_results.iterrows():
-                new_query_rows.append((row['input_x'], row['input_y']))
+            if backwards:
+                con.execute('SELECT input_x, input_y FROM arrow_table WHERE output_x = ? AND output_y = ?', row)
+                sql_results = con.fetchdf()
+                for _, row in sql_results.iterrows():
+                    new_query_rows.append((row['input_x'], row['input_y']))
+            else:
+                con.execute('SELECT output_x, output_y FROM arrow_table WHERE input_x = ? AND input_y = ?', row)
+                sql_results = con.fetchdf()
+                for _, row in sql_results.iterrows():
+                    new_query_rows.append((row['output_x'], row['output_y']))
         query_rows = new_query_rows
     return query_rows
 
