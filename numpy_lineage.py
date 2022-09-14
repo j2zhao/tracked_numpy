@@ -5,6 +5,7 @@ import numpy.core.tracked_float as tf
 import json
 import sys
 import random
+import shutil
 
 def convert_functions(func):
     print(func)
@@ -49,15 +50,23 @@ if __name__ == '__main__':
         for i in range(len(lines)):
             func.append(json.loads(lines[i]))
     # choose functions
-    n = len(func)
-    indices = [random.randrange(0, n) for i in range(size)]
-    #indices = list(range(n))
-    func2 = []
-    for i in indices:
-        func2.append(convert_functions(func[i]))
-    # run functions
-    array = np.random.rand(1000, 1000)
-    for i, f in enumerate(func2):
-        array = run_function(array, f[0], f[1])
-        dire = os.path.join(folder, 'step{}.npy'.format(i))
-        np.save(dire, array)
+    for i in range(100):
+        n = len(func)
+        indices = [random.randrange(0, n) for i in range(size)]
+        #indices = list(range(n))
+        func2 = []
+        for i in indices:
+            func2.append(convert_functions(func[i]))
+        # run functions
+        array = np.random.rand(1000, 1000)
+        folder_ = folder + str(i)
+        try:
+            shutil.rmtree(folder_)
+        except OSError as e:
+            pass
+        os.mkdir(array)
+
+        for i, f in enumerate(func2):
+            array = run_function(array, f[0], f[1])
+            dire = os.path.join(folder_, 'step{}.npy'.format(i))
+            np.save(dire, array)
