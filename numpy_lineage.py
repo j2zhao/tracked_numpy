@@ -46,12 +46,12 @@ def convert_functions(func):
 def run_function(array, f, kwargs):
     if len(array.shape) == 0:
         array  = np.reshape(array, (1,1))
-        tf.initialize(array, i)
+        tf.initialize(array, 1)
     elif len(array.shape) == 1:
         array  = np.reshape(array, (-1,1))
-        tf.initialize(array, i)
+        tf.initialize(array, 1)
     else:
-        tf.initialize(array, i)
+        tf.initialize(array, 1)
     output = f(array, **kwargs)
     return output
 
