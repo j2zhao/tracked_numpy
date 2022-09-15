@@ -286,8 +286,6 @@ def comp_rel_save(array, path, name, image = False, arrow = True, gzip = True):
         prov = provenance[id]
         vals = convert_rel(prov)
         vals_inverse = convert_inverse_rel(prov)
-        print(vals)
-        print(vals_inverse)
         df = pd.DataFrame(vals, columns= ["output_x1", "output_x2", "output_y1", "output_y2", \
                 "input_x1_a", "input_x1_1", "input_x1_2", \
                 "input_x2_a", "input_x2_1", "input_x2_2",  \
