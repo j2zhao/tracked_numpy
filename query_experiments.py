@@ -55,7 +55,7 @@ if __name__ == '__main__':
     pranges = [get_range(xsize, ysize, x, y)]
     tnames = []
     for i in range(num_steps):
-        tname = 'step{}_1.parquet'.format(i)
+        tname = 'step{}_1'.format(i)
         tnames.append(tname)
     #result = query_comp(pranges, folder2, tnames, absolute = False, merge = True, dtype = 'arrow')
     #result = quer
