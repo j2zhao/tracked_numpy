@@ -62,7 +62,6 @@
 ["median", {"axis": [1, 0]}]
 ["mean", {"axis": [1, 0]}]
 ["std", {"axis": [1, 0]}]
-["reshape", {"newshape":[[-1,1],[1,-1]]}]
 ["ravel"]
 ["moveaxis", {"source": [0,1], "destination":[0,1]}]
 ["swapaxes",{"axis1": [0,1], "axis2":[0,1]}]
