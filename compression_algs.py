@@ -48,7 +48,6 @@ def aux(array, ids = [1]):
  
 def raw_save(array, path, name, ids = [1], arrow = True):
     dfs = aux(array, ids)
-    print('hello')
     for id in dfs:
         if not arrow:
             dire = os.path.join(path, name + str(id) + '.csv')

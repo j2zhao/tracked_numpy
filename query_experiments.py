@@ -52,8 +52,6 @@ if __name__ == '__main__':
     else:
         x = 10
         y = 10
-    print(x)
-    print(y)
     raise ValueError()
     pranges = [get_range(xsize, ysize, x, y)]
     tnames = []
