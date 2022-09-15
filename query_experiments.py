@@ -38,8 +38,7 @@ def get_range(xsize, ysize, x, y):
 
 
 if __name__ == '__main__':
-    folder1 = 'compression_tests_2/numpy_pipeline'
-    
+    folder1 = 'compression_tests_2/numpy_pipeline0'
     folder2 = 'storage'
     num_steps = 5
     input2 = []
@@ -47,22 +46,21 @@ if __name__ == '__main__':
     dfile = ''
     xsize = 1
     ysize = 1
-    for i in range(100):
-        if folder1 != '':
-            x, y = compression_convert(folder1, folder2, num_steps, dfile, input2, images)
-        else:
-            x = 10
-            y = 10
-        
-        pranges = [get_range(xsize, ysize, x, y)]
-        tnames = []
-        for i in range(num_steps):
-            tname = 'step{}_1'.format(i)
-            tnames.append(tname)
-        #result = query_comp(pranges, folder2, tnames, absolute = False, merge = True, dtype = 'arrow')
-        #result = quer
-        # y_invertedlist(pranges, folder2, tnames, dtype = 'arrow')
-        print(pranges)
-        result = query_one2one(pranges, folder2, tnames, dtype = 'turbo')
-        ##result = query_invertedlist(pranges, folder2, tnames, dtype = 'arrow')
-        print(result)
+    if folder1 != '':
+        x, y = compression_convert(folder1, folder2, num_steps, dfile, input2, images)
+    else:
+        x = 10
+        y = 10
+    
+    pranges = [get_range(xsize, ysize, x, y)]
+    tnames = []
+    for i in range(num_steps):
+        tname = 'step{}_1'.format(i)
+        tnames.append(tname)
+    #result = query_comp(pranges, folder2, tnames, absolute = False, merge = True, dtype = 'arrow')
+    #result = quer
+    # y_invertedlist(pranges, folder2, tnames, dtype = 'arrow')
+    print(pranges)
+    result = query_one2one(pranges, folder2, tnames, dtype = 'turbo')
+    ##result = query_invertedlist(pranges, folder2, tnames, dtype = 'arrow')
+    print(result)
