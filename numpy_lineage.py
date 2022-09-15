@@ -58,7 +58,7 @@ def run_function(array, f, kwargs):
 if __name__ == '__main__':
     folder = 'compression_tests_2/numpy_pipeline'
     func_list = 'compression_tests_2/single_functions.txt'
-    size = 1
+    size = 5
     exp = sys.argv[1]
     # read function list
     func = []

@@ -242,12 +242,10 @@ def _var(a, axis=None, dtype=None, out=None, ddof=0, keepdims=False, *,
     else:
         x = x*x
         #x = um.multiply(x, um.conjugate(x), out=x).real
-    print('test')
     ret = umr_sum(x, axis, dtype, out, keepdims=keepdims, where=where, initial = None)
 
     # Compute degrees of freedom and make sure it is not negative.
     rcount = um.maximum(rcount - ddof, 0)
-    print('test2')
     # divide by degrees of freedom
     if isinstance(ret, mu.ndarray):
         ret = um.true_divide(
