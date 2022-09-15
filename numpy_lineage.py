@@ -23,6 +23,7 @@ def convert_array(array):
     for i in range(array.shape[0]):
         for j in range(array.shape[1]):
             arr2[i, j] = DummyProv(array[i,j].provenance)
+    return arr2
 
 def convert_functions(func):
     kwargs = {}
@@ -57,7 +58,7 @@ def run_function(array, f, kwargs):
 if __name__ == '__main__':
     folder = 'compression_tests_2/numpy_pipeline'
     func_list = 'compression_tests_2/single_functions.txt'
-    size = 5
+    size = 1
     exp = sys.argv[1]
     # read function list
     func = []
@@ -73,7 +74,7 @@ if __name__ == '__main__':
     for i in indices:
         func2.append(convert_functions(func[i]))
     # run functions
-    array = np.random.rand(1000, 1000).astype(tf.tracked_float)
+    array = np.random.rand(1000, 100).astype(tf.tracked_float)
     folder_ = folder + exp
     print(folder_)
     try:
