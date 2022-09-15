@@ -367,7 +367,7 @@ if __name__ == '__main__':
         os.mkdir('./temp')        
         # with open ('./compression_tests_2/join_output.pickle', 'rb') as f:
         #     arr = pickle.load(f)
-        arr = test1(size)
+        arr = test7(size)
         #imgplot = plt.imshow(arr)
         #plt.show()
         # print('done')
@@ -391,7 +391,7 @@ if __name__ == '__main__':
         start = time.time()
         #column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1, 2])
         #gzip_save(arr, './storage', 'step0_', ids = [1, 2], arrow = True)
-        comp_rel_save(arr, './storage', 'step0_', arrow = True, gzip=True)
+        comp_rel_save(arr, './storage', 'step0_', arrow = True, gzip=False)
         end = time.time()
         print('compression time')
         print(size)
