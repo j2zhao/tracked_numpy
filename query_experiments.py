@@ -61,6 +61,6 @@ if __name__ == '__main__':
     #result = quer
     # y_invertedlist(pranges, folder2, tnames, dtype = 'arrow')
     print(pranges)
-    result = query_one2one(pranges, folder2, tnames, dtype = 'turbo')
+    result = query_one2one(pranges, folder2, tnames, dtype = 'arrow')
     ##result = query_invertedlist(pranges, folder2, tnames, dtype = 'arrow')
     print(result)
