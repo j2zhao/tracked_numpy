@@ -27,9 +27,9 @@ def compression_convert(folder1, folder2, num_steps, dfile, input2, images):
         else:
             ids = [1,2]
         if i not in images:
-            save_func(array, folder2, 'step{}'.format(i), ids = ids)
+            raw_save(array, folder2, 'step{}'.format(i), ids = ids)
         else:
-            save_func(array, folder2, 'step{}'.format(i), ids = ids, image = True)
+            raw_save(array, folder2, 'step{}'.format(i), ids = ids, image = True)
     return final_shape
 
 def get_range(xsize, ysize, x, y):
