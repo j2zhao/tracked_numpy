@@ -43,7 +43,7 @@ if __name__ == '__main__':
     num_steps = 5
     input2 = []
     images = []
-    dfile = 'pickle'
+    dfile = '.pickle'
     xsize = 1
     ysize = 1
     if folder1 != '':
