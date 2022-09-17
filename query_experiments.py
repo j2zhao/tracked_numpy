@@ -27,7 +27,7 @@ def compression_convert(folder1, folder2, num_steps, dfile, input2, images):
         else:
             ids = [1,2]
         if i not in images:
-            raw_save(array, folder2, 'step{}_'.format(i), ids = ids)
+            raw_save(array, folder2, 'step{}_'.format(i), ids = ids, arrow = False)
         else:
             raw_save(array, folder2, 'step{}_'.format(i), ids = ids, image = True)
     return final_shape
@@ -62,6 +62,6 @@ if __name__ == '__main__':
     #result = quer
     # y_invertedlist(pranges, folder2, tnames, dtype = 'arrow')
     print(pranges)
-    result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'arrow')
+    result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'csv')
     ##result = query_invertedlist(pranges, folder2, tnames, dtype = 'arrow')
     print(result)
