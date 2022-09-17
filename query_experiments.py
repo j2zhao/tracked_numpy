@@ -50,17 +50,18 @@ if __name__ == '__main__':
     if folder1 != '':
         x, y = compression_convert(folder1, folder2, num_steps, dfile, input2, images)
     else:
-        x = 10
-        y = 10
+        x = 1000
+        y = 100
     pranges = [get_range(xsize, ysize, x, y)]
     tnames = []
     for i in range(num_steps):
         tname = 'step{}_1'.format(i)
         tnames.append(tname)
+    tnames.reverse()
     #result = query_comp(pranges, folder2, tnames, absolute = False, merge = True, dtype = 'arrow')
     #result = quer
     # y_invertedlist(pranges, folder2, tnames, dtype = 'arrow')
     print(pranges)
-    result = query_one2one(pranges, folder2, tnames, dtype = 'arrow')
+    result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'arrow')
     ##result = query_invertedlist(pranges, folder2, tnames, dtype = 'arrow')
     print(result)

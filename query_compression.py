@@ -16,6 +16,15 @@ def load_parquet(folder):
             tables[nm] = pq.read_table(dire)
     return tables
 
+def load_csv(folder):
+    tables = {}
+    for name in os.listdir(folder):
+        if name.endswith('.csv'): 
+            dire = os.path.join(folder, name)
+            nm = name.split('.')[0]
+            tables[nm] = pd.read_csv(dire)
+    return tables
+
 def load_turbo(folder):
     turbo_dir = "./turbo/Turbo-Range-Coder/turborc"
     turbo_param = "-d"
@@ -61,6 +70,8 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
         tables = load_parquet(folder)
     elif dtype == 'turbo':
         tables = load_turbo(folder)
+    elif dtype == 'csv':
+        tables = load_csv(folder)
     elif dtype == 'temp':
         tables = load_temp()
     else:
