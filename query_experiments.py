@@ -76,7 +76,7 @@ if __name__ == '__main__':
         ##result = query_invertedlist(pranges, folder2, tnames, dtype = 'arrow')
         print(result)
     times = np.asarray(times)
-    avg = np.avg(times)
+    avg = np.average(times)
     std = np.std(times)
     print('average time')
     print(avg)
