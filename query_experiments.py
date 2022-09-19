@@ -47,7 +47,12 @@ if __name__ == '__main__':
     for j in range(100):
         folder1 = 'compression_tests_2/numpy_pipeline' + str(j)
         print(folder1)
-        folder2 = 'storage'
+        folder2 = 'storage/raw' + str(j)
+        try:
+            shutil.rmtree(folder2)
+        except OSError as e:
+            pass
+        os.mkdir(folder2)
         num_steps = 5
         input2 = []
         images = []
