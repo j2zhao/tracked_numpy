@@ -43,6 +43,7 @@ def get_range(xsize, ysize, x, y):
 
 if __name__ == '__main__':
     times = []
+    experiment = 0
     for j in range(100):
         folder1 = 'compression_tests_2/numpy_pipeline' + str(j)
         print(folder1)
@@ -74,6 +75,11 @@ if __name__ == '__main__':
         times.append(end - start)
         ##result = query_invertedlist(pranges, folder2, tnames, dtype = 'arrow')
         print(result)
-    avg = sum(times)/len(times)
+    times = np.toarray(times)
+    avg = np.avg(times)
+    std = np.std(times)
     print('average time')
-    print
+    print(avg)
+    print(std)
+    np.save('query_results/times{}.npy'.format(experiment), times)
+    
