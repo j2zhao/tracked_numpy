@@ -31,11 +31,11 @@ def convert_functions(func):
         return (getattr(np, func[0]), {})
     for key, val in func[1].items():
         if func[0] == 'partition' and key == 'kth':
-            kwargs[key] = random.randrange(0, 1000)
+            kwargs[key] = random.randrange(0, 100)
         elif func[0] == 'delete' and key == 'obj':
-            kwargs[key] = random.randrange(0, 1000)
+            kwargs[key] = random.randrange(0, 100)
         elif func[0] == 'insert' and key == 'obj':
-            kwargs[key] = random.randrange(0, 1000)
+            kwargs[key] = random.randrange(0, 100)
         elif func[0] == 'insert' and key == 'values':
             kwargs[key] = np.zeros(()).astype(tf.tracked_float)
         else:
