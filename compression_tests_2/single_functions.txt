@@ -61,7 +61,6 @@
 ["quantile",  {"axis": [1, 0], "q":[0.1, 0.2, 0.4]}]
 ["median", {"axis": [1, 0]}]
 ["mean", {"axis": [1, 0]}]
-["std", {"axis": [1, 0]}]
 ["ravel"]
 ["moveaxis", {"source": [0,1], "destination":[0,1]}]
 ["swapaxes",{"axis1": [0,1], "axis2":[0,1]}]
