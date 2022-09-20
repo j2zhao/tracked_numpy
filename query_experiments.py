@@ -38,21 +38,22 @@ def compression_convert(folder1, folder2, num_steps, dfile, input2, images):
 def get_range(xsize, ysize, x, y):
     xstart = random.randrange(0, x - xsize)     
     ystart = random.randrange(0, y - ysize)
-    return (xstart, xstart + xsize - 1), (ystart, ystart + ysize - 1)
-
+    xmax = max(xstart + xsize - 1, xsize - 1)
+    ymax = max(ystart + ysize - 1, ysize)
+    return (xstart, xmax), (ystart, ymax)
 
 if __name__ == '__main__':
     times = []
-    experiment = 10
+    experiment = 1
     for j in range(100):
         #folder1 = 'compression_tests_2/numpy_pipeline' + str(j)
         folder1 = ''
         folder2 = 'storage/raw' + str(j)
-        # try:
-        #     shutil.rmtree(folder2)
-        # except OSError as e:
-        #     pass
-        #os.mkdir(folder2)
+        try:
+            shutil.rmtree(folder2)
+        except OSError as e:
+            pass
+        os.mkdir(folder2)
         print(folder2)
         num_steps = 5
         input2 = []
@@ -62,9 +63,16 @@ if __name__ == '__main__':
         ysize = 1
         if folder1 != '':
             x, y = compression_convert(folder1, folder2, num_steps, dfile, input2, images)
+            with open(os.path.join(folder2, 'x.pickle')) as f:
+                pickle.dump(x, f)
+            with open(os.path.join(folder2, 'y.pickle')) as f:
+                pickle.dump(y, f)
         else:
-            x = 1000
-            y = 100
+            with open(os.path.join(folder2, 'x.pickle')) as f:
+                x = pickle.load(f)
+            with open(os.path.join(folder2, 'y.pickle')) as f:
+                y = pickle.load(f)
+        continue
         pranges = [get_range(xsize, ysize, x, y)]
         tnames = []
         for i in range(num_steps):
@@ -81,11 +89,11 @@ if __name__ == '__main__':
         times.append(end - start)
         ##result = query_invertedlist(pranges, folder2, tnames, dtype = 'arrow')
         #print(result)
-    times = np.asarray(times)
-    avg = np.average(times)
-    std = np.std(times)
-    print('average time')
-    print(avg)
-    print(std)
-    np.save('query_results/raw_times{}.npy'.format(experiment), times)
+    # times = np.asarray(times)
+    # avg = np.average(times)
+    # std = np.std(times)
+    # print('average time')
+    # print(avg)
+    # print(std)
+    # np.save('query_results/raw_times{}.npy'.format(experiment), times)
     
