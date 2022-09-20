@@ -81,25 +81,30 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
     for prange in pranges:
         for i in range(prange[0][0], prange[0][1] + 1):
             for j in range(prange[1][0], prange[1][1] + 1):
-                query_rows.append([i, j])
+                query_rows.append([int(i), int(j)])
     #print(query_rows)
     
     for name in tnames:
         arrow_table = tables[name]
         new_query_rows = []
-        for row in query_rows:
-            row = [int(row[0]), int(row[1])]
+        # for row in query_rows:
+        #     row = (int(row[0]), int(row[1]))
             # print(con.fetchall())
-            if backwards:
-                con.execute('SELECT input_x, input_y FROM arrow_table WHERE output_x = ? AND output_y = ?', row)
-                sql_results = con.fetchdf()
-                for _, row in sql_results.iterrows():
-                    new_query_rows.append((row['input_x'], row['input_y']))
-            else:
-                con.execute('SELECT output_x, output_y FROM arrow_table WHERE input_x = ? AND input_y = ?', row)
-                sql_results = con.fetchdf()
-                for _, row in sql_results.iterrows():
-                    new_query_rows.append((row['output_x'], row['output_y']))
+        if backwards:
+            query = 'SELECT input_x, input_y FROM arrow_table WHERE (output_x, output_y) IN ' + str(tuple(query_rows))
+            print(query)
+            con.execute(query)
+            #con.execute('SELECT input_x, input_y FROM arrow_table WHERE output_x = ? AND output_y = ?', row)
+            sql_results = con.fetchdf()
+            for _, row in sql_results.iterrows():
+                new_query_rows.append((row['input_x'], row['input_y']))
+        else:
+            query = 'SELECT output_x, output_y FROM arrow_table WHERE (input_x, input_y) IN ' + str(tuple(query_rows))
+            print(query)
+            #con.execute('SELECT output_x, output_y FROM arrow_table WHERE input_x = ? AND input_y = ?', row)
+            sql_results = con.fetchdf()
+            for _, row in sql_results.iterrows():
+                new_query_rows.append((row['output_x'], row['output_y']))
         query_rows = new_query_rows
     return query_rows
 
