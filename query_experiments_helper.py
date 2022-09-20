@@ -53,6 +53,6 @@ def make_compression_numpy(f2, f1, num_steps, folder_range):
 if __name__ == '__main__':
     folder1 = 'compression_tests_2/numpy_pipeline'
     folder2 = 'storage/turbo_comp'
-    folder_range = list(range(20))
-    #folder_range = [15]
+    #folder_range = list(range(20))
+    folder_range = [0]
     make_compression_numpy(folder2, folder1, num_steps = 5, folder_range = folder_range)

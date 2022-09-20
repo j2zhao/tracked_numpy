@@ -44,7 +44,7 @@ if __name__ == '__main__':
         xsize = sizes[k][0]
         ysize = sizes[k][1]
         experiment = experiments[k]
-        for j in range(20):
+        for j in range(1):
             # get folder name and last size
             folder2 = 'storage/turbo_comp' + str(j)
             print(folder2)
