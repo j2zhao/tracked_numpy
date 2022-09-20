@@ -53,4 +53,4 @@ if __name__ == '__main__':
     folder2 = 'storage/raw'
     #folder_range = list(range(20))
     folder_range = [15]
-    make_compression_numpy(folder1, folder1, num_steps = 5, folder_range = folder_range)
+    make_compression_numpy(folder2, folder1, num_steps = 5, folder_range = folder_range)

@@ -87,6 +87,5 @@ if __name__ == '__main__':
         array = run_function(array, f[0], f[1])
         array_saved = convert_array(array)
         dire = os.path.join(folder_, 'step{}.pickle'.format(i))
-        print(dire)
         with open(dire, 'wb') as file:
             pickle.dump(array_saved, file)
