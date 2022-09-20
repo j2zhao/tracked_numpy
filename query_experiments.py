@@ -80,7 +80,7 @@ if __name__ == '__main__':
         end = time.time()
         times.append(end - start)
         ##result = query_invertedlist(pranges, folder2, tnames, dtype = 'arrow')
-        #print(result)
+        print(result)
     times = np.asarray(times)
     avg = np.average(times)
     std = np.std(times)
