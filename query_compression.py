@@ -65,7 +65,6 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
 
     """
     con = duckdb.connect(database=':memory:')
-    print(dtype)
     if dtype == 'arrow':
         tables = load_parquet(folder)
     elif dtype == 'turbo':
@@ -78,6 +77,7 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
         raise ValueError('dtype argument not supported')
 
     query_rows = []
+    print(pranges)
     for prange in pranges:
         for i in range(prange[0][0], prange[0][1] + 1):
             for j in range(prange[1][0], prange[1][1] + 1):
