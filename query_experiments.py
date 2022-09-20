@@ -77,7 +77,7 @@ if __name__ == '__main__':
     for k in range(len(experiments)):
         times = []
         xsize = sizes[k][0]
-        ysize = size[k][1]
+        ysize = sizes[k][1]
         experiment = experiments[k]
         for j in range(20):
             # get folder name and last size
