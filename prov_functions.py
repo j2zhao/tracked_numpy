@@ -95,7 +95,7 @@ def run(provenance, func, arrays, args, repetition, log):
         
         if prov == None:
             provenance = prov_obj.compress_function(output)
-            print(provenance)
+            #print(provenance)
             prov_obj.add_prov(provenance, func.__name__, arg_dic, arr_tup)
             #print(prov_obj.prov)
             prov_obj.add_log(0, 0, func.__name__, arg_dic, arr_tup, provenance)

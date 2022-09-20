@@ -43,7 +43,7 @@ def get_range(xsize, ysize, x, y):
 
 if __name__ == '__main__':
     times = []
-    experiment = 0
+    experiment = 10
     for j in range(100):
         #folder1 = 'compression_tests_2/numpy_pipeline' + str(j)
         folder1 = ''
@@ -58,7 +58,7 @@ if __name__ == '__main__':
         input2 = []
         images = []
         dfile = '.pickle'
-        xsize = 1
+        xsize = 10
         ysize = 1
         if folder1 != '':
             x, y = compression_convert(folder1, folder2, num_steps, dfile, input2, images)
@@ -80,12 +80,12 @@ if __name__ == '__main__':
         end = time.time()
         times.append(end - start)
         ##result = query_invertedlist(pranges, folder2, tnames, dtype = 'arrow')
-        print(result)
+        #print(result)
     times = np.asarray(times)
     avg = np.average(times)
     std = np.std(times)
     print('average time')
     print(avg)
     print(std)
-    np.save('query_results/times{}.npy'.format(experiment), times)
+    np.save('query_results/raw_times{}.npy'.format(experiment), times)
     
