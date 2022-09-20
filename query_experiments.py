@@ -46,7 +46,7 @@ if __name__ == '__main__':
         experiment = experiments[k]
         for j in range(20):
             # get folder name and last size
-            folder2 = 'storage/parquet_gzip' + str(j)
+            folder2 = 'storage/turbo_comp' + str(j)
             print(folder2)
             with open(os.path.join(folder2, 'x.pickle'), 'rb') as f:
                 x = pickle.load(f)
@@ -61,7 +61,7 @@ if __name__ == '__main__':
             tnames.reverse()
             # get query results
             start = time.time()
-            result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'arrow')
+            result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'turbo')
             end = time.time()
             times.append(end - start)
             #result = query_comp(pranges, folder2, tnames, absolute = False, merge = True, dtype = 'arrow')
@@ -71,5 +71,5 @@ if __name__ == '__main__':
         print('finished experiment: {}'.format(experiment))
         print('average time: {}'.format(avg))
         print('std time: {}'.format(std))
-        np.save('query_results/arrow_gzip_times{}.npy'.format(experiment), times)
+        np.save('query_results/turbo_times{}.npy'.format(experiment), times)
     

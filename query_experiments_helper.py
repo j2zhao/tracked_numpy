@@ -28,8 +28,9 @@ def compression_convert(folder1, folder2, num_steps, dfile, input2, images):
         else:
             ids = [1,2]
         if i not in images:
+            column_save(array, folder2, 'step{}_'.format(i), temp_path = './temp', ids = ids)
             #raw_save(array, folder2, 'step{}_'.format(i), ids = ids, arrow = True)
-            gzip_save(array, folder2, 'step{}_'.format(i), ids = ids, arrow = True)
+            #gzip_save(array, folder2, 'step{}_'.format(i), ids = ids, arrow = True)
         #else:
             #raw_save(array, folder2, 'step{}_'.format(i), ids = ids, image = False, arrow=True)
     return final_shape
@@ -51,7 +52,7 @@ def make_compression_numpy(f2, f1, num_steps, folder_range):
 
 if __name__ == '__main__':
     folder1 = 'compression_tests_2/numpy_pipeline'
-    folder2 = 'storage/parquet_gzip'
+    folder2 = 'storage/turbo_comp'
     folder_range = list(range(20))
     #folder_range = [15]
     make_compression_numpy(folder2, folder1, num_steps = 5, folder_range = folder_range)
