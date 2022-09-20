@@ -43,6 +43,7 @@ def load_turbo(folder):
                 array_dict[db_names[i]] = np.load(p2, allow_pickle=True)
             table = pd.DataFrame(array_dict)
             tables[f1] = table
+        print(tables)
     return tables
 
 
@@ -144,3 +145,7 @@ def query_invertedlist(pranges, folder, tnames, dtype = 'arrow'):
                     arr_i += 2
         query_rows = new_query_rows
     return query_rows
+
+if __name__ == '__main__':
+    q = query_one2one([((0,0), (0,0))], 'storage', ['step0_1'], backwards = True, dtype = 'turbo')
+    print(q)
