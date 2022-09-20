@@ -43,7 +43,6 @@ def load_turbo(folder):
                 array_dict[db_names[i]] = np.load(p2, allow_pickle=True)
             table = pd.DataFrame(array_dict)
             tables[f1] = table
-        print(tables)
     return tables
 
 
