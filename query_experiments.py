@@ -46,8 +46,8 @@ if __name__ == '__main__':
     times = []
     experiment = 1
     for j in range(100):
-        #folder1 = 'compression_tests_2/numpy_pipeline' + str(j)
-        folder1 = ''
+        folder1 = 'compression_tests_2/numpy_pipeline' + str(j)
+        #folder1 = ''
         folder2 = 'storage/raw' + str(j)
         try:
             shutil.rmtree(folder2)
