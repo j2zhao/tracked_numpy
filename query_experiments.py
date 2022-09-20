@@ -46,8 +46,8 @@ if __name__ == '__main__':
     times = []
     experiment = 1
     for j in range(100):
-        #folder1 = 'compression_tests_2/numpy_pipeline' + str(j)
-        folder1 = ''
+        folder1 = 'compression_tests_2/numpy_pipeline' + str(j)
+        #folder1 = ''
         folder2 = 'storage/raw' + str(j)
         try:
             shutil.rmtree(folder2)
@@ -67,11 +67,13 @@ if __name__ == '__main__':
                 pickle.dump(x, f)
             with open(os.path.join(folder2, 'y.pickle'), 'wb') as f:
                 pickle.dump(y, f)
+            print('hello')
         else:
             with open(os.path.join(folder2, 'x.pickle'), 'rb') as f:
                 x = pickle.load(f)
             with open(os.path.join(folder2, 'y.pickle'), 'rb') as f:
                 y = pickle.load(f)
+        continue
         pranges = [get_range(xsize, ysize, x, y)]
         tnames = []
         for i in range(num_steps):
@@ -88,11 +90,11 @@ if __name__ == '__main__':
         times.append(end - start)
         ##result = query_invertedlist(pranges, folder2, tnames, dtype = 'arrow')
         #print(result)
-    times = np.asarray(times)
-    avg = np.average(times)
-    std = np.std(times)
-    print('average time')
-    print(avg)
-    print(std)
-    np.save('query_results/raw_times{}.npy'.format(experiment), times)
+    # times = np.asarray(times)
+    # avg = np.average(times)
+    # std = np.std(times)
+    # print('average time')
+    # print(avg)
+    # print(std)
+    # np.save('query_results/raw_times{}.npy'.format(experiment), times)
     
