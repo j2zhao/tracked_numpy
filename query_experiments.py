@@ -46,7 +46,7 @@ if __name__ == '__main__':
         experiment = experiments[k]
         for j in range(20):
             # get folder name and last size
-            folder2 = 'storage/raw' + str(j)
+            folder2 = 'storage/parquet' + str(j)
             print(folder2)
             with open(os.path.join(folder2, 'x.pickle'), 'rb') as f:
                 x = pickle.load(f)
@@ -62,7 +62,7 @@ if __name__ == '__main__':
             
             # get query results
             start = time.time()
-            result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'csv')
+            result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'parquet')
             end = time.time()
             times.append(end - start)
             #result = query_comp(pranges, folder2, tnames, absolute = False, merge = True, dtype = 'arrow')
