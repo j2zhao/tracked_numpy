@@ -139,10 +139,10 @@ def query_comp(pranges, folder, tnames, absolute = False, merge = True, dtype = 
     for name in tnames:
         oranges = []
         for prange in pranges:
-            x1 = int(prange[0][0])
-            x2 = int(prange[0][1])
-            y1 = int(prange[1][0])
-            y2 = int(prange[1][1])
+            x1 = prange[0][0]
+            x2 = prange[0][1]
+            y1 = prange[1][0]
+            y2 = prange[1][1]
 
             arrow_table = tables[name]
             df = con.execute("SELECT * FROM arrow_table WHERE LEAST(output_x2, {}) >= GREATEST(output_x1, {}) \

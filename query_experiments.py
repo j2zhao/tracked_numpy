@@ -14,14 +14,19 @@ import time
 
 def get_range(xsize, ysize, x, y):
     if x <= xsize:
+        y_size = int(xsize/x)*y_size
+    if y <= ysize:
+        x_size = int(ysize/y)*x_size
+
+    if x <= xsize:
         xstart = 0
-        xmax = x -1
+        xmax = x - 1
     else:
         xstart = random.randrange(0, x - xsize)
         xmax = xstart + xsize - 1
     if y <= ysize:
         ystart = 0
-        ymax = y -1
+        ymax = y - 1
     else:
         ystart = random.randrange(0, y - ysize)
         ymax = ystart + ysize - 1
