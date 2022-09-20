@@ -36,8 +36,8 @@ def get_range(xsize, ysize, x, y):
 if __name__ == '__main__':
     
     sizes = [(1, 1), (10, 1), (100, 1), (1000, 1), (1000, 10), (1000, 100)]
-    #experiments = [1, 10, 100, 1000, 10000, 100000]
-    experiments = [1]
+    experiments = [1, 10, 100, 1000, 10000, 100000]
+    #experiments = [1]
     num_steps = 5
     for k in range(len(experiments)):
         times = []
