@@ -73,5 +73,5 @@ if __name__ == '__main__':
         print('average time: {}'.format(avg))
         print('std time: {}'.format(std))
         print(avg)
-        np.save('query_results/raw_times{}.npy'.format(experiment), times)
+        np.save('query_results/arrow_times{}.npy'.format(experiment), times)
     
