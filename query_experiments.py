@@ -36,6 +36,8 @@ def compression_convert(folder1, folder2, num_steps, dfile, input2, images):
     return final_shape
 
 def get_range(xsize, ysize, x, y):
+    print(x)
+    print(y)
     xstart = random.randrange(0, x - xsize)     
     ystart = random.randrange(0, y - ysize)
     xmax = max(xstart + xsize - 1, xsize - 1)
