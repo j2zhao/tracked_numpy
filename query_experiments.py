@@ -52,7 +52,7 @@ if __name__ == '__main__':
         #     shutil.rmtree(folder2)
         # except OSError as e:
         #     pass
-        os.mkdir(folder2)
+        #os.mkdir(folder2)
         print(folder2)
         num_steps = 5
         input2 = []
