@@ -63,7 +63,7 @@ def make_compression(f2, f1, num_steps, folder_range = 20, input2 = [], images =
             pass
         os.mkdir(folder2)
 
-        x, y = compression_convert(folder1, folder2, num_steps, dfile = '.pickle', input2, images)
+        x, y = compression_convert(folder1, folder2, num_steps, dfile = '.pickle', input2 = [], images = [])
         with open(os.path.join(folder2, 'x.pickle'), 'wb') as f:
             pickle.dump(x, f)
         with open(os.path.join(folder2, 'y.pickle'), 'wb') as f:
