@@ -63,14 +63,14 @@ if __name__ == '__main__':
         ysize = 1
         if folder1 != '':
             x, y = compression_convert(folder1, folder2, num_steps, dfile, input2, images)
-            with open(os.path.join(folder2, 'x.pickle')) as f:
+            with open(os.path.join(folder2, 'x.pickle'), 'wb') as f:
                 pickle.dump(x, f)
-            with open(os.path.join(folder2, 'y.pickle')) as f:
+            with open(os.path.join(folder2, 'y.pickle'), 'wb') as f:
                 pickle.dump(y, f)
         else:
-            with open(os.path.join(folder2, 'x.pickle')) as f:
+            with open(os.path.join(folder2, 'x.pickle'), 'rb') as f:
                 x = pickle.load(f)
-            with open(os.path.join(folder2, 'y.pickle')) as f:
+            with open(os.path.join(folder2, 'y.pickle'), 'rb') as f:
                 y = pickle.load(f)
         continue
         pranges = [get_range(xsize, ysize, x, y)]
