@@ -153,7 +153,7 @@ def column_save(array, path, name, temp_path = './temp', ids = [1]):
         col_compression.to_column_2(array, temp_path, ids, zeros = True)
     turbo_dir = "./turbo/Turbo-Range-Coder/turborc"
     turbo_param = "-20"
-    tb_h = '-FH'
+    tb_h = '-H'
     file_names = ['x1.npy', 'x2.npy', 'y1.npy', 'y2.npy']
     for temp in file_names:
         p1 = os.path.join(temp_path, temp)
@@ -364,7 +364,7 @@ if __name__ == '__main__':
         os.mkdir('./temp')        
         # with open ('./compression_tests_2/join_output.pickle', 'rb') as f:
         #     arr = pickle.load(f)
-        arr = test7(size)
+        arr = test1(size)
         #imgplot = plt.imshow(arr)
         #plt.show()
         # print('done')
@@ -386,13 +386,15 @@ if __name__ == '__main__':
         #     print(i)
             # raw_save(arr[i], './storage', 'step0_{}'.format(i), ids = [1, 2], arrow = False)
         start = time.time()
+        column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1])
         #column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1, 2])
         #gzip_save(arr, './storage', 'step0_', ids = [1, 2], arrow = True)
-        comp_rel_save(arr, './storage', 'step0_', arrow = True, gzip=True)
+        #comp_rel_save(arr, './storage', 'step0_', arrow = True, gzip=True)
         end = time.time()
         print('compression time')
         print(size)
         print(end - start)
+        raise ValueError()
         # print('compression size')
         # size = get_size(start_path = './storage')
         # print(size)
