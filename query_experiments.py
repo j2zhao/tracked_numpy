@@ -58,8 +58,8 @@ if __name__ == '__main__':
         input2 = []
         images = []
         dfile = '.pickle'
-        xsize = 10
-        ysize = 0
+        xsize = 1
+        ysize = 1
         if folder1 != '':
             x, y = compression_convert(folder1, folder2, num_steps, dfile, input2, images)
         else:
