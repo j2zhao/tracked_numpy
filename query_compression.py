@@ -39,7 +39,6 @@ def load_turbo(folder):
                 p1 = os.path.join(f2, file + '.rc')
                 p2 = os.path.join(f2, file)
                 command = " ".join([turbo_dir, turbo_param, p1, p2])
-                print(command)
                 os.system(command)
                 array_dict[db_names[i]] = np.load(p2, allow_pickle=True)
             table = pd.DataFrame(array_dict)
@@ -92,7 +91,6 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
             # print(con.fetchall())
         if backwards:
             query = 'SELECT input_x, input_y FROM arrow_table WHERE (output_x, output_y) IN ' + str(tuple(query_rows))
-            print(query)
             con.execute(query)
             #con.execute('SELECT input_x, input_y FROM arrow_table WHERE output_x = ? AND output_y = ?', row)
             sql_results = con.fetchdf()

@@ -13,9 +13,9 @@ import time
 
 
 def get_range(xsize, ysize, x, y):
-    if x <= xsize:
+    if x < xsize:
         ysize = int(xsize/x)*ysize
-    if y <= ysize:
+    if y < ysize:
         xsize = int(ysize/y)*xsize
 
     if x <= xsize:
