@@ -74,7 +74,7 @@ if __name__ == '__main__':
     sizes = [(1, 1), (10, 1), (100, 1), (1000, 1), (1000, 10), (1000, 100)]
     experiments = [1, 10, 100, 1000, 10000, 100000]
     num_steps = 5
-    for k in len(experiments):
+    for k in range(len(experiments)):
         times = []
         xsize = sizes[k][0]
         ysize = size[k][1]
