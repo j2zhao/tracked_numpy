@@ -38,7 +38,7 @@ def compression_convert(folder1, folder2, num_steps, dfile, input2, images):
 def get_range(xsize, ysize, x, y):
     xstart = random.randrange(0, x - xsize)     
     ystart = random.randrange(0, y - ysize)
-    return (xstart, xstart + xsize), (ystart, ystart + ysize)
+    return (xstart, xstart + xsize - 1), (ystart, ystart + ysize - 1)
 
 
 if __name__ == '__main__':
@@ -58,7 +58,7 @@ if __name__ == '__main__':
         input2 = []
         images = []
         dfile = '.pickle'
-        xsize = 0
+        xsize = 10
         ysize = 0
         if folder1 != '':
             x, y = compression_convert(folder1, folder2, num_steps, dfile, input2, images)
@@ -74,13 +74,13 @@ if __name__ == '__main__':
         #result = query_comp(pranges, folder2, tnames, absolute = False, merge = True, dtype = 'arrow')
         #result = quer
         # y_invertedlist(pranges, folder2, tnames, dtype = 'arrow')
-        print(pranges)
+        #print(pranges)
         start = time.time()
         result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'csv')
         end = time.time()
         times.append(end - start)
         ##result = query_invertedlist(pranges, folder2, tnames, dtype = 'arrow')
-        print(result)
+        #print(result)
     times = np.asarray(times)
     avg = np.average(times)
     std = np.std(times)
