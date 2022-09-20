@@ -52,12 +52,12 @@ def get_range(xsize, ysize, x, y):
     else:
         ystart = random.randrange(0, y - ysize)
         ymax = ystart + ysize - 1
-        
+
     return (xstart, xmax), (ystart, ymax)
 
 if __name__ == '__main__':
     times = []
-    experiment = 1
+    experiment = 100000
     for j in range(100):
         #folder1 = 'compression_tests_2/numpy_pipeline' + str(j)
         folder1 = ''
@@ -73,8 +73,8 @@ if __name__ == '__main__':
         input2 = []
         images = []
         dfile = '.pickle'
-        xsize = 1
-        ysize = 1
+        xsize = 1000
+        ysize = 100
         if folder1 != '':
             x, y = compression_convert(folder1, folder2, num_steps, dfile, input2, images)
             with open(os.path.join(folder2, 'x.pickle'), 'wb') as f:
