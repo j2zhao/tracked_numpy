@@ -89,7 +89,6 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
         new_query_rows = []
         for row in query_rows:
             row = [int(row[0]), int(row[1])]
-        # print('hello')
             # print(con.fetchall())
             if backwards:
                 con.execute('SELECT input_x, input_y FROM arrow_table WHERE output_x = ? AND output_y = ?', row)

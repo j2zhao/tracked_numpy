@@ -36,8 +36,6 @@ def compression_convert(folder1, folder2, num_steps, dfile, input2, images):
     return final_shape
 
 def get_range(xsize, ysize, x, y):
-    print(x)
-    print(y)
     if x <= xsize:
         xstart = 0
         xmax = x -1
