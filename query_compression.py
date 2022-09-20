@@ -90,7 +90,7 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
         #     row = (int(row[0]), int(row[1]))
             # print(con.fetchall())
         if backwards:
-            print(query_rows)
+            print(arrow_table)
             query = 'SELECT input_x, input_y FROM arrow_table WHERE (output_x, output_y) IN ' + str(tuple(query_rows))
             con.execute(query)
             #con.execute('SELECT input_x, input_y FROM arrow_table WHERE output_x = ? AND output_y = ?', row)
