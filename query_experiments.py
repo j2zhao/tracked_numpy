@@ -62,7 +62,7 @@ if __name__ == '__main__':
             
             # get query results
             start = time.time()
-            result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'parquet')
+            result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'arrow')
             end = time.time()
             times.append(end - start)
             #result = query_comp(pranges, folder2, tnames, absolute = False, merge = True, dtype = 'arrow')
