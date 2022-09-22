@@ -46,7 +46,7 @@ if __name__ == '__main__':
         experiment = experiments[k]
         for j in range(20):
             # get folder name and last size
-            folder2 = 'storage/turbo_comp' + str(j)
+            folder2 = 'storage/dslog_no_merge' + str(j)
             #folder2 = 'storage/turbo' + str(j)
             print(folder2)
             with open(os.path.join(folder2, 'x.pickle'), 'rb') as f:
@@ -57,12 +57,13 @@ if __name__ == '__main__':
             pranges = [get_range(xsize, ysize, x, y)]
             tnames = []
             for i in range(num_steps):
-                tname = 'step{}_1'.format(i)
+                tname = 'step{}_1back'.format(i)
                 tnames.append(tname)
             tnames.reverse()
             # get query results
             start = time.time()
-            result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'turbo')
+            query_comp(pranges, folder2, tnames, merge = False, dtype = 'arrow')
+            #result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'turbo')
             end = time.time()
             times.append(end - start)
             #result = query_comp(pranges, folder2, tnames, absolute = False, merge = True, dtype = 'arrow')
