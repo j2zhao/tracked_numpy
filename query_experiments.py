@@ -39,8 +39,7 @@ if __name__ == '__main__':
     experiments = [1, 10, 100, 1000, 10000, 100000]
     #experiments = [1]
     num_steps = 5
-    #for k in range(len(experiments)):
-    for k in range(1, 2):
+    for k in range(len(experiments)):
         times = []
         xsize = sizes[k][0]
         ysize = sizes[k][1]
@@ -65,6 +64,7 @@ if __name__ == '__main__':
             result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'turbo')
             end = time.time()
             times.append(end - start)
+            raise ValueError()
             #result = query_comp(pranges, folder2, tnames, absolute = False, merge = True, dtype = 'arrow')
         times = np.asarray(times)
         avg = np.average(times)
