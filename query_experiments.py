@@ -46,7 +46,7 @@ if __name__ == '__main__':
         experiment = experiments[k]
         for j in range(20):
             # get folder name and last size
-            folder2 = 'storage/dslog_no_merge' + str(j)
+            folder2 = 'storage/dslog_gzip' + str(j)
             #folder2 = 'storage/turbo' + str(j)
             print(folder2)
             with open(os.path.join(folder2, 'x.pickle'), 'rb') as f:
@@ -73,5 +73,5 @@ if __name__ == '__main__':
         print('finished experiment: {}'.format(experiment))
         print('average time: {}'.format(avg))
         print('std time: {}'.format(std))
-        np.save('query_results/dslog_merge{}.npy'.format(experiment), times)
+        np.save('query_results/dslog_gzip{}.npy'.format(experiment), times)
     
