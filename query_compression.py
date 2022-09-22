@@ -33,7 +33,7 @@ def load_turbo(folder):
         f2 = os.path.join(folder, f1)
         if os.path.isdir(f2):
             file_names = ["x1.npy", "x2.npy", "y1.npy", "y2.npy"]
-            db_names = ['input_x', 'input_y', 'output_x', 'output_y']
+            db_names = ['output_x', 'output_y', 'input_x', 'input_y']
             array_dict = {}
             for i, file in enumerate(file_names):
                 p1 = os.path.join(f2, file + '.rc')
