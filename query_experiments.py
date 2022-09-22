@@ -47,8 +47,8 @@ if __name__ == '__main__':
         for j in range(20):
             j = 1
             # get folder name and last size
-            #folder2 = 'storage/turbo_comp' + str(j)
-            folder2 = 'storage/parquet' + str(j)
+            folder2 = 'storage/turbo_comp' + str(j)
+            #folder2 = 'storage/turbo' + str(j)
             print(folder2)
             with open(os.path.join(folder2, 'x.pickle'), 'rb') as f:
                 x = pickle.load(f)
@@ -63,7 +63,7 @@ if __name__ == '__main__':
             tnames.reverse()
             # get query results
             start = time.time()
-            result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'arrow')
+            result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'turbo')
             end = time.time()
             times.append(end - start)
             raise ValueError()
