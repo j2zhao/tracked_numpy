@@ -10,7 +10,8 @@ import pandas as pd
 def load_parquet(folder):
     tables = {}
     for name in os.listdir(folder):
-        if name.endswith('.parquet'): 
+        if name.endswith('.parquet'):
+            print(name)
             dire = os.path.join(folder, name)
             nm = name.split('.')[0]
             tables[nm] = pq.read_table(dire)
