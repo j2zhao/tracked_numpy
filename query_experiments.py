@@ -46,7 +46,7 @@ if __name__ == '__main__':
         experiment = experiments[k]
         for j in range(20):
             # get folder name and last size
-            folder2 = 'storage/dslog_gzi' + str(j)
+            folder2 = 'storage/dslog_giz' + str(j)
             #folder2 = 'storage/turbo' + str(j)
             print(folder2)
             with open(os.path.join(folder2, 'x.pickle'), 'rb') as f:
