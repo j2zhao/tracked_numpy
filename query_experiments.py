@@ -57,7 +57,7 @@ if __name__ == '__main__':
             pranges = [get_range(xsize, ysize, x, y)]
             tnames = []
             for i in range(num_steps):
-                tname = 'step{}_1back'.format(i)
+                tname = 'step{}_back1'.format(i)
                 tnames.append(tname)
             tnames.reverse()
             # get query results
