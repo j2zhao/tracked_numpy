@@ -45,7 +45,6 @@ if __name__ == '__main__':
         ysize = sizes[k][1]
         experiment = experiments[k]
         for j in range(20):
-            j = 1
             # get folder name and last size
             folder2 = 'storage/turbo_comp' + str(j)
             #folder2 = 'storage/turbo' + str(j)
@@ -66,7 +65,6 @@ if __name__ == '__main__':
             result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'turbo')
             end = time.time()
             times.append(end - start)
-            raise ValueError()
             #result = query_comp(pranges, folder2, tnames, absolute = False, merge = True, dtype = 'arrow')
         times = np.asarray(times)
         avg = np.average(times)
