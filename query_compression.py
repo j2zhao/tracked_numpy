@@ -84,8 +84,8 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
     #print(query_rows)
     
     for name in tnames:
-        print(tnames)
         arrow_table = tables[name]
+        print(arrow_table)
         new_query_rows = []
         # for row in query_rows:
         #     row = (int(row[0]), int(row[1]))
@@ -96,7 +96,6 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
             con.execute(query)
             #con.execute('SELECT input_x, input_y FROM arrow_table WHERE output_x = ? AND output_y = ?', row)
             sql_results = con.fetchdf()
-            print(sql_results)
             for _, row in sql_results.iterrows():
                 new_query_rows.append((row['input_x'], row['input_y']))
         else:
