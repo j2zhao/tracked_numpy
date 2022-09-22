@@ -86,8 +86,11 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
     for name in tnames:
         print('')
         print(name)
-        arrow_table = tables[name]
-        print(arrow_table)
+        if 'dtype' == 'turbo':
+            df_table = tables[name]
+            con.execute("CREATE TABLE arrow_table AS SELECT * FROM df_table")
+        else:
+            arrow_table = tables[name]
         new_query_rows = []
         # for row in query_rows:
         #     row = (int(row[0]), int(row[1]))
