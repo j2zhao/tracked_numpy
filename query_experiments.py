@@ -62,7 +62,7 @@ if __name__ == '__main__':
             tnames.reverse()
             # get query results
             start = time.time()
-            query_comp(pranges, folder2, tnames, merge = False, dtype = 'arrow')
+            query_comp(pranges, folder2, tnames, merge = True, dtype = 'arrow')
             #result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'turbo')
             end = time.time()
             times.append(end - start)
@@ -73,5 +73,5 @@ if __name__ == '__main__':
         print('finished experiment: {}'.format(experiment))
         print('average time: {}'.format(avg))
         print('std time: {}'.format(std))
-        np.save('query_results/turbo_times{}.npy'.format(experiment), times)
+        np.save('query_results/dslog_merge{}.npy'.format(experiment), times)
     
