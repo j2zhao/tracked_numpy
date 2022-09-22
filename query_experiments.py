@@ -48,7 +48,7 @@ if __name__ == '__main__':
             j = 1
             # get folder name and last size
             #folder2 = 'storage/turbo_comp' + str(j)
-            folder2 = 'storage/parquet'
+            folder2 = 'storage/parquet' + str(j)
             print(folder2)
             with open(os.path.join(folder2, 'x.pickle'), 'rb') as f:
                 x = pickle.load(f)
