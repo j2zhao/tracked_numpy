@@ -68,4 +68,4 @@ if __name__ == '__main__':
     folder2 = 'storage/image_raw'
     #folder_range = list(range(20))
     #folder_range = []
-    make_compression_numpy(folder2, folder1, num_steps = 5)
+    make_compression_image(folder2, folder1, num_steps = 5)
