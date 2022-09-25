@@ -35,8 +35,10 @@ def get_range(xsize, ysize, x, y):
 
 if __name__ == '__main__':
     
-    sizes = [(1, 1), (10, 1), (100, 1), (1000, 1), (1000, 10), (1000, 100)]
-    experiments = [1, 10, 100, 1000, 10000, 100000]
+    #sizes = [(1, 1), (10, 1), (100, 1), (1000, 1), (1000, 10), (1000, 100)]
+    sizes = [(13, 13), (42, 42), (132, 132), (186, 186), (263, 263), (322, 322), (372, 372), (416, 416)]
+    experiments = [0, 1, 10, 20, 40, 60, 80, 100]
+    percentage = []
     #experiments = [1]
     num_steps = 5
     for k in range(len(experiments)):
@@ -44,9 +46,9 @@ if __name__ == '__main__':
         xsize = sizes[k][0]
         ysize = sizes[k][1]
         experiment = experiments[k]
-        for j in range(20):
+        for j in range(5):
             # get folder name and last size
-            folder2 = 'storage/dslog_giz' + str(j)
+            folder2 = 'storage/image_raw'
             #folder2 = 'storage/turbo' + str(j)
             print(folder2)
             with open(os.path.join(folder2, 'x.pickle'), 'rb') as f:

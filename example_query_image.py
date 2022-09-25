@@ -10,6 +10,29 @@ class DummyProv(object):
     def __init__(self, prov):
         self.provenance = prov
 
+def array_upscale(arr, factor = 10):
+    if len(arr.shape) == 2:
+        x = arr.shape[0]*factor
+        y = arr.shape[1]*factor
+        arr_2 = np.zeros((x, y), dtype=arr.dtype)
+        
+        for i in range(arr.shape[0]):
+            for j in range(arr.shape[1]):
+                for a in range(factor):
+                    for b in range(factor):
+                        arr_2[(i*factor + a), (j*factor + b)] = arr[i, j]
+        
+        return arr_2
+    else:
+        x = arr.shape[0]*factor
+        arr_2 = np.zeros((x), dtype=arr.dtype)
+        
+        for i in range(arr.shape[0]):
+                for a in range(factor):
+                    arr_2[(i*factor + a)] = arr[i]
+        
+        return arr_2
+
 def convert(array, ids = [0]):
     new_array = np.zeros(array.shape, dtype=object)
     for i in range(array.shape[0]):
@@ -31,7 +54,7 @@ def resize_aux(arr, w, h, prov = False):
     for i in range(w):
         for j in range(h):
             x1 = x*i
-            if i == w -1:
+            if i == w - 1:
                 x2 = w_org
             else:
                 x2 = x*(i + 1)
@@ -42,8 +65,9 @@ def resize_aux(arr, w, h, prov = False):
                 y2 = y*(j + 1)
             total = (x2 - x1)*(y2 - y1)
             new_arr[i, j] = np.sum(arr[x1:x2, y1:y2], initial= None)//total
-    
     return new_arr
+
+
 def resize_img(array, w = 416, h = 416):
     w_org = array.shape[0]
     h_org = array.shape[1]
@@ -84,6 +108,23 @@ def flip_img(array):
     array = np.fliplr(array)
     return array, prov_array   
 
+def lime_exp(afile, upscale = 10):
+    arr = np.load(afile)
+    if upscale != 0:
+        arr = array_upscale(arr, factor = upscale)
+    ar2 = np.zeros(arr.shape)
+    ar2[arr > 0.5] = 1
+    prov = np.empty(arr.shape,dtype = object)
+    for i in range(arr.shape[0]):
+        for j in range(arr.shape[1]):
+            if ar2[i, j] == 1:
+                p = DummyProv([(1, i, j)])
+                prov[i, j] = p
+            else:
+                p = DummyProv([])
+                prov[i, j] = p
+    return ar2, prov
+
 if __name__ == '__main__': 
     folder = 'compression_tests_2/image_pipeline'
     image_dire = 'compression_tests_2/VIRAT_S_000101_10.jpeg'
@@ -106,6 +147,10 @@ if __name__ == '__main__':
     dire = os.path.join(folder, 'step4.npy')
     np.save(dire, prov_arr)
     # Use Lime
-    dire = os.path.join(folder, 'lime_input.jpg')
-    cv2.imwrite(dire, image)
+    dire = os.path.join(folder, 'step5.npy')
+    dire2 = os.path.join(folder, 'yolo_example.npy')
+    image, prov_arr = lime_exp(dire2, upscale = 0)
+    np.save(dire, prov_arr)
+    #dire = os.path.join(folder, 'lime_input.jpg')
+    #cv2.imwrite(dire, image)
     #np.save(dire, image)
