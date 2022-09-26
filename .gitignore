@@ -1,6 +1,6 @@
 # Jinjin's Gitignore
 
-compression_tests_2/**
+./compression_tests_2/**
 
 # Editor temporary/working/backup files #
 #########################################
