@@ -53,14 +53,14 @@ def make_compression_numpy(f2, f1, num_steps, folder_range):
 
 def make_compression_image(f2, f1, num_steps):
     try:
-        shutil.rmtree(folder2)
+        shutil.rmtree(f2)
     except OSError as e:
         pass
     os.mkdir(f2)
     x, y = compression_convert(f1, f2, num_steps, dfile = '.npy', input2 = [])
-    with open(os.path.join(folder2, 'x.pickle'), 'wb') as f:
+    with open(os.path.join(f2, 'x.pickle'), 'wb') as f:
         pickle.dump(x, f)
-    with open(os.path.join(folder2, 'y.pickle'), 'wb') as f:
+    with open(os.path.join(f2, 'y.pickle'), 'wb') as f:
         pickle.dump(y, f)
 
 if __name__ == '__main__':
