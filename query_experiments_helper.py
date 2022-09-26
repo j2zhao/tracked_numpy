@@ -57,7 +57,6 @@ def make_compression_image(f2, f1, num_steps):
     except OSError as e:
         pass
     os.mkdir(f2)
-    raise ValueError()
     x, y = compression_convert(f1, f2, num_steps, dfile = '.npy', input2 = [])
     with open(os.path.join(f2, 'x.pickle'), 'wb') as f:
         pickle.dump(x, f)
@@ -65,7 +64,7 @@ def make_compression_image(f2, f1, num_steps):
         pickle.dump(y, f)
 
 if __name__ == '__main__':
-    folder1 = 'compression_tests_2/image_pipeline'
+    folder1 = 'compression_tests_2/compression_tests_2/image_pipeline'
     folder2 = 'storage/image_raw'
     #folder_range = list(range(20))
     #folder_range = []
