@@ -57,6 +57,7 @@ def make_compression_image(f2, f1, num_steps):
     except OSError as e:
         pass
     os.mkdir(f2)
+    raise ValueError()
     x, y = compression_convert(f1, f2, num_steps, dfile = '.npy', input2 = [])
     with open(os.path.join(f2, 'x.pickle'), 'wb') as f:
         pickle.dump(x, f)
