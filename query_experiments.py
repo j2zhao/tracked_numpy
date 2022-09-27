@@ -50,7 +50,7 @@ if __name__ == '__main__':
         experiment = experiments[k]
         for j in range(5):
             # get folder name and last size
-            folder2 = 'storage/image_raw'
+            folder2 = 'storage/image_pq'
             #folder2 = 'storage/turbo' + str(j)
             print(folder2)
             with open(os.path.join(folder2, 'x.pickle'), 'rb') as f:
@@ -67,7 +67,7 @@ if __name__ == '__main__':
             # get query results
             start = time.time()
             #query_comp(pranges, folder2, tnames, merge = True, dtype = 'arrow')c
-            result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'csv')
+            result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
             end = time.time()
             times.append(end - start)
                 
@@ -78,5 +78,5 @@ if __name__ == '__main__':
         print('finished experiment: {}'.format(experiment))
         print('average time: {}'.format(avg))
         print('std time: {}'.format(std))
-        np.save('query_results/image_raw{}.npy'.format(experiment), times)
+        np.save('query_results/image_pq{}.npy'.format(experiment), times)
     
