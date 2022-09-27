@@ -97,6 +97,7 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
                 new_query_rows.append((row['input_x'], row['input_y']))
         else:
             query = 'SELECT output_x, output_y FROM arrow_table WHERE (input_x, input_y) IN ' + str(tuple(query_rows))
+            con.execute(query)
             #con.execute('SELECT output_x, output_y FROM arrow_table WHERE input_x = ? AND input_y = ?', row)
             sql_results = con.fetchdf()
             for _, row in sql_results.iterrows():
