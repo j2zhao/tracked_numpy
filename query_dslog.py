@@ -14,6 +14,7 @@ def sort_(prov):
     return int(s)
 
 def merge_ranges(pranges):
+    """pranges [(x1, x2), (y1, y2)"""
     plist = list(set(pranges))
     plist.sort(key=sort_)
     cur_x1 = -1
@@ -137,7 +138,6 @@ def query_comp(pranges, folder, tnames, absolute = False, merge = True, dtype = 
     
 
     for name in tnames:
-        print(pranges)
         oranges = []
         for prange in pranges:
             x1 = prange[0][0]
@@ -146,6 +146,7 @@ def query_comp(pranges, folder, tnames, absolute = False, merge = True, dtype = 
             y2 = prange[1][1]
 
             arrow_table = tables[name]
+            print(arrow_table)
             df = con.execute("SELECT * FROM arrow_table WHERE LEAST(output_x2, {}) >= GREATEST(output_x1, {}) \
                 AND LEAST(output_y2, {}) >= GREATEST(output_y1, {})".format(x2, x1, y2, y1)).fetchdf()
             #print(df)
@@ -153,6 +154,9 @@ def query_comp(pranges, folder, tnames, absolute = False, merge = True, dtype = 
                 oranges += input_output(prange, df)
             else:
                 oranges += input_output_abs(df)
+        if len(oranges) == 0:
+            print(name)
+            print(oranges)
         if merge:
             pranges = merge_ranges(oranges)
         else:
