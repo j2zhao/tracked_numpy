@@ -46,7 +46,7 @@ if __name__ == '__main__':
         xsize = sizes[k][0]
         ysize = sizes[k][1]
         experiment = experiments[k]
-        while True:
+        for j in range(5):
             # get folder name and last size
             folder2 = 'storage/image_raw'
             #folder2 = 'storage/turbo' + str(j)
@@ -65,16 +65,10 @@ if __name__ == '__main__':
             # get query results
             start = time.time()
             #query_comp(pranges, folder2, tnames, merge = True, dtype = 'arrow')c
-            result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'csv')
+            result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'csv')
             end = time.time()
-            if len(result) == 0:
-                print('early stop')
-                continue
-            else:
-                print('success')
-                times.append(end - start)
-                if len(times) == 5:
-                    break
+            times.append(end - start)
+                
             #result = query_comp(pranges, folder2, tnames, absolute = False, merge = True, dtype = 'arrow')
         times = np.asarray(times)
         avg = np.average(times)
