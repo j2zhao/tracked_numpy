@@ -64,8 +64,8 @@ if __name__ == '__main__':
             tnames.reverse()
             # get query results
             start = time.time()
-            #query_comp(pranges, folder2, tnames, merge = True, dtype = 'arrow')
-            result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'turbo')
+            #query_comp(pranges, folder2, tnames, merge = True, dtype = 'arrow')c
+            result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'cvs')
             end = time.time()
             times.append(end - start)
             #result = query_comp(pranges, folder2, tnames, absolute = False, merge = True, dtype = 'arrow')
