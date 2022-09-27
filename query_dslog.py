@@ -155,5 +155,6 @@ def query_comp(pranges, folder, tnames, absolute = False, merge = True, dtype = 
                 oranges += input_output_abs(df)
         if merge:
             pranges = merge_ranges(oranges)
-        pranges = oranges
+        else:
+            pranges = oranges
     return pranges
