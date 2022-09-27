@@ -19,7 +19,7 @@ def compression_convert(folder1, folder2, num_steps, dfile, input2):
             with open(array_file, 'rb') as f:
                 array = pickle.load(f)
         elif dfile == '.npy':
-            array = np.load(array_file)
+            array = np.load(array_file,allow_pickle=True)
         
         final_shape = array.shape
 
