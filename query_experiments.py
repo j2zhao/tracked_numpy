@@ -52,7 +52,7 @@ if __name__ == '__main__':
         experiment = experiments[k]
         for j in range(5):
             # get folder name and last size
-            folder2 = 'storage/image_raw'
+            folder2 = 'storage/image_pq'
             #folder2 = 'storage/turbo' + str(j)
             print(folder2)
             x = shape[0]
@@ -71,7 +71,7 @@ if __name__ == '__main__':
             # get query results
             start = time.time()
             #query_comp(pranges, folder2, tnames, merge = True, dtype = 'arrow')
-            result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'csv')
+            result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
             end = time.time()
             times.append(end - start)
                 
