@@ -50,7 +50,7 @@ if __name__ == '__main__':
         experiment = experiments[k]
         for j in range(5):
             # get folder name and last size
-            folder2 = 'storage/image_turbo'
+            folder2 = 'storage/image_comp'
             #folder2 = 'storage/turbo' + str(j)
             print(folder2)
             with open(os.path.join(folder2, 'x.pickle'), 'rb') as f:
@@ -61,13 +61,13 @@ if __name__ == '__main__':
             pranges = [get_range(xsize, ysize, x, y)]
             tnames = []
             for i in range(num_steps):
-                tname = 'step{}_1'.format(i)
+                tname = 'step{}_1forward'.format(i)
                 tnames.append(tname)
             #tnames.reverse()
             # get query results
             start = time.time()
-            #query_comp(pranges, folder2, tnames, merge = True, dtype = 'arrow')c
-            result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'turbo')
+            query_comp(pranges, folder2, tnames, merge = True, dtype = 'arrow')
+            #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'turbo')
             end = time.time()
             times.append(end - start)
                 
@@ -78,5 +78,5 @@ if __name__ == '__main__':
         print('finished experiment: {}'.format(experiment))
         print('average time: {}'.format(avg))
         print('std time: {}'.format(std))
-        np.save('query_results/image_turbo{}.npy'.format(experiment), times)
+        np.save('query_results/image_comp{}.npy'.format(experiment), times)
     
