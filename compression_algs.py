@@ -226,7 +226,7 @@ def convert_inverse_rel(prov):
             else:
                 y1_ = y1 + y[type_y][i][0]
                 y2_ = y2 + y[type_y][i][1]
-                out_y_tup = [None, None, -x[type_x][i][0], None, None, -x[type_x][i][1]]
+                out_y_tup = [None, None, -y[type_y][i][0], None, None, -y[type_y][i][1]]
             tup = [x1_, x2_, y1_, y2_] + out_x_tup + out_y_tup 
             new_list.append(tup)
     return new_list

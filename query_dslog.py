@@ -140,6 +140,7 @@ def query_comp(pranges, folder, tnames, absolute = False, merge = True, dtype = 
     for name in tnames:
         oranges = []
         for prange in pranges:
+            
             x1 = prange[0][0]
             x2 = prange[0][1]
             y1 = prange[1][0]
@@ -156,6 +157,7 @@ def query_comp(pranges, folder, tnames, absolute = False, merge = True, dtype = 
         if len(oranges) == 0:
             return oranges
         elif merge:
+            
             pranges = merge_ranges(oranges)
         else:
             pranges = oranges
