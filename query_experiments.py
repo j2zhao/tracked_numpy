@@ -50,7 +50,7 @@ if __name__ == '__main__':
         experiment = experiments[k]
         for j in range(5):
             # get folder name and last size
-            folder2 = 'storage/image_pq'
+            folder2 = 'storage/image_gzip'
             #folder2 = 'storage/turbo' + str(j)
             print(folder2)
             with open(os.path.join(folder2, 'x.pickle'), 'rb') as f:
@@ -78,5 +78,5 @@ if __name__ == '__main__':
         print('finished experiment: {}'.format(experiment))
         print('average time: {}'.format(avg))
         print('std time: {}'.format(std))
-        np.save('query_results/image_pq{}.npy'.format(experiment), times)
+        np.save('query_results/image_gzip{}.npy'.format(experiment), times)
     
