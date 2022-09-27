@@ -134,9 +134,10 @@ def query_comp(pranges, folder, tnames, absolute = False, merge = True, dtype = 
         tables = load_parquet(folder)
     else:
         raise ValueError('dtype not supported')
-
+    
 
     for name in tnames:
+        print(pranges)
         oranges = []
         for prange in pranges:
             x1 = prange[0][0]
