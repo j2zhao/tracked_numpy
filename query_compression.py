@@ -103,6 +103,7 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
             for _, row in sql_results.iterrows():
                 new_query_rows.append((row['output_x'], row['output_y']))
         query_rows = new_query_rows
+        print(query_rows)
     return query_rows
 
 def query_invertedlist(pranges, folder, tnames, dtype = 'arrow'):
