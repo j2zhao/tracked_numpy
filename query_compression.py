@@ -81,11 +81,9 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
         for i in range(prange[0][0], prange[0][1] + 1):
             for j in range(prange[1][0], prange[1][1] + 1):
                 query_rows.append((int(i), int(j)))
-    print(query_rows)
     
     for name in tnames:
         arrow_table = tables[name]
-        print(arrow_table)
         new_query_rows = []
         # for row in query_rows:
         #     row = (int(row[0]), int(row[1]))
@@ -104,7 +102,8 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
             for _, row in sql_results.iterrows():
                 new_query_rows.append((row['output_x'], row['output_y']))
         query_rows = new_query_rows
-        print(query_rows)
+        if query_rows == []:
+            return query_rows
     return query_rows
 
 def query_invertedlist(pranges, folder, tnames, dtype = 'arrow'):
