@@ -65,7 +65,7 @@ if __name__ == '__main__':
             # get query results
             start = time.time()
             #query_comp(pranges, folder2, tnames, merge = True, dtype = 'arrow')c
-            result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'cvs')
+            result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'csv')
             end = time.time()
             times.append(end - start)
             #result = query_comp(pranges, folder2, tnames, absolute = False, merge = True, dtype = 'arrow')
