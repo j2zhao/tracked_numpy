@@ -129,7 +129,8 @@ if __name__ == '__main__':
     folder = 'compression_tests_2/image_pipeline'
     image_dire = 'compression_tests_2/VIRAT_S_000101_10.jpeg'
     image = np.asarray(cv2.imread(image_dire))
-    
+    print(image.shape)
+    raise ValueError()
     # Resize Image
     image, prov_arr = resize_img(image)
     prov_arr = convert(prov_arr)
