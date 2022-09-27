@@ -30,14 +30,16 @@ def get_range(xsize, ysize, x, y):
     else:
         ystart = random.randrange(0, y - ysize)
         ymax = ystart + ysize - 1
-
     return (xstart, xmax), (ystart, ymax)
 
 if __name__ == '__main__':
     shape = [1080, 1920]
+    #shape = [1000000, 9]
     sizes_ = [0.001, 0.01, 0.1, 0.2, 0.4, 0.6, 0.8, 1]
     sizes = [(int(math.sqrt(s)*shape[0]), int(math.sqrt(s)*shape[1])) for s in sizes_]
+    #sizes = [(int(s*shape[0]), shape[1]) for s in sizes_]
     #sizes = [(1, 1), (10, 1), (100, 1), (1000, 1), (1000, 10), (1000, 100)]
+
     #sizes = [(13, 13), (42, 42), (132, 132), (186, 186), (263, 263), (322, 322), (372, 372), (416, 416)]
     experiments = [0, 1, 10, 20, 40, 60, 80, 100]
     percentage = []
@@ -53,10 +55,12 @@ if __name__ == '__main__':
             folder2 = 'storage/image_comp'
             #folder2 = 'storage/turbo' + str(j)
             print(folder2)
-            with open(os.path.join(folder2, 'x.pickle'), 'rb') as f:
-                x = pickle.load(f)
-            with open(os.path.join(folder2, 'y.pickle'), 'rb') as f:
-                y = pickle.load(f)
+            x = shape[0]
+            y = shape[1]
+            # with open(os.path.join(folder2, 'x.pickle'), 'rb') as f:
+            #     x = pickle.load(f)
+            # with open(os.path.join(folder2, 'y.pickle'), 'rb') as f:
+            #     y = pickle.load(f)
             # get ranges and step names
             pranges = [get_range(xsize, ysize, x, y)]
             tnames = []
