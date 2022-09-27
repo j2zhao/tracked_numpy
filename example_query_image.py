@@ -33,7 +33,7 @@ def array_upscale(arr, factor = 10):
         
         return arr_2
 
-def convert(array, ids = [0]):
+def convert(array):
     new_array = np.zeros(array.shape, dtype=object)
     for i in range(array.shape[0]):
         for j in range(array.shape[1]):
@@ -132,24 +132,29 @@ if __name__ == '__main__':
     
     # Resize Image
     image, prov_arr = resize_img(image)
+    prov_arr = convert(prov_arr)
     dire = os.path.join(folder, 'step1.npy')
     np.save(dire, prov_arr)
     # Change Luminosity
     image, prov_arr = lum_img(image)
     dire = os.path.join(folder, 'step2.npy')
+    prov_arr = convert(prov_arr)
     np.save(dire, prov_arr)
     # Rotate Image
     image, prov_arr = rotate_img(image)
     dire = os.path.join(folder, 'step3.npy')
+    prov_arr = convert(prov_arr)
     np.save(dire, prov_arr)
     # flip image
     image, prov_arr = flip_img(image)
     dire = os.path.join(folder, 'step4.npy')
+    prov_arr = convert(prov_arr)
     np.save(dire, prov_arr)
     # Use Lime
     dire = os.path.join(folder, 'step5.npy')
     dire2 = os.path.join(folder, 'yolo_example.npy')
     image, prov_arr = lime_exp(dire2, upscale = 0)
+    prov_arr = convert(prov_arr)
     np.save(dire, prov_arr)
     #dire = os.path.join(folder, 'lime_input.jpg')
     #cv2.imwrite(dire, image)

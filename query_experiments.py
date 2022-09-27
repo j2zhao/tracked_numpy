@@ -59,13 +59,13 @@ if __name__ == '__main__':
             pranges = [get_range(xsize, ysize, x, y)]
             tnames = []
             for i in range(num_steps):
-                tname = 'step{}_back1'.format(i)
+                tname = 'step{}_1'.format(i)
                 tnames.append(tname)
             tnames.reverse()
             # get query results
             start = time.time()
-            query_comp(pranges, folder2, tnames, merge = True, dtype = 'arrow')
-            #result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'turbo')
+            #query_comp(pranges, folder2, tnames, merge = True, dtype = 'arrow')
+            result = query_one2one(pranges, folder2, tnames, backwards = True, dtype = 'turbo')
             end = time.time()
             times.append(end - start)
             #result = query_comp(pranges, folder2, tnames, absolute = False, merge = True, dtype = 'arrow')
@@ -75,5 +75,5 @@ if __name__ == '__main__':
         print('finished experiment: {}'.format(experiment))
         print('average time: {}'.format(avg))
         print('std time: {}'.format(std))
-        np.save('query_results/dslog_gzip{}.npy'.format(experiment), times)
+        np.save('query_results/image_raw{}.npy'.format(experiment), times)
     
