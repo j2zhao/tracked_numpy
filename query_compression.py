@@ -85,6 +85,7 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
     
     for name in tnames:
         arrow_table = tables[name]
+        print(arrow_table)
         new_query_rows = []
         # for row in query_rows:
         #     row = (int(row[0]), int(row[1]))
