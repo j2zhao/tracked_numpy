@@ -61,7 +61,7 @@ if __name__ == '__main__':
             for i in range(num_steps):
                 tname = 'step{}_1'.format(i)
                 tnames.append(tname)
-            tnames.reverse()
+            #tnames.reverse()
             # get query results
             start = time.time()
             #query_comp(pranges, folder2, tnames, merge = True, dtype = 'arrow')c
