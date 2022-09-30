@@ -7,6 +7,7 @@ import pyarrow.parquet as pq
 import numpy as np
 import pandas as pd
 from query_compression import load_parquet
+import time
 
 def sort_(prov):
     (ox1, ox2), (oy1, oy2) = prov
@@ -138,11 +139,17 @@ def query_comp(pranges, folder, tnames, absolute = False, merge = True, dtype = 
     
 
     for name in tnames:
+        print(name)
+        print(len(pranges))
+        start = time.time()
         oranges = []
         if merge:
             pranges = merge_ranges(pranges)
+        end = time.time()
+        print(len(pranges))
+        print('merge time: {}'.format(end - start))
+        start = time.time()
         for prange in pranges:
-            
             x1 = prange[0][0]
             x2 = prange[0][1]
             y1 = prange[1][0]
@@ -158,5 +165,7 @@ def query_comp(pranges, folder, tnames, absolute = False, merge = True, dtype = 
                 oranges += input_output_abs(df)
         if len(oranges) == 0:
             return oranges
+        end = time.time()
+        print('query time: {}'.format(end - start))
         pranges = oranges
     return pranges

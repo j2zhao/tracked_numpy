@@ -50,9 +50,9 @@ if __name__ == '__main__':
         xsize = sizes[k][0]
         ysize = sizes[k][1]
         experiment = experiments[k]
-        for j in range(5):
+        for j in range(1):
             # get folder name and last size
-            folder2 = 'storage/image_pq'
+            folder2 = 'storage/image_comp'
             #folder2 = 'storage/turbo' + str(j)
             print(folder2)
             x = shape[0]
@@ -70,17 +70,17 @@ if __name__ == '__main__':
             #tnames.reverse()
             # get query results
             start = time.time()
-            #query_comp(pranges, folder2, tnames, merge = True, dtype = 'arrow')
-            result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
+            query_comp(pranges, folder2, tnames, merge = True, dtype = 'arrow')
+            #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
             end = time.time()
             times.append(end - start)
                 
             #result = query_comp(pranges, folder2, tnames, absolute = False, merge = True, dtype = 'arrow')
-        times = np.asarray(times)
-        avg = np.average(times)
-        std = np.std(times)
-        print('finished experiment: {}'.format(experiment))
-        print('average time: {}'.format(avg))
+        # times = np.asarray(times)
+        # avg = np.average(times)
+        # std = np.std(times)
+        # print('finished experiment: {}'.format(experiment))
+        # print('average time: {}'.format(avg))
         #print('std time: {}'.format(std))
         #mp.save('query_results/image_comp{}.npy'.format(experiment), times)
     
