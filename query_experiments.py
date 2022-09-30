@@ -39,7 +39,7 @@ if __name__ == '__main__':
     #sizes = [(int(math.sqrt(s)*shape[0]), int(math.sqrt(s)*shape[1])) for s in sizes_]
     #sizes = [(int(s*shape[0]), shape[1]) for s in sizes_]
     #sizes = [(1, 1), (10, 1), (100, 1), (1000, 1), (1000, 10), (1000, 100)]
-    sizes = [(1, 1)]
+    sizes = [(10, 10)]
     #sizes = [(13, 13), (42, 42), (132, 132), (186, 186), (263, 263), (322, 322), (372, 372), (416, 416)]
     #experiments = [0, 1, 10, 20, 40, 60, 80, 100]
     percentage = []
