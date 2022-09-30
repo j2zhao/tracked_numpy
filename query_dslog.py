@@ -164,6 +164,7 @@ def query_comp(pranges, folder, tnames, absolute = False, merge = True, dtype = 
                 oranges += input_output(prange, df)
             else:
                 oranges += input_output_abs(df)
+            raise ValueError()
         if len(oranges) == 0:
             return oranges
         end = time.time()
