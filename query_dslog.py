@@ -65,6 +65,7 @@ def merge_ranges(pranges):
                 temp_start = x[0]
                 last_value = x[1]
         compressed.append(((temp_start, last_value), col))
+    print(compressed)
     return compressed
 
 def input_output(prange, results):
