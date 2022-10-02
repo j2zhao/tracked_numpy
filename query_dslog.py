@@ -50,7 +50,6 @@ def merge_ranges(pranges):
         temp_list[(temp_start, last_value)] = []
     temp_list[(temp_start, last_value)].append((cur_x1, cur_x2))
     compressed = []
-    print(temp_list)
     for col in temp_list:
         temp_start = -1
         last_value = -1
@@ -162,4 +161,5 @@ def query_comp(pranges, folder, tnames, absolute = False, merge = True, dtype = 
         if merge:
             oranges = merge_ranges(oranges)
         pranges = oranges
+        print(len(pranges))
     return pranges
