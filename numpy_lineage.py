@@ -23,6 +23,7 @@ def convert_array(array):
     for i in range(array.shape[0]):
         for j in range(array.shape[1]):
             arr2[i, j] = DummyProv(array[i,j].provenance)
+            print(array[i,j].provenance)
     return arr2
 
 def convert_functions(func):

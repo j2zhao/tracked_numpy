@@ -18,7 +18,7 @@ def merge_ranges(pranges):
     """pranges [(x1, x2), (y1, y2)"""
     plist = list(set(pranges))
     plist.sort(key=sort_)
-    print(plist)
+    
     cur_x1 = -1
     cur_x2 = -1
     temp_start = -1
@@ -39,7 +39,7 @@ def merge_ranges(pranges):
             temp_start = prange[1][0]
             last_value = prange[1][1]
         elif last_value >= prange[1][0] - 1:
-            last_value = max(prange[0][1], last_value)
+            last_value = max(prange[1][1], last_value)
         else:
             if (temp_start, last_value) not in temp_list:
                 temp_list[(temp_start, last_value)] = []
@@ -65,7 +65,6 @@ def merge_ranges(pranges):
                 temp_start = x[0]
                 last_value = x[1]
         compressed.append(((temp_start, last_value), col))
-    print(compressed)
     return compressed
 
 def input_output(prange, results):
@@ -154,15 +153,13 @@ def query_comp(pranges, folder, tnames, absolute = False, merge = True, dtype = 
             arrow_table = tables[name]
             df = con.execute("SELECT * FROM arrow_table WHERE LEAST(output_x2, {}) >= GREATEST(output_x1, {}) \
                 AND LEAST(output_y2, {}) >= GREATEST(output_y1, {})".format(x2, x1, y2, y1)).fetchdf()
-            print(df)
             if not absolute:
                 oranges += input_output(prange, df)
             else:
                 oranges += input_output_abs(df)
-        if merge:
-            pranges = merge_ranges(oranges)
-        raise ValueError()
         if len(oranges) == 0:
             return oranges
+        if merge:
+            oranges = merge_ranges(oranges)
         pranges = oranges
     return pranges

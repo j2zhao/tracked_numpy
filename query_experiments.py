@@ -35,15 +35,14 @@ def get_range(xsize, ysize, x, y):
 if __name__ == '__main__':
     shape = [1080, 1920]
     #shape = [1000000, 9]
-    #sizes_ = [0.001, 0.01, 0.1, 0.2, 0.4, 0.6, 0.8, 1]
-    #sizes = [(int(math.sqrt(s)*shape[0]), int(math.sqrt(s)*shape[1])) for s in sizes_]
+    sizes_ = [0.001, 0.01, 0.1, 0.2, 0.4, 0.6, 0.8, 1]
+    sizes = [(int(math.sqrt(s)*shape[0]), int(math.sqrt(s)*shape[1])) for s in sizes_]
     #sizes = [(int(s*shape[0]), shape[1]) for s in sizes_]
     #sizes = [(1, 1), (10, 1), (100, 1), (1000, 1), (1000, 10), (1000, 100)]
-    sizes = [(1080, 20)]
+    #sizes = [(1080, 20)]
     #sizes = [(13, 13), (42, 42), (132, 132), (186, 186), (263, 263), (322, 322), (372, 372), (416, 416)]
-    #experiments = [0, 1, 10, 20, 40, 60, 80, 100]
-    percentage = []
-    experiments = [1]
+    experiments = [0, 1, 10, 20, 40, 60, 80, 100]
+    #experiments = [1]
     num_steps = 5
     for k in range(len(experiments)):
         times = []
@@ -73,7 +72,9 @@ if __name__ == '__main__':
             query_comp(pranges, folder2, tnames, merge = True, dtype = 'arrow')
             #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
             end = time.time()
-            times.append(end - start)
+            print('finished experiment: {}'.format(experiment))
+            print(end - start)
+            #times.append(end - start)
                 
             #result = query_comp(pranges, folder2, tnames, absolute = False, merge = True, dtype = 'arrow')
         # times = np.asarray(times)
