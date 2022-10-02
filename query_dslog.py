@@ -161,5 +161,4 @@ def query_comp(pranges, folder, tnames, absolute = False, merge = True, dtype = 
         if merge:
             oranges = merge_ranges(oranges)
         pranges = oranges
-        print(len(pranges))
     return pranges
