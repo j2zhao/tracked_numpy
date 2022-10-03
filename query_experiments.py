@@ -64,6 +64,7 @@ if __name__ == '__main__':
             #     y = pickle.load(f)
             # get ranges and step names
             pranges = [get_range(xsize, ysize, x, y)]
+            print(pranges)
             tnames = []
             for i in range(num_steps):
                 tname = 'step{}_for1'.format(i)
