@@ -25,7 +25,7 @@ folder2 = 'storage/dslog_giz18'
 # table = tables['step3_for1']
 # print(table)
 tnames = []
-pranges = [(0,1000), (0, 100)]
+pranges = [((0,1000), (0, 100))]
 for i in range(5):
     tname = 'step{}_for1'.format(i)
     tnames.append(tname)
