@@ -13,7 +13,7 @@ from query_dslog import *
 def compression_convert(folder1, folder2, num_steps, dfile, input2):
     final_shape = None
     for i in range(num_steps):
-        array_file = os.path.join(folder1, 'step{}{}'.format(i + 1, dfile))
+        array_file = os.path.join(folder1, 'step{}{}'.format(i, dfile))
         print(array_file)
         if dfile == '.pickle':
             with open(array_file, 'rb') as f:
@@ -27,9 +27,9 @@ def compression_convert(folder1, folder2, num_steps, dfile, input2):
             ids = [1]
         else:
             ids = [1,2]
-        #comp_rel_save(array, folder2, 'step{}_'.format(i), image = False, arrow = True, gzip = True)
+        comp_rel_save(array, folder2, 'step{}_'.format(i), image = False, arrow = True, gzip = True)
         #column_save(array, folder2, 'step{}_'.format(i), temp_path = './temp', ids = ids)
-        raw_save(array, folder2, 'step{}_'.format(i), ids = ids, arrow = False)
+        #raw_save(array, folder2, 'step{}_'.format(i), ids = ids, arrow = False)
         #gzip_save(array, folder2, 'step{}_'.format(i), ids = ids, arrow = True)
         #else:
             #raw_save(array, folder2, 'step{}_'.format(i), ids = ids, image = False, arrow=True)
@@ -76,9 +76,9 @@ def make_compression_relational(f2, f1, num_steps):
         pickle.dump(y, f)
 
 if __name__ == '__main__':
-    folder1 = 'compression_tests_2/compression_tests_2/image_pipeline'
-    folder2 = 'storage/image_raw'
-    #folder_range = list(range(20))
+    folder1 = 'compression_tests_2/numpy_pipeline'
+    folder2 = 'storage/np_dslog'
+    folder_range = list(range(20))
     #folder_range = []
-    make_compression_image(folder2, folder1, num_steps = 5)
-    #make_compression_numpy(folder2, folder1, 5, folder_range)
+    #make_compression_image(folder2, folder1, num_steps = 5)
+    make_compression_numpy(folder2, folder1, 5, folder_range)

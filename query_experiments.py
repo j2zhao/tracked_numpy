@@ -33,17 +33,17 @@ def get_range(xsize, ysize, x, y):
     return (xstart, xmax), (ystart, ymax)
 
 if __name__ == '__main__':
-    shape = [1080, 1920]
-    #shape = [1000, 100]
+    #shape = [1080, 1920]
+    shape = [1000, 100]
     #shape = [1000000, 9]
-    sizes_ = [0.001, 0.01, 0.1, 0.2, 0.4, 0.6, 0.8, 1]
-    sizes = [(int(math.sqrt(s)*shape[0]), int(math.sqrt(s)*shape[1])) for s in sizes_]
+    #sizes_ = [0.001, 0.01, 0.1, 0.2, 0.4, 0.6, 0.8, 1]
+    #sizes = [(int(math.sqrt(s)*shape[0]), int(math.sqrt(s)*shape[1])) for s in sizes_]
     ##sizes = [(int(s*shape[0]), shape[1]) for s in sizes_]
-    #sizes = [(1, 1), (10, 1), (100, 1), (1000, 1), (1000, 10), (1000, 100)]
-    #experiments = [1, 10, 100, 1000, 10000, 100000]
+    sizes = [(1, 1), (10, 1), (100, 1), (1000, 1), (1000, 10), (1000, 100)]
+    experiments = [1, 10, 100, 1000, 10000, 100000]
     #sizes = [(1080, 20)]
     #sizes = [(13, 13), (42, 42), (132, 132), (186, 186), (263, 263), (322, 322), (372, 372), (416, 416)]
-    experiments = [0, 1, 10, 20, 40, 60, 80, 100]
+    #experiments = [0, 1, 10, 20, 40, 60, 80, 100]
     #experiments = [1]
     num_steps = 5
     for k in range(len(experiments)):
@@ -51,10 +51,10 @@ if __name__ == '__main__':
         xsize = sizes[k][0]
         ysize = sizes[k][1]
         experiment = experiments[k]
-        for j in range(1):
+        for j in range(20):
             # get folder name and last size
-            #folder2 = 'storage/dslog_giz' + str(j)
-            folder2 = 'storage/image_raw'
+            folder2 = 'storage/np_dslog' + str(j)
+            #folder2 = 'storage/image_raw'
             print(folder2)
             x = shape[0]
             y = shape[1]
@@ -67,23 +67,23 @@ if __name__ == '__main__':
             print(pranges)
             tnames = []
             for i in range(num_steps):
-                tname = 'step{}_1'.format(i)
+                tname = 'step{}_for1'.format(i)
                 tnames.append(tname)
             #tnames.reverse()
             # get query results
             start = time.time()
-            #query_comp(pranges, folder2, tnames, merge = True, dtype = 'arrow')
-            result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'csv')
+            query_comp(pranges, folder2, tnames, merge = True, dtype = 'arrow')
+            #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'csv')
             end = time.time()
-            print('finished experiment: {}'.format(experiment))
-            print(end - start)
-            #times.append(end - start)
+            #print('finished experiment: {}'.format(experiment))
+            #print(end - start)
+            times.append(end - start)
                 
-        # times = np.asarray(times)
-        # avg = np.average(times)
-        # std = np.std(times)
-        # print('finished experiment: {}'.format(experiment))
-        # print('average time: {}'.format(avg))
-        # print('std time: {}'.format(std))
-        # np.save('query_results_2/dslog_nomerge{}.npy'.format(experiment), times)
+        times = np.asarray(times)
+        avg = np.average(times)
+        std = np.std(times)
+        print('finished experiment: {}'.format(experiment))
+        print('average time: {}'.format(avg))
+        print('std time: {}'.format(std))
+        np.save('query_results_2/dslog_merge{}.npy'.format(experiment), times)
     
