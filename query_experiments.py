@@ -67,7 +67,7 @@ if __name__ == '__main__':
             print(pranges)
             tnames = []
             for i in range(num_steps):
-                tname = 'step{}_for1'.format(i)
+                tname = 'step{}_1'.format(i)
                 tnames.append(tname)
             #tnames.reverse()
             # get query results
