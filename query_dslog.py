@@ -15,6 +15,7 @@ def sort_(prov):
     return int(s)
 
 def merge_ranges(pranges):
+    print(pranges)
     """pranges [(x1, x2), (y1, y2)"""
     plist = list(set(pranges))
     plist.sort(key=sort_)
