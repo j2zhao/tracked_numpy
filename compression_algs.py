@@ -252,7 +252,7 @@ def convert_inverse_rel(prov):
                     y2_ = y[type_y][i][1]
                     out_y_tup[0] = y1
                     out_y_tup[3] = y2
-                elif type_y == '0':
+                elif type_y == '1':
                     y1_ = x1 + y[type_y][i][0]
                     y2_ = x2 + y[type_y][i][1]
                     out_x_tup[2] = -y[type_y][i][1]
