@@ -13,7 +13,7 @@ from query_dslog import *
 def compression_convert(folder1, folder2, num_steps, dfile, input2):
     final_shape = None
     for i in range(num_steps):
-        array_file = os.path.join(folder1, 'step{}{}'.format(i, dfile))
+        array_file = os.path.join(folder1, 'step{}{}'.format(i + 1, dfile))
         print(array_file)
         if dfile == '.pickle':
             with open(array_file, 'rb') as f:
