@@ -198,35 +198,65 @@ def convert_inverse_rel(prov):
             type_y = '0'
         else:
             type_y = '1'
+        
+        if (type_x == '0' and type_y == '0') or (type_x == '1' and type_y == '1'):
+            raise ValueError('currently not supported')
+
         max_i = len(x[type_x])
 
         for i in range(max_i):
             # get xs
-            if type_x == 'a':
-                x1_ = x[type_x][i][0]
-                x2_ = x[type_x][i][1]
-                out_x_tup = [x1, None, None, x2, None, None]
-            elif type_x == '0':
-                x1_ = x1 + x[type_x][i][0]
-                x2_ = x2 + x[type_x][i][1]
-                out_x_tup = [None, -x[type_x][i][0], None, None, -x[type_x][i][1], None]
-            else:
+            out_x_tup = [None, None, None, None, None, None]
+            out_y_tup = [None, None, None, None, None, None]
+
+            if type_x == '1' and type_y == '0':
                 x1_ = y1 + x[type_x][i][0]
                 x2_ = y2 + x[type_x][i][1]
-                out_x_tup = [None, None, -x[type_x][i][0], None, None, -x[type_x][i][1]]
-            # get ys
-            if type_y == 'a':
-                y1_ = y[type_y][i][0]
-                y2_ = y[type_y][i][1]
-                out_y_tup = [y1, None, None, y2, None, None]
-            elif type_y == '0':
+                out_y_tup[1] = -x[type_x][i][1]
+                out_y_tup[4] = -x[type_x][i][0]
                 y1_ = x1 + y[type_y][i][0]
                 y2_ = x2 + y[type_y][i][1]
-                out_y_tup = [None, -y[type_y][i][0], None, None, -y[type_y][i][1], None]
+                out_x_tup[2] = -y[type_y][i][1]
+                out_x_tup[5] = -y[type_y][i][0]
+            elif type_x == '1' and type_y == 'a':
+                x1_ = y1 + x[type_x][i][0]
+                x2_ = y2 + x[type_x][i][1]
+                out_y_tup[1] = -x[type_x][i][1]
+                out_y_tup[4] = -x[type_x][i][0]
+                y1_ = y[type_y][i][0]
+                y2_ = y[type_y][i][1]
+                out_x_tup[0] = x1
+                out_x_tup[3] = x2
+            elif type_x == 'a' and type_y == '0':
+                y1_ = x1 + y[type_y][i][0]
+                y2_ = x2 + y[type_y][i][1]
+                out_x_tup[2] = -y[type_y][i][1]
+                out_x_tup[5] = -y[type_y][i][0]
+                x1_ = x[type_x][i][0]
+                x2_ = x[type_x][i][1]
+                out_y_tup[0] = y1
+                out_y_tup[3] = y2
             else:
-                y1_ = y1 + y[type_y][i][0]
-                y2_ = y2 + y[type_y][i][1]
-                out_y_tup = [None, None, -y[type_y][i][0], None, None, -y[type_y][i][1]]
+                if type_x == 'a':
+                    x1_ = x[type_x][i][0]
+                    x2_ = x[type_x][i][1]
+                    out_x_tup[0] = x1
+                    out_x_tup[3] = x2
+                elif type_x == '0':
+                    x1_ = x1 + x[type_x][i][0]
+                    x2_ = x2 + x[type_x][i][1]
+                    out_x_tup[1] = -x[type_x][i][1]
+                    out_x_tup[4] = -x[type_x][i][0]
+                if type_y == 'a':
+                    y1_ = y[type_y][i][0]
+                    y2_ = y[type_y][i][1]
+                    out_y_tup[0] = y1
+                    out_y_tup[3] = y2
+                elif type_y == '0':
+                    y1_ = x1 + y[type_y][i][0]
+                    y2_ = x2 + y[type_y][i][1]
+                    out_x_tup[2] = -y[type_y][i][1]
+                    out_x_tup[5] = -y[type_y][i][0]
             tup = [x1_, x2_, y1_, y2_] + out_x_tup + out_y_tup 
             new_list.append(tup)
     return new_list
