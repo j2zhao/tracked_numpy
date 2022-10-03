@@ -19,13 +19,18 @@ folder2 = 'storage/dslog_giz18'
             #     y = pickle.load(f)
             # get ranges and step names
 #pranges = [((520, 520), (955, 965))]
-tnames = ['step3_for1']
+# tnames = ['step3_for1']
 
-tables = load_parquet(folder2)
-table = tables['step3_for1']
-print(table)
-
+# tables = load_parquet(folder2)
+# table = tables['step3_for1']
+# print(table)
+tnames = []
+pranges = [(0,1000), (0, 100)]
+for i in range(5):
+    tname = 'step{}_for1'.format(i)
+    tnames.append(tname)
             #tnames.reverse()
             # get query results
 #query_comp(pranges, folder2, tnames, merge = True, dtype = 'arrow')
             #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
+query_comp(pranges, folder2, tnames, merge = True, dtype = 'arrow')
