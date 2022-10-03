@@ -201,6 +201,7 @@ def convert_inverse_rel(prov):
             type_y = '0'
         
         if (type_x == '0' and type_y == '0') or (type_x == '1' and type_y == '1'):
+            print(prov)
             raise ValueError('currently not supported')
 
         max_i = len(x[type_x])
