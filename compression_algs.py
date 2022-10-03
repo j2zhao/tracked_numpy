@@ -1,5 +1,6 @@
 
 
+from cmath import isnan
 import numpy as np
 import time
 import os
@@ -253,10 +254,10 @@ def convert_inverse_rel(prov):
                     out_y_tup[0] = y1
                     out_y_tup[3] = y2
                 elif type_y == '1':
-                    y1_ = x1 + y[type_y][i][0]
-                    y2_ = x2 + y[type_y][i][1]
-                    out_x_tup[2] = -y[type_y][i][1]
-                    out_x_tup[5] = -y[type_y][i][0]
+                    y1_ = y1 + y[type_y][i][0]
+                    y2_ = y2 + y[type_y][i][1]
+                    out_y_tup[2] = -y[type_y][i][1]
+                    out_y_tup[5] = -y[type_y][i][0]
             tup = [x1_, x2_, y1_, y2_] + out_x_tup + out_y_tup 
             new_list.append(tup)
     return new_list
