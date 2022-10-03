@@ -195,10 +195,10 @@ def convert_inverse_rel(prov):
             type_x = '1'
         if 'a' in y:
             type_y = 'a'
-        elif '0' in y:
-            type_y = '0'
-        else:
+        elif '1' in y:
             type_y = '1'
+        else:
+            type_y = '0'
         
         if (type_x == '0' and type_y == '0') or (type_x == '1' and type_y == '1'):
             raise ValueError('currently not supported')
