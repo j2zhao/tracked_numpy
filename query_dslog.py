@@ -118,6 +118,7 @@ def input_output(prange, results):
                 break
         if ox1 < 0 or ox2 < 0 or oy1 < 0 or oy2 < 0:
             print(row)
+            raise ValueError()
         oranges.append(((ox1, ox2), (oy1, oy2)))
     return oranges
 
@@ -142,6 +143,7 @@ def query_comp(pranges, folder, tnames, absolute = False, merge = True, dtype = 
     
 
     for name in tnames:
+        print(name)
         oranges = []
         for prange in pranges:
             x1 = prange[0][0]
