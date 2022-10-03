@@ -54,7 +54,7 @@ if __name__ == '__main__':
         for j in range(1):
             # get folder name and last size
             #folder2 = 'storage/dslog_giz' + str(j)
-            folder2 = 'storage/image_dslog'
+            folder2 = 'storage/image_raw'
             print(folder2)
             x = shape[0]
             y = shape[1]
@@ -72,8 +72,8 @@ if __name__ == '__main__':
             #tnames.reverse()
             # get query results
             start = time.time()
-            query_comp(pranges, folder2, tnames, merge = True, dtype = 'arrow')
-            #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'csv')
+            #query_comp(pranges, folder2, tnames, merge = True, dtype = 'arrow')
+            result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'csv')
             end = time.time()
             print('finished experiment: {}'.format(experiment))
             print(end - start)
