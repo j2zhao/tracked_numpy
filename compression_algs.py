@@ -305,13 +305,13 @@ def convert_inverse_rel(prov):
                 tup = [x1_, x2_, y1_, y2_] + out_x_tup + out_y_tup 
                 new_list.append(tup)
             elif type_x == '1' and type_y == '1': #8
-                for i in range(y1, y2):
+                for j in range(y1, y2):
                     out_x_tup[0] = x1
                     out_x_tup[3] = x2
-                    x1_ = i + x[type_x][i][0]
-                    x2_ = i + x[type_x][i][1]
-                    y1_ = i + y[type_y][i][0]
-                    y2_ = i + y[type_y][i][1]
+                    x1_ = j + x[type_x][i][0]
+                    x2_ = j + x[type_x][i][1]
+                    y1_ = j + y[type_y][i][0]
+                    y2_ = j + y[type_y][i][1]
                     out_y_tup[1] = x[type_x][i][0]
                     out_y_tup[4] = x[type_x][i][1]
                     out_y_tup[2] = y[type_y][i][0]
@@ -319,13 +319,13 @@ def convert_inverse_rel(prov):
                     tup = [x1_, x2_, y1_, y2_] + out_x_tup + out_y_tup 
                     new_list.append(tup)
             elif type_x == '0' and type_y == '0': #9
-                for i in range(x1, x2):
+                for j in range(x1, x2):
                     out_y_tup[0] = y1
                     out_y_tup[3] = y2
-                    y1_ = i + y[type_y][i][0]
-                    y2_ = i + y[type_y][i][1]
-                    x1_ = i + x[type_x][i][0]
-                    x2_ = i + x[type_x][i][1]
+                    y1_ = j + y[type_y][i][0]
+                    y2_ = j + y[type_y][i][1]
+                    x1_ = j + x[type_x][i][0]
+                    x2_ = j + x[type_x][i][1]
                     out_x_tup[1] = x[type_x][i][0]
                     out_x_tup[4] = x[type_x][i][1]
                     out_x_tup[2] = y[type_y][i][0]
