@@ -182,9 +182,11 @@ def input_output_for(prange, results):
             print(row)
             raise ValueError()
         if ox1 > ox2:
+            print('x')
             print(row)
             raise ValueError()
         if oy1 > oy2:
+            print('y')
             print(row)
             raise ValueError()
         oranges.append(((ox1, ox2), (oy1, oy2)))
