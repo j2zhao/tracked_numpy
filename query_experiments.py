@@ -35,7 +35,7 @@ def get_range(xsize, ysize, x, y):
 if __name__ == '__main__':
     shape = [1080, 1920]
     #shape = [1000, 100]
-    shape = [1000000, 9]
+    #shape = [1000000, 9]
     sizes_ = [0.001, 0.01, 0.1, 0.2, 0.4, 0.6, 0.8, 1]
     sizes = [(int(math.sqrt(s)*shape[0]), int(math.sqrt(s)*shape[1])) for s in sizes_]
     #sizes = [(int(s*shape[0]), shape[1]) for s in sizes_]
