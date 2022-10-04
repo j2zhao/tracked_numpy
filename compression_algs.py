@@ -178,6 +178,21 @@ def column_save(array, path, name, temp_path = './temp', ids = [1]):
             command = " ".join([turbo_dir, tb_h, turbo_param, p1, p2])
             os.system(command)
 
+def get_rel_tups(x, y, outx, outy, type_x, type_y):
+    out_x_tup = [None, None, None, None, None, None]
+    out_y_tup = [None, None, None, None, None, None]
+    if type_x == '0' and type_y == '0':     
+        for i in range(x[0], x[0] + 1):
+            x1_ = i + outx[0]
+            x2_ = i + outx[1] 
+            out_x_tup[0] = i
+            out__tup[0]
+                # out_y_tup[1] = -x[type_x][i][1]
+                # out_y_tup[4] = -x[type_x][i][0]
+                # y1_ = x1 + y[type_y][i][0]
+                # y2_ = x2 + y[type_y][i][1]
+                # out_x_tup[2] = -y[type_y][i][1]
+                # out_x_tup[5] = -y[type_y][i][0]
 
 def convert_inverse_rel(prov):
     new_list = []
@@ -200,67 +215,123 @@ def convert_inverse_rel(prov):
         else:
             type_y = '0'
         
-        if (type_x == '0' and type_y == '0') or (type_x == '1' and type_y == '1'):
-            print(tup)
-            
-
+    
         max_i = len(x[type_x])
 
         for i in range(max_i):
+            # if (type_x == '0' and type_y == '0') or (type_x == '1' and type_y == '1'):
+            #     tups = get_rel_tups(tup[0], tup[1], x[type_x][i], y[type_y][i], type_x)
+            #     new_list += tups
+            #     continue
+
             # get xs
             out_x_tup = [None, None, None, None, None, None]
             out_y_tup = [None, None, None, None, None, None]
-
-            if type_x == '1' and type_y == '0':
-                x1_ = y1 + x[type_x][i][0]
-                x2_ = y2 + x[type_x][i][1]
-                out_y_tup[1] = -x[type_x][i][1]
-                out_y_tup[4] = -x[type_x][i][0]
-                y1_ = x1 + y[type_y][i][0]
-                y2_ = x2 + y[type_y][i][1]
-                out_x_tup[2] = -y[type_y][i][1]
-                out_x_tup[5] = -y[type_y][i][0]
-            elif type_x == '1' and type_y == 'a':
-                x1_ = y1 + x[type_x][i][0]
-                x2_ = y2 + x[type_x][i][1]
-                out_y_tup[1] = -x[type_x][i][1]
-                out_y_tup[4] = -x[type_x][i][0]
+            if type_x == 'a' and type_y == 'a': #1
+                x1_ = x[type_x][i][0]
+                x2_ = x[type_x][i][1]
                 y1_ = y[type_y][i][0]
                 y2_ = y[type_y][i][1]
                 out_x_tup[0] = x1
                 out_x_tup[3] = x2
-            elif type_x == 'a' and type_y == '0':
-                y1_ = x1 + y[type_y][i][0]
-                y2_ = x2 + y[type_y][i][1]
-                out_x_tup[2] = -y[type_y][i][1]
-                out_x_tup[5] = -y[type_y][i][0]
-                x1_ = x[type_x][i][0]
-                x2_ = x[type_x][i][1]
                 out_y_tup[0] = y1
                 out_y_tup[3] = y2
-            else:
-                if type_x == 'a':
-                    x1_ = x[type_x][i][0]
-                    x2_ = x[type_x][i][1]
+                tup = [x1_, x2_, y1_, y2_] + out_x_tup + out_y_tup 
+                new_list.append(tup)
+            elif type_x == 'a' and type_y == '1': #2
+                x1_ = x[type_x][i][0]
+                x2_ = x[type_x][i][1]
+                out_x_tup[0] = x1
+                out_x_tup[3] = x2
+                y1_ = y1 + y[type_y][i][0]
+                y2_ = y2 + y[type_y][i][1]
+                out_y_tup[2] = y[type_y][i][0]
+                out_y_tup[5] = y[type_y][i][1]
+                tup = [x1_, x2_, y1_, y2_] + out_x_tup + out_y_tup 
+                new_list.append(tup)
+            elif type_x == '0' and type_y == 'a': #3
+                y1_ = y[type_y][i][0]
+                y2_ = y[type_y][i][1]
+                out_y_tup[0] = y1
+                out_y_tup[3] = y2
+                x1_ = x1 + x[type_x][i][0]
+                x2_ = x2 + x[type_x][i][1]
+                out_x_tup[1] = x[type_x][i][0]
+                out_x_tup[4] = x[type_x][i][1]
+                tup = [x1_, x2_, y1_, y2_] + out_x_tup + out_y_tup 
+                new_list.append(tup)
+            elif type_x == '0' and type_y == '1': #4
+                x1_ = x1 + x[type_x][i][0]
+                x2_ = x2 + x[type_x][i][1]
+                out_x_tup[1] = x[type_x][i][0]
+                out_x_tup[4] = x[type_x][i][1]
+                y1_ = y1 + y[type_y][i][0]
+                y2_ = y2 + y[type_y][i][1]
+                out_y_tup[2] = y[type_y][i][0]
+                out_y_tup[5] = y[type_y][i][1]
+                tup = [x1_, x2_, y1_, y2_] + out_x_tup + out_y_tup 
+                new_list.append(tup)
+            elif type_x == '1' and type_y == '0': #5
+                y1_ = x1 + y[type_y][i][0]
+                y2_ = x2 + y[type_y][i][1]
+                x1_ = y1 + x[type_x][i][0]
+                x2_ = y2 + x[type_x][i][1]
+                out_x_tup[2] = y[type_y][i][0]
+                out_x_tup[5] = y[type_y][i][1]
+                out_y_tup[1] = x[type_x][i][0]
+                out_y_tup[4] = x[type_x][i][1]
+                tup = [x1_, x2_, y1_, y2_] + out_x_tup + out_y_tup 
+                new_list.append(tup)
+            elif type_x == 'a' and type_y == '0': #6
+                x1_ = x[type_x][i][0]
+                x2_ = x[type_x][i][1]
+                out_x_tup[2] = y[type_y][i][0]
+                out_x_tup[5] = y[type_y][i][1]
+                y1_ = x1 + y[type_y][i][0]
+                y2_ = x2 + y[type_y][i][1]
+                out_y_tup[0] = y1
+                out_y_tup[3] = y2
+                tup = [x1_, x2_, y1_, y2_] + out_x_tup + out_y_tup 
+                new_list.append(tup)
+            elif type_x == '1' and type_y == 'a': #7
+                y1_ = y[type_y][i][0]
+                y2_ = y[type_y][i][1]
+                out_y_tup[1] = x[type_x][i][0]
+                out_y_tup[4] = x[type_x][i][1]
+                x1_ = y1 + x[type_x][i][0]
+                x2_ = y2 + x[type_x][i][1]
+                out_x_tup[0] = x1
+                out_x_tup[3] = x2
+                tup = [x1_, x2_, y1_, y2_] + out_x_tup + out_y_tup 
+                new_list.append(tup)
+            elif type_x == '1' and type_y == '1': #8
+                for i in range(y1, y2):
                     out_x_tup[0] = x1
                     out_x_tup[3] = x2
-                elif type_x == '0':
-                    x1_ = x1 + x[type_x][i][0]
-                    x2_ = x2 + x[type_x][i][1]
-                    out_x_tup[1] = -x[type_x][i][1]
-                    out_x_tup[4] = -x[type_x][i][0]
-                if type_y == 'a':
-                    y1_ = y[type_y][i][0]
-                    y2_ = y[type_y][i][1]
+                    x1_ = i + x[type_x][i][0]
+                    x2_ = i + x[type_x][i][1]
+                    y1_ = i + y[type_y][i][0]
+                    y2_ = i + y[type_y][i][1]
+                    out_y_tup[1] = x[type_x][i][0]
+                    out_y_tup[4] = x[type_x][i][1]
+                    out_y_tup[2] = y[type_y][i][0]
+                    out_y_tup[5] = y[type_y][i][1]
+                    tup = [x1_, x2_, y1_, y2_] + out_x_tup + out_y_tup 
+                    new_list.append(tup)
+            elif type_x == '0' and type_y == '0': #9
+                for i in range(x1, x2):
                     out_y_tup[0] = y1
                     out_y_tup[3] = y2
-                elif type_y == '1':
-                    y1_ = y1 + y[type_y][i][0]
-                    y2_ = y2 + y[type_y][i][1]
-                    out_y_tup[2] = -y[type_y][i][1]
-                    out_y_tup[5] = -y[type_y][i][0]
-            tup = [x1_, x2_, y1_, y2_] + out_x_tup + out_y_tup 
-            new_list.append(tup)
+                    y1_ = i + y[type_y][i][0]
+                    y2_ = i + y[type_y][i][1]
+                    x1_ = i + x[type_x][i][0]
+                    x2_ = i + x[type_x][i][1]
+                    out_x_tup[1] = x[type_x][i][0]
+                    out_x_tup[4] = x[type_x][i][1]
+                    out_x_tup[2] = y[type_y][i][0]
+                    out_x_tup[5] = y[type_y][i][1]
+                    tup = [x1_, x2_, y1_, y2_] + out_x_tup + out_y_tup 
+                    new_list.append(tup)            
     return new_list
 
 def convert_rel(prov):

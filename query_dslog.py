@@ -75,6 +75,7 @@ def input_output(prange, results):
     # 0: a, 1: 1, 2: 2
     oranges = []
     for row in results.itertuples():
+        print(row)
         # get intersection with row range
         sql_x1 = int(row[1])
         sql_x2 = int(row[2])
@@ -122,6 +123,30 @@ def input_output(prange, results):
         oranges.append(((ox1, ox2), (oy1, oy2)))
     return oranges
 
+def input_output_for(prange, results):
+    x1 = prange[0][0]
+    x2 = prange[0][1]
+    y1 = prange[1][0]
+    y2 = prange[1][1]
+    # 0: a, 1: 1, 2: 2
+    oranges = []
+    # for row in results.itertuples():
+    #     # get intersection with row range
+    #     ix1 = max(x1, int(row[1]))
+    #     ix2 = min(x2, int(row[2]))
+    #     iy1 = max(y1, int(row[3]))
+    #     iy2 = min(y2, int(row[4]))
+    #     # for each output find appropriate range
+    #     # xa, x0, x1, ya, y0, y1
+    #     for i in range()
+
+
+    #     if ox1 < 0 or ox2 < 0 or oy1 < 0 or oy2 < 0:
+    #         print(row)
+    #         raise ValueError()
+    #     oranges.append(((ox1, ox2), (oy1, oy2)))
+    return oranges
+
 def input_output_abs(results):
     # 0: a, 1: 1, 2: 2
     oranges = []
@@ -134,7 +159,7 @@ def input_output_abs(results):
         oranges.append(((ox1, ox2), (oy1, oy2)))
     return oranges
 
-def query_comp(pranges, folder, tnames, absolute = False, merge = True, dtype = 'arrow'):
+def query_comp(pranges, folder, tnames, backward = False, absolute = False, merge = True, dtype = 'arrow'):
     con = duckdb.connect(database=':memory:')
     if dtype == 'arrow':
         tables = load_parquet(folder)
@@ -153,8 +178,10 @@ def query_comp(pranges, folder, tnames, absolute = False, merge = True, dtype = 
             arrow_table = tables[name]
             df = con.execute("SELECT * FROM arrow_table WHERE LEAST(output_x2, {}) >= GREATEST(output_x1, {}) \
                 AND LEAST(output_y2, {}) >= GREATEST(output_y1, {})".format(x2, x1, y2, y1)).fetchdf()
-            if not absolute:
+            if not absolute and backward:
                 oranges += input_output(prange, df)
+            elif not absolute and not backward:
+                oranges += input_output_for(prange, df)
             else:
                 oranges += input_output_abs(df)
         if len(oranges) == 0:
