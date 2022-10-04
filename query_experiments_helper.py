@@ -76,10 +76,10 @@ def make_compression_relational(f2, f1, num_steps):
         pickle.dump(y, f)
 
 if __name__ == '__main__':
-    folder1 = 'compression_tests_2/compression_tests_2/image_pipeline'
-    folder2 = 'storage/image_dslog'
+    folder1 = 'compression_tests_2/relationa_pipeline'
+    folder2 = 'storage/relational_raw'
     #folder_range = list(range(20))
     #folder_range = []
-    make_compression_image(folder2, folder1, num_steps = 5)
+    #make_compression_image(folder2, folder1, num_steps = 5)
     #make_compression_numpy(folder2, folder1, 5, folder_range)
-    #make_compression_relational(folder2, folder1, num_steps = 5)
+    make_compression_relational(folder2, folder1, num_steps = 5)
