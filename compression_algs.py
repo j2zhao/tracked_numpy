@@ -40,6 +40,7 @@ def aux(array, ids = [1]):
     for i in range(array.shape[0]):
         for j in range(array.shape[1]):
             for p in array[i, j].provenance:
+                print(p)
                 id, x, y = p
                 provs[id].append([i, j, x, y])
     results = {}
