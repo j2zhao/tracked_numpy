@@ -123,12 +123,8 @@ def input_output(prange, results):
     return oranges
 
 def forward_aux(orig1, orig2, ix1, ix2, r1, r2):
-    print((ix1 - r1))
-    print(orig1)
-    print((ix2 - r2))
-    print(orig2)
-    x = max((ix1 - r1), orig1)
-    y = min((ix2 - r2), orig2)
+    x = max((ix1 - r2), (orig1 - r1))
+    y = min((ix2 - r1), (orig2 - r2))
     return (x, y)
 
 def input_output_for(prange, results):
@@ -151,14 +147,14 @@ def input_output_for(prange, results):
             k = j + 3
             if not np.isnan(row[j]):
                 if i == 0:
-                    print('x4')
+                    #print('x4')
                     ox1 = int(row[j])
                     ox2 = int(row[k])
                 elif i == 1:
-                    print('x2')
+                    #print('x2')
                     ox1, ox2 = forward_aux(int(row[1]), int(row[2]), ix1, ix2, int(row[j]), int(row[k]))
                 else:
-                    print('x1')
+                    #print('x1')
                     ox1, ox2 = forward_aux(int(row[3]), int(row[4]), iy1, iy2, int(row[j]), int(row[k]))
                 break
 
@@ -167,14 +163,14 @@ def input_output_for(prange, results):
             k = j + 3
             if not np.isnan(row[j]):
                 if i == 0:
-                    print('hi2')
+                    #print('hi2')
                     oy1 = int(row[j])
                     oy2 = int(row[k])
                 elif i == 1:
-                    print('hi1')
+                    #print('hi1')
                     oy1, oy2 = forward_aux(int(row[1]), int(row[2]), ix1, ix2, int(row[j]), int(row[k]))
                 else:
-                    print('hi')
+                    #print('hi')
                     oy1, oy2 = forward_aux(int(row[3]), int(row[4]), iy1, iy2, int(row[j]), int(row[k]))
                 break
 
