@@ -165,7 +165,7 @@ def input_output_for(prange, results):
                 elif i == 1:
                     oy1, oy2 = forward_aux(int(row[1]), int(row[2]), ix1, ix2, int(row[j]), int(row[k]))
                 else:
-                    ox1, ox2 = forward_aux(int(row[3]), int(row[4]), iy1, iy2, int(row[j]), int(row[k]))
+                    oy1, oy2 = forward_aux(int(row[3]), int(row[4]), iy1, iy2, int(row[j]), int(row[k]))
                 break
 
         if ox1 < 0 or ox2 < 0 or oy1 < 0 or oy2 < 0:
