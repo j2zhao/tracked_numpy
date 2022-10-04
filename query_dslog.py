@@ -147,11 +147,14 @@ def input_output_for(prange, results):
             k = j + 3
             if not np.isnan(row[j]):
                 if i == 0:
+                    print('x4')
                     ox1 = int(row[j])
                     ox2 = int(row[k])
                 elif i == 1:
+                    print('x2')
                     ox1, ox2 = forward_aux(int(row[1]), int(row[2]), ix1, ix2, int(row[j]), int(row[k]))
                 else:
+                    print('x1')
                     ox1, ox2 = forward_aux(int(row[3]), int(row[4]), iy1, iy2, int(row[j]), int(row[k]))
                 break
 
@@ -160,18 +163,24 @@ def input_output_for(prange, results):
             k = j + 3
             if not np.isnan(row[j]):
                 if i == 0:
+                    print('hi2')
                     oy1 = int(row[j])
                     oy2 = int(row[k])
                 elif i == 1:
+                    print('hi1')
                     oy1, oy2 = forward_aux(int(row[1]), int(row[2]), ix1, ix2, int(row[j]), int(row[k]))
                 else:
+                    print('hi')
                     oy1, oy2 = forward_aux(int(row[3]), int(row[4]), iy1, iy2, int(row[j]), int(row[k]))
                 break
 
         if ox1 < 0 or ox2 < 0 or oy1 < 0 or oy2 < 0:
             print(row)
             raise ValueError()
-        if ox1 > ox2 or oy1 > oy2:
+        if ox1 > ox2:
+            print(row)
+            raise ValueError()
+        if oy1 > oy2:
             print(row)
             raise ValueError()
         oranges.append(((ox1, ox2), (oy1, oy2)))
