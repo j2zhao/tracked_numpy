@@ -75,9 +75,6 @@ def input_output(prange, results):
     # 0: a, 1: 1, 2: 2
     oranges = []
     for row in results.itertuples():
-        print(row)
-        print(row[2])
-        raise ValueError
         # get intersection with row range
         sql_x1 = int(row[1])
         sql_x2 = int(row[2])
@@ -125,6 +122,11 @@ def input_output(prange, results):
         oranges.append(((ox1, ox2), (oy1, oy2)))
     return oranges
 
+def forward_aux(orig1, orig2, ix1, ix2, r1, r2):
+    x = max((ix1 - r1), orig1)
+    y = min((ix2 - r2), orig2)
+    return (x, y)
+
 def input_output_for(prange, results):
     x1 = prange[0][0]
     x2 = prange[0][1]
@@ -132,21 +134,47 @@ def input_output_for(prange, results):
     y2 = prange[1][1]
     # 0: a, 1: 1, 2: 2
     oranges = []
-    # for row in results.itertuples():
-    #     # get intersection with row range
-    #     ix1 = max(x1, int(row[1]))
-    #     ix2 = min(x2, int(row[2]))
-    #     iy1 = max(y1, int(row[3]))
-    #     iy2 = min(y2, int(row[4]))
-    #     # for each output find appropriate range
-    #     # xa, x0, x1, ya, y0, y1
-    #     for i in range()
+    for row in results.itertuples():
+        # get intersection with row range
+        ix1 = max(x1, int(row[1]))
+        ix2 = min(x2, int(row[2]))
+        iy1 = max(y1, int(row[3]))
+        iy2 = min(y2, int(row[4]))
+        # for each output find appropriate range
+        # xa, x0, x1, ya, y0, y1
+        for i in range(3):
+            j = i + 5
+            k = j + 3
+            if not np.isnan(row[j]):
+                if i == 0:
+                    ox1 = int(row[j])
+                    ox2 = int(row[k])
+                elif i == 1:
+                    ox1, ox2 = forward_aux(int(row[1]), int(row[2]), ix1, ix2, int(row[j]), int(row[k]))
+                else:
+                    ox1, ox2 = forward_aux(int(row[3]), int(row[4]), iy1, iy2, int(row[j]), int(row[k]))
+                break
 
+        for i in range(3):
+            j = i + 11
+            k = j + 3
+            if not np.isnan(row[j]):
+                if i == 0:
+                    oy1 = int(row[j])
+                    oy2 = int(row[k])
+                elif i == 1:
+                    oy1, oy2 = forward_aux(int(row[1]), int(row[2]), ix1, ix2, int(row[j]), int(row[k]))
+                else:
+                    ox1, ox2 = forward_aux(int(row[3]), int(row[4]), iy1, iy2, int(row[j]), int(row[k]))
+                break
 
-    #     if ox1 < 0 or ox2 < 0 or oy1 < 0 or oy2 < 0:
-    #         print(row)
-    #         raise ValueError()
-    #     oranges.append(((ox1, ox2), (oy1, oy2)))
+        if ox1 < 0 or ox2 < 0 or oy1 < 0 or oy2 < 0:
+            print(row)
+            raise ValueError()
+        if ox1 > ox2 or oy1 > oy2:
+            print(row)
+            raise ValueError()
+        oranges.append(((ox1, ox2), (oy1, oy2)))
     return oranges
 
 def input_output_abs(results):
@@ -183,7 +211,7 @@ def query_comp(pranges, folder, tnames, backward = False, absolute = False, merg
             if not absolute and backward:
                 oranges += input_output(prange, df)
             elif not absolute and not backward:
-                oranges += input_output(prange, df)
+                oranges += input_output_for(prange, df)
             else:
                 oranges += input_output_abs(df)
         if len(oranges) == 0:
