@@ -8,7 +8,7 @@ import os
 def missing_filter(array, missing = '\\N'):
     for i in range(array.shape[0]):
         for j in range(array.shape[1]):
-            array[i,j].provenance = [(0, i, j)]
+            array[i,j].provenance = [(1, i, j)]
     new_array = []
     for i in range(array.shape[0]):
         skip = False
@@ -30,19 +30,19 @@ def combine_cols(array, col1 = 0, col2 = 0):
     for i in range(array.shape[0]):
         for j in range(array.shape[1]):
             
-            array[i,j].provenance = [(0, i, j)]
+            array[i,j].provenance = [(1, i, j)]
     
     new_array = np.zeros((array.shape[0], array.shape[1] + 1) , dtype= object)
 
     new_array[:, :-1] = array
     for i in range(array.shape[0]):
-        new_array[i, -1] = TrackedObj('test', [(0, i, col1),(0, i, col2)])
+        new_array[i, -1] = TrackedObj('test', [(1, i, col1),(1, i, col2)])
     return new_array
 
 def one_hot(array, column = 8):
     for i in range(array.shape[0]):
         for j in range(array.shape[1]):
-            array[i,j].provenance = [(0, i, j)]
+            array[i,j].provenance = [(1, i, j)]
 
     values = set()
     values_dict = {}
@@ -61,7 +61,7 @@ def one_hot(array, column = 8):
     for i in range(array.shape[0]): 
         for j in range(len(values)):
             x = j + array.shape[1] - 1
-            new_array[i,x] = TrackedObj('onehot', [(0, i, column)])
+            new_array[i,x] = TrackedObj('onehot', [(1, i, column)])
     # for i in range(array.shape[0]): 
     #     val = array[i, column].value
     #     index = values_dict[val] + array.shape[1] - 1
@@ -71,7 +71,7 @@ def one_hot(array, column = 8):
 def one2one(array):
     for i in range(array.shape[0]):
         for j in range(array.shape[1]):
-            array[i,j].provenance = [(0, i, j)]
+            array[i,j].provenance = [(1, i, j)]
     return array
 
 if __name__ == '__main__':
