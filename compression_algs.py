@@ -40,7 +40,6 @@ def aux(array, ids = [1]):
     for i in range(array.shape[0]):
         for j in range(array.shape[1]):
             for p in array[i, j].provenance:
-                print(p)
                 id, x, y = p
                 provs[id].append([i, j, x, y])
     results = {}
@@ -178,22 +177,6 @@ def column_save(array, path, name, temp_path = './temp', ids = [1]):
             p2 = os.path.join(p2, temp_names[i])
             command = " ".join([turbo_dir, tb_h, turbo_param, p1, p2])
             os.system(command)
-
-def get_rel_tups(x, y, outx, outy, type_x, type_y):
-    out_x_tup = [None, None, None, None, None, None]
-    out_y_tup = [None, None, None, None, None, None]
-    if type_x == '0' and type_y == '0':     
-        for i in range(x[0], x[0] + 1):
-            x1_ = i + outx[0]
-            x2_ = i + outx[1] 
-            out_x_tup[0] = i
-            out__tup[0]
-                # out_y_tup[1] = -x[type_x][i][1]
-                # out_y_tup[4] = -x[type_x][i][0]
-                # y1_ = x1 + y[type_y][i][0]
-                # y2_ = x2 + y[type_y][i][1]
-                # out_x_tup[2] = -y[type_y][i][1]
-                # out_x_tup[5] = -y[type_y][i][0]
 
 def convert_inverse_rel(prov):
     new_list = []

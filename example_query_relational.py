@@ -8,7 +8,7 @@ import os
 def missing_filter(array, missing = '\\N'):
     for i in range(array.shape[0]):
         for j in range(array.shape[1]):
-            array[i,j].provenance = (0, i, j)
+            array[i,j].provenance = [(0, i, j)]
     new_array = []
     for i in range(array.shape[0]):
         skip = False
@@ -30,7 +30,7 @@ def combine_cols(array, col1 = 0, col2 = 0):
     for i in range(array.shape[0]):
         for j in range(array.shape[1]):
             
-            array[i,j].provenance = (0, i, j)
+            array[i,j].provenance = [(0, i, j)]
     
     new_array = np.zeros((array.shape[0], array.shape[1] + 1) , dtype= object)
 
@@ -42,7 +42,7 @@ def combine_cols(array, col1 = 0, col2 = 0):
 def one_hot(array, column = 8):
     for i in range(array.shape[0]):
         for j in range(array.shape[1]):
-            array[i,j].provenance = (0, i, j)
+            array[i,j].provenance = [(0, i, j)]
 
     values = set()
     values_dict = {}
@@ -53,8 +53,6 @@ def one_hot(array, column = 8):
             values.add(val)
             values_dict[val] = index
             index +=1
-    print(len(values))
-    print(values)
     #raise ValueError()
     new_size = array.shape[1] - 1 + len(values)
     new_array = np.zeros((array.shape[0], new_size), dtype = object)
@@ -73,7 +71,7 @@ def one_hot(array, column = 8):
 def one2one(array):
     for i in range(array.shape[0]):
         for j in range(array.shape[1]):
-            array[i,j].provenance = (0, i, j)
+            array[i,j].provenance = [(0, i, j)]
     return array
 
 if __name__ == '__main__':
@@ -99,6 +97,14 @@ if __name__ == '__main__':
     print(arr.shape)
     #Filter out missing data
     arr = missing_filter(arr)
+    # for i in range(arr.shape[0]):
+    #     for j in range(arr.shape[1]):
+    #         if not isinstance(arr[i, j].provenance, tuple):
+    #             print(i)
+    #             print(j)
+    #             print(arr[i, j].provenance)
+    #             raise ValueError()
+    print(arr.shape)
     p = os.path.join(folder, 'step2.pickle')
     with open(p, 'wb') as f:
         pickle.dump(arr, f)
