@@ -123,6 +123,10 @@ def input_output(prange, results):
     return oranges
 
 def forward_aux(orig1, orig2, ix1, ix2, r1, r2):
+    print((ix1 - r1))
+    print(orig1)
+    print((ix2 - r2))
+    print(orig2)
     x = max((ix1 - r1), orig1)
     y = min((ix2 - r2), orig2)
     return (x, y)
