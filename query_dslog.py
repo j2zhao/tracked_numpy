@@ -76,6 +76,8 @@ def input_output(prange, results):
     oranges = []
     for row in results.itertuples():
         print(row)
+        print(row[1])
+        raise ValueError
         # get intersection with row range
         sql_x1 = int(row[1])
         sql_x2 = int(row[2])
