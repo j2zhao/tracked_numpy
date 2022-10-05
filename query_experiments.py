@@ -56,7 +56,6 @@ if __name__ == '__main__':
             #folder2 = 'storage/np_dslog' + str(j)
             #folder2 = 'storage/image_dslog'
             folder2 = 'storage/relational_dslog'
-            print(j)
             x = shape[0]
             y = shape[1]
             # with open(os.path.join(folder2, 'x.pickle'), 'rb') as f:
