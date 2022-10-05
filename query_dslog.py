@@ -233,4 +233,5 @@ def query_comp(pranges, folder, tnames, backward = False, absolute = False, merg
         if merge:
             oranges = merge_ranges(oranges)
         pranges = oranges
+        print(pranges)
     return pranges
