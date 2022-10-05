@@ -51,12 +51,12 @@ if __name__ == '__main__':
         xsize = sizes[k][0]
         ysize = sizes[k][1]
         experiment = experiments[k]
-        for j in range(1):
+        for j in range(20):
             # get folder name and last size
             #folder2 = 'storage/np_dslog' + str(j)
             #folder2 = 'storage/image_dslog'
             folder2 = 'storage/relational_dslog'
-            print(folder2)
+            print(j)
             x = shape[0]
             y = shape[1]
             # with open(os.path.join(folder2, 'x.pickle'), 'rb') as f:
@@ -75,15 +75,15 @@ if __name__ == '__main__':
             query_comp(pranges, folder2, tnames, backward = False, merge = True, dtype = 'arrow')
             #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'turbo')
             end = time.time()
-            print('finished experiment: {}'.format(experiment))
-            print(end - start)
-            # times.append(end - start)
+            #print('finished experiment: {}'.format(experiment))
+            #print(end - start)
+            times.append(end - start)
                 
-        # times = np.asarray(times)
-        # avg = np.average(times)
+        times = np.asarray(times)
+        avg = np.average(times)
         # std = np.std(times)
-        # print('finished experiment: {}'.format(experiment))
-        # print('average time: {}'.format(avg))
+        print('finished experiment: {}'.format(experiment))
+        print('average time: {}'.format(avg))
         # print('std time: {}'.format(std))
         # np.save('query_results_2/image_dslog_results{}.npy'.format(experiment), times)
     
