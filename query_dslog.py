@@ -212,6 +212,7 @@ def query_comp(pranges, folder, tnames, backward = False, absolute = False, merg
     
 
     for name in tnames:
+        print(name)
         oranges = []
         for prange in pranges:
             x1 = prange[0][0]
