@@ -35,10 +35,10 @@ def get_range(xsize, ysize, x, y):
 if __name__ == '__main__':
     #shape = [1080, 1920]
     #shape = [1000, 100]
-    shape = [1000000, 9]
+    shape = [9, 1000000]
     sizes_ = [0.001, 0.01, 0.1, 0.2, 0.4, 0.6, 0.8, 1]
     #sizes = [(int(math.sqrt(s)*shape[0]), int(math.sqrt(s)*shape[1])) for s in sizes_]
-    sizes = [(int(s*shape[0]), shape[1]) for s in sizes_]
+    sizes = [(shape[0], int(s*shape[1])) for s in sizes_]
     #sizes = [(1, 1), (10, 1), (100, 1), (1000, 1), (1000, 10), (1000, 100)]
     #experiments = [1, 10, 100, 1000, 10000, 100000]
     #sizes = [(1080, 20)]
@@ -65,7 +65,6 @@ if __name__ == '__main__':
             #     y = pickle.load(f)
             # get ranges and step names
             pranges = [get_range(xsize, ysize, x, y)]
-            print(pranges)
             tnames = []
             for i in range(num_steps):
                 tname = 'step{}_for1'.format(i)
