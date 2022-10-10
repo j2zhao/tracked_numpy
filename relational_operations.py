@@ -60,9 +60,9 @@ def join_prov(df1, df2, column_name1, column_name2,  id1 = 1, id2 = 2, limit = 1
     u.sort(key=_short)
     a = 0
     for val in u:
-        if a%1000 == 0:
-            print(val)
-            print(a)
+        # if a%1000 == 0:
+        print(val)
+        print(a)
         df1_sub = df1.loc[df1[column_name1] == val]
         df2_sub = df2.loc[df2[column_name2] == val]
         for i, row1 in df1_sub.iterrows():
