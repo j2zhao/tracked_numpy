@@ -30,6 +30,9 @@ def groupby_prov(df, col_name, agg_name, id1 = 1, id2 = 2, limit = 1000):
             col2.append(obj2)
     return np.asarray([col1, col2], dtype=object)
 
+def _short(key):
+    key = int(key[2:])
+    return key
 
 
 def join_prov(df1, df2, column_name1, column_name2,  id1 = 1, id2 = 2, limit = 100000):
@@ -53,7 +56,8 @@ def join_prov(df1, df2, column_name1, column_name2,  id1 = 1, id2 = 2, limit = 1
     u1 = set(df1[column_name1].unique())
     u2 = set(df2[column_name2].unique())
     u = u1.intersection(u2)
-    print(len(u))
+    u = list(u)
+    u.sort(key=_short)
     a = 0
     for val in u:
         if a%1000 == 0:

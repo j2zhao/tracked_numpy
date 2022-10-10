@@ -310,4 +310,6 @@ def test18(limit = 1000000, data_left = './compression_tests_2/left_join_pandas.
 
 if __name__ == '__main__':
     arr = test18()
+    with open('join_output.pickle', 'wb') as f:
+        pickle.dump(arr, f)
     print(arr)
