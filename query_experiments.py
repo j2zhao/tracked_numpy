@@ -39,7 +39,7 @@ if __name__ == '__main__':
     sizes_ = [0.001, 0.01, 0.1, 0.2, 0.4, 0.6, 0.8, 1]
     #sizes = [(int(math.sqrt(s)*shape[0]), int(math.sqrt(s)*shape[1])) for s in sizes_]
     #sizes = [(shape[0], int(s*shape[1])) for s in sizes_]
-    sizes = ([9, 1000000])
+    sizes = [[9, 1000000]]
     #sizes = [(1, 1), (10, 1), (100, 1), (1000, 1), (1000, 10), (1000, 100)]
     #experiments = [1, 10, 100, 1000, 10000, 100000]
     #sizes = [(1080, 20)]
