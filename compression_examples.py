@@ -266,7 +266,9 @@ def test16(data = './compression_tests_2/group_by_pandas.pickle', col_name = 'st
     #data = pd.read_csv(data)
     with open(data, 'rb') as f:
         data = pickle.load(f, encoding='latin1')
-        
+    
+    # print(len(data['startYear'].unique()))
+    # print(data['startYear'].unique())
     data = groupby_prov(data, col_name, agg_name, limit = 1000000)
     return data
 
@@ -290,10 +292,12 @@ def test18(limit = 1000000, data_left = './compression_tests_2/left_join_pandas.
     #df2 = pd.read_csv(data_right)
     with open(data_left, 'rb') as f:
         df1 = pickle.load(f, encoding='latin1')
-        #df1 = df1.head(1000000)
+        df1 = df1.head(1000000)
+        print(df1.shape)
     with open(data_right, 'rb') as f:
         df2 = pickle.load(f, encoding='latin1')
-        #df2 = df2.head(1000000)
+        df2 = df2.head(1000000)
+        print(df2.shape)
     data = join_prov(df1, df2, column1, column2, limit = limit)
     return data
 
@@ -309,7 +313,4 @@ def test18(limit = 1000000, data_left = './compression_tests_2/left_join_pandas.
 #     return data
 
 if __name__ == '__main__':
-    arr = test18()
-    with open('join_output.pickle', 'wb') as f:
-        pickle.dump(arr, f)
-    print(arr)
+    test18()

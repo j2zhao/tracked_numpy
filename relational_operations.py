@@ -1,9 +1,10 @@
+from cmath import isnan
 import pandas as pd
 import numpy as np
 from tracked_object import TrackedObj
 import pickle
 
-def groupby_prov(df, col_name, agg_name, id1 = 1, id2 = 2, limit = 1000):
+def groupby_prov(df, col_name, agg_name, id1 = 1, limit = 1000):
     """
     Sum group by with col_name, on aggregation_name
     """
@@ -12,20 +13,22 @@ def groupby_prov(df, col_name, agg_name, id1 = 1, id2 = 2, limit = 1000):
     col2 = []
     columns = list(df.columns)
     columns_dict = {}
+    uniq = list(df[col_name].unique())
     for i, c in enumerate(columns):
         columns_dict[c] = i
-
     for index, row in df.iterrows():
         if index >= limit:
             break
-        if row[col_name] in col1_dict:
+        if np.isnan(row[col_name]):
+            continue
+        elif row[col_name] in col1_dict:
             i = col1_dict[row[col_name]]
-            col2[i] += TrackedObj(row[agg_name], (id2, columns_dict[agg_name], index))
+            col2[i] += TrackedObj(row[agg_name], (id1, columns_dict[agg_name], index))
         else:
             i = len(col1)
             col1_dict[row[col_name]] = i
             obj1 = TrackedObj(row[col_name], (id1, columns_dict[col_name], index))
-            obj2 = TrackedObj(row[agg_name], (id2, columns_dict[agg_name], index))
+            obj2 = TrackedObj(row[agg_name], (id1, columns_dict[agg_name], index))
             col1.append(obj1)
             col2.append(obj2)
     return np.asarray([col1, col2], dtype=object)

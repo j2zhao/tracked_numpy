@@ -88,7 +88,7 @@ if __name__ == '__main__':
     #     df2 = pickle.load(f, encoding='latin1')
     # Merge two datasets
     #arr = join_prov(df1, df2, column1, column2, limit = 100000)
-    with open('./compression_tests_2/join_output.pickle', 'rb') as f:
+    with open('./join_output.pickle', 'rb') as f:
         arr = pickle.load(f)
     p = os.path.join(folder, 'step1.pickle')
     with open(p, 'wb') as f:
