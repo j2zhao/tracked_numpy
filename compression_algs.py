@@ -368,28 +368,29 @@ def comp_rel_save(array, path, name, image = False, arrow = True, gzip = True):
         provenance[1] = array_compression(array)
     else:
         provenance = compression(array, relative = True)
+    print(provenance)
     for id in provenance:
         prov = provenance[id]
         vals = convert_rel(prov)
-        vals_inverse = convert_inverse_rel(prov)
+        #vals_inverse = convert_inverse_rel(prov)
         df = pd.DataFrame(vals, columns= ["output_x1", "output_x2", "output_y1", "output_y2", \
                 "input_x1_a", "input_x1_1", "input_x1_2", \
                 "input_x2_a", "input_x2_1", "input_x2_2",  \
                 "input_y1_a", "input_y1_1", "input_y1_2", \
                 "input_y2_a", "input_y2_1", "input_y2_2"])
 
-        df_2 = pd.DataFrame(vals_inverse, columns= ["output_x1", "output_x2", "output_y1", "output_y2", \
-                "input_x1_a", "input_x1_1", "input_x1_2", \
-                "input_x2_a", "input_x2_1", "input_x2_2",  \
-                "input_y1_a", "input_y1_1", "input_y1_2", \
-                "input_y2_a", "input_y2_1", "input_y2_2"])
+        # df_2 = pd.DataFrame(vals_inverse, columns= ["output_x1", "output_x2", "output_y1", "output_y2", \
+        #         "input_x1_a", "input_x1_1", "input_x1_2", \
+        #         "input_x2_a", "input_x2_1", "input_x2_2",  \
+        #         "input_y1_a", "input_y1_1", "input_y1_2", \
+        #         "input_y2_a", "input_y2_1", "input_y2_2"])
     
         if not arrow:
             dire = os.path.join(path, name + 'back' + str(id) + '.csv' )
             df.to_csv(dire)
 
             dire_2 = os.path.join(path, name + 'for' + str(id) + '.csv' )
-            df_2.to_csv(dire_2)
+            #df_2.to_csv(dire_2)
         else:
             table = pa.Table.from_pandas(df, preserve_index=False)
             dire = os.path.join(path, name + 'back' + str(id) + '.parquet')
@@ -398,12 +399,12 @@ def comp_rel_save(array, path, name, image = False, arrow = True, gzip = True):
             else: 
                 pq.write_table(table, dire)
             
-            table_2 = pa.Table.from_pandas(df_2, preserve_index=False)
-            dire_2 = os.path.join(path, name + 'for' + str(id) + '.parquet')
-            if gzip:
-                pq.write_table(table_2, dire_2, compression='gzip')
-            else: 
-                pq.write_table(table_2, dire_2)
+            #table_2 = pa.Table.from_pandas(df_2, preserve_index=False)
+            # dire_2 = os.path.join(path, name + 'for' + str(id) + '.parquet')
+            # if gzip:
+            #     pq.write_table(table_2, dire_2, compression='gzip')
+            # else: 
+            #     pq.write_table(table_2, dire_2)
 
 def comp_save(array, path, name, arrow = True, gzip = True):
     provenance = compression(array, relative = False)
@@ -450,7 +451,7 @@ if __name__ == '__main__':
     os.mkdir('./temp')        
     # with open ('./compression_tests_2/join_output.pickle', 'rb') as f:
     #     arr = pickle.load(f)
-    arr = test16()
+    arr = test6()
     #imgplot = plt.imshow(arr)
     #plt.show()
     # print('done')
