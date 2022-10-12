@@ -220,7 +220,6 @@ def query_comp(pranges, folder, tnames, backward = False, absolute = False, merg
             y2 = prange[1][1]
 
             arrow_table = tables[name]
-            print(arrow_table)
             df = con.execute("SELECT * FROM arrow_table WHERE LEAST(output_x2, {}) >= GREATEST(output_x1, {}) \
                 AND LEAST(output_y2, {}) >= GREATEST(output_y1, {})".format(x2, x1, y2, y1)).fetchdf()
             if not absolute and backward:
