@@ -55,7 +55,7 @@ def test3(arr = (1000, 1000)):
     # test reduction
     arr = np.random.random(arr).astype(tf.tracked_float)
     tf.initialize(arr, 1)
-    arr = np.sum(arr, axis = 1, initial=None)
+    arr = np.sum(arr, axis = 0, initial=None)
     return arr
 
 def test4(arr = (10, 100000)):
