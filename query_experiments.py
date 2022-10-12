@@ -69,7 +69,7 @@ if __name__ == '__main__':
             pranges = [get_range(xsize, ysize, x, y)]
             print(pranges)
             tnames = []
-            for i in range(1):
+            for i in range(5):
                 tname = 'step{}_for1'.format(i)
                 tnames.append(tname)
             #tnames.reverse()
