@@ -58,7 +58,7 @@ if __name__ == '__main__':
             # get folder name and last size
             #folder2 = 'storage/np_dslog' + str(j)
             #folder2 = 'storage/image_dslog'
-            folder2 = 'storage/relational_dslog'
+            folder2 = 'storage/relational_raw'
             x = shape[0]
             y = shape[1]
             # with open(os.path.join(folder2, 'x.pickle'), 'rb') as f:
@@ -70,13 +70,13 @@ if __name__ == '__main__':
             print(pranges)
             tnames = []
             for i in range(5):
-                tname = 'step{}_for1'.format(i)
+                tname = 'step{}_1'.format(i)
                 tnames.append(tname)
             #tnames.reverse()
             # get query results
             start = time.time()
-            result = query_comp(pranges, folder2, tnames, backward = False, merge = True, dtype = 'arrow')
-            #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'csv')
+            #result = query_comp(pranges, folder2, tnames, backward = False, merge = True, dtype = 'arrow')
+            result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'csv')
             end = time.time()
             if len(result) != 0:
                 print('finished experiment: {}'.format(experiment))

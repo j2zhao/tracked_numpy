@@ -448,9 +448,9 @@ if __name__ == '__main__':
         pass
     os.mkdir('./storage')
     os.mkdir('./temp')        
-    with open ('./compression_tests_2/join_output.pickle', 'rb') as f:
-        arr = pickle.load(f)
-    #arr = test1()
+    # with open ('./compression_tests_2/join_output.pickle', 'rb') as f:
+    #     arr = pickle.load(f)
+    arr = test16()
     #imgplot = plt.imshow(arr)
     #plt.show()
     # print('done')
