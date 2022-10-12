@@ -28,9 +28,9 @@ def compression_convert(folder1, folder2, num_steps, dfile, input2):
         else:
             ids = [1,2]
         #comp_rel_save(array, folder2, 'step{}_'.format(i), image = False, arrow = True, gzip = True)
-        column_save(array, folder2, 'step{}_'.format(i), temp_path = './temp', ids = ids)
+        #column_save(array, folder2, 'step{}_'.format(i), temp_path = './temp', ids = ids)
         #raw_save(array, folder2, 'step{}_'.format(i), ids = ids, arrow = True)
-        #gzip_save(array, folder2, 'step{}_'.format(i), ids = ids, arrow = True)
+        gzip_save(array, folder2, 'step{}_'.format(i), ids = ids, arrow = True)
         #else:
             #raw_save(array, folder2, 'step{}_'.format(i), ids = ids, image = False, arrow=True)
     print(final_shape)
@@ -77,7 +77,7 @@ def make_compression_relational(f2, f1, num_steps):
 
 if __name__ == '__main__':
     folder1 = 'compression_tests_2/relational_pipeline'
-    folder2 = 'storage/relational_turbo'
+    folder2 = 'storage/relational_gzip'
     #folder_range = list(range(20))
     #folder_range = []
     #make_compression_image(folder2, folder1, num_steps = 5)
