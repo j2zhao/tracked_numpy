@@ -78,7 +78,7 @@ if __name__ == '__main__':
             #query_comp(pranges, folder2, tnames, backward = False, merge = True, dtype = 'arrow')
             result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'csv')
             end = time.time()
-            if len(result != 0):
+            if len(result) != 0:
                 print('finished experiment: {}'.format(experiment))
                 print(j)
                 print(end - start)
