@@ -230,10 +230,8 @@ def query_comp(pranges, folder, tnames, backward = False, absolute = False, merg
                 oranges += input_output_abs(df)
         
         if len(oranges) == 0:
-            print(len(oranges))
             return oranges
         if merge:
             oranges = merge_ranges(oranges)
-        print(len(oranges))
         pranges = oranges
     return pranges
