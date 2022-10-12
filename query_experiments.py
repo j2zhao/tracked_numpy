@@ -38,25 +38,27 @@ if __name__ == '__main__':
     shape = [9, 1000000]
     sizes_ = [0.001, 0.01, 0.1, 0.2, 0.4, 0.6, 0.8, 1]
     #sizes = [(int(math.sqrt(s)*shape[0]), int(math.sqrt(s)*shape[1])) for s in sizes_]
-    #sizes = [(shape[0], int(s*shape[1])) for s in sizes_]
-    sizes = [[9, 1000000*0.8]]
+    sizes = [(shape[0], int(s*shape[1])) for s in sizes_]
+    #sizes = [[9, 1000000*0.8]]
     #sizes = [(1, 1), (10, 1), (100, 1), (1000, 1), (1000, 10), (1000, 100)]
     #experiments = [1, 10, 100, 1000, 10000, 100000]
     #sizes = [(1080, 20)]
     #sizes = [(13, 13), (42, 42), (132, 132), (186, 186), (263, 263), (322, 322), (372, 372), (416, 416)]
-    #experiments = [0, 1, 10, 20, 40, 60, 80, 100]
-    experiments = [1]
+    experiments = [0, 1, 10, 20, 40, 60, 80, 100]
+    #experiments = [1]
     num_steps = 5
     for k in range(len(experiments)):
         times = []
         xsize = sizes[k][0]
         ysize = sizes[k][1]
         experiment = experiments[k]
-        for j in range(1):
+        j = 0
+        while True:
+            j + 1
             # get folder name and last size
             #folder2 = 'storage/np_dslog' + str(j)
             #folder2 = 'storage/image_dslog'
-            folder2 = 'storage/relational_dslog'
+            folder2 = 'storage/relational_raw'
             x = shape[0]
             y = shape[1]
             # with open(os.path.join(folder2, 'x.pickle'), 'rb') as f:
@@ -68,23 +70,25 @@ if __name__ == '__main__':
             print(pranges)
             tnames = []
             for i in range(1):
-                tname = 'step{}_for1'.format(i)
+                tname = 'step{}_1'.format(i)
                 tnames.append(tname)
             #tnames.reverse()
             # get query results
             start = time.time()
-            query_comp(pranges, folder2, tnames, backward = False, merge = True, dtype = 'arrow')
-            #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'turbo')
+            #query_comp(pranges, folder2, tnames, backward = False, merge = True, dtype = 'arrow')
+            result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'csv')
             end = time.time()
-            #print('finished experiment: {}'.format(experiment))
-            #print(end - start)
-            times.append(end - start)
+            if len(result != 0):
+                print('finished experiment: {}'.format(experiment))
+                print(j)
+                print(end - start)
+                break
                 
-        times = np.asarray(times)
-        avg = np.average(times)
-        # std = np.std(times)
-        print('finished experiment: {}'.format(experiment))
-        print('average time: {}'.format(avg))
+        # times = np.asarray(times)
+        # avg = np.average(times)
+        # # std = np.std(times)
+        # print('finished experiment: {}'.format(experiment))
+        # print('average time: {}'.format(avg))
         # print('std time: {}'.format(std))
         # np.save('query_results_2/image_dslog_results{}.npy'.format(experiment), times)
     
