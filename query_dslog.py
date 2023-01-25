@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 from query_compression import load_parquet
 import time
+import math
 
 def sort_(prov):
     (ox1, ox2), (oy1, oy2) = prov
@@ -66,11 +67,16 @@ def merge_ranges(pranges):
         compressed.append(((temp_start, last_value), col))
     return compressed
 
+# GIANT TODO: UPDATE NONEs
 def input_output(prange, results):
     x1 = prange[0][0]
     x2 = prange[0][1]
+    if x2 == None:
+        x2 = x1
     y1 = prange[1][0]
     y2 = prange[1][1]
+    if y2 == None:
+        y2 = y1
 
     # 0: a, 1: 1, 2: 2
     oranges = []
@@ -93,14 +99,26 @@ def input_output(prange, results):
             if not np.isnan(row[j]):
                 if i == 0:
                     ox1 = int(row[j])
-                    ox2 = int(row[k])
+                    if math.isnan(row[k]):
+                        ox2 = ox1
+                    else:
+                        ox2 = int(row[k])
                 elif i == 1:
                     ox1 = int(row[j]) + ix1
-                    ox2 = int(row[k]) + ix2
+                    if math.isnan(row[k]):
+                        ox2 = ox1 + ix2
+                    else:
+                        ox2 = int(row[k]) + ix2
+                    
                 else:
                     ox1 = int(row[j]) + iy1
-                    ox2 = int(row[k]) + iy2
+                    if math.isnan(row[k]):
+                        ox2 = ox1 + iy2
+                    else:
+                        ox2 = int(row[k]) + iy2
+                    
                 break
+        
 
         for i in range(3):
             j = i + 11
@@ -108,13 +126,22 @@ def input_output(prange, results):
             if not np.isnan(row[j]):
                 if i == 0:
                     oy1 = int(row[j])
-                    oy2 = int(row[k])
+                    if math.isnan(row[k]):
+                        oy2 = oy1
+                    else:
+                        oy2 = int(row[k])
                 elif i == 1:
                     oy1 = int(row[j]) + ix1
-                    oy2 = int(row[k]) + ix2
+                    if math.isnan(row[k]):
+                        oy2 = oy1 + ix2
+                    else:
+                        oy2 = int(row[k]) + ix2
                 else:
                     oy1 = int(row[j]) + iy1
-                    oy2 = int(row[k]) + iy2
+                    if math.isnan(row[k]):
+                        oy2 = oy1 + iy2
+                    else:
+                        oy2 = int(row[k]) + iy2
                 break
         if ox1 < 0 or ox2 < 0 or oy1 < 0 or oy2 < 0:
             print(row)
@@ -220,8 +247,9 @@ def query_comp(pranges, folder, tnames, backward = False, absolute = False, merg
             y2 = prange[1][1]
 
             arrow_table = tables[name]
-            df = con.execute("SELECT * FROM arrow_table WHERE LEAST(output_x2, {}) >= GREATEST(output_x1, {}) \
-                AND LEAST(output_y2, {}) >= GREATEST(output_y1, {})".format(x2, x1, y2, y1)).fetchdf()
+            #edited here
+            df = con.execute("SELECT DISTINCT * FROM arrow_table WHERE LEAST(COALESCE(output_x2, output_x1), {}) >= GREATEST(output_x1, {}) \
+                AND LEAST(COALESCE(output_y2, output_y1), {}) >= GREATEST(output_y1, {}) OR ".format(x2, x1, y2, y1)).fetchdf()
             if not absolute and backward:
                 oranges += input_output(prange, df)
             elif not absolute and not backward:
@@ -235,3 +263,18 @@ def query_comp(pranges, folder, tnames, backward = False, absolute = False, merg
             oranges = merge_ranges(oranges)
         pranges = oranges
     return pranges
+
+
+con = duckdb.connect(database=':memory:')
+d = {'col1': [0, 1], 'col2': [None, 2]}
+df = pd.DataFrame(data=d)
+start = time.time()
+result1 = con.execute("SELECT GREATEST(col2) FROM df").fetchdf()
+end = time.time()
+# print(end - start)
+# start = time.time()
+# result2 = con.execute("SELECT GREATEST(col2) FROM df").fetchdf()
+# end = time.time()
+# print(end - start)
+for row in result1.itertuples():
+    print(math.isnan((row[1])))

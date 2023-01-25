@@ -72,6 +72,17 @@ def gzip_save(array, path, name, ids = [1], arrow = True):
             dire = os.path.join(path, name + str(id) + '.parquet')
             pq.write_table(table, dire, compression='gzip')
 
+# def raw_save(array, path, name, ids = [1], arrow = True):
+#     dfs = aux(array, ids)
+#     for id in dfs:
+#         if not arrow:
+#             dire = os.path.join(path, name + str(id) + '.csv')
+#             dfs[id].to_csv(dire)
+#         else:
+#             table = pa.Table.from_pandas(dfs[id], preserve_index=False)
+#             dire = os.path.join(path, name + str(id) + '.parquet')
+#             pq.write_table(table, dire)
+            
 
 def inverted_list(array, path, name, ids = [1], batch_size = 10000, arrow = True):
     """
@@ -324,33 +335,50 @@ def convert_rel(prov):
         # insert input values
         x1, x2  = tup[0]
         y1, y2  = tup[1]
+        if x2 == x1:
+            x2 = None
+        elif y2 == y1:
+            y2 = None
         x, y = tup[2]
         i = 0
         max_i = -1
         while True:
             val = [x1, x2, y1, y2]
+            temp = None
+            temp2 = None
             for t in ['a', '0', '1']:
                 if t in x:
                     if max_i == -1:
                         max_i = len(x[t])
                     val.append(x[t][i][0])
+                    temp = x[t][i][0]
+                    temp2 = t
                 else:
                     val.append(None)
 
             for t in ['a', '0', '1']:
                 if t in x:
-                    val.append(x[t][i][1])
+                    if temp == x[t][i][1] and t == temp2:
+                        val.append(None)
+                    else:
+                        val.append(x[t][i][1])
                 else:
                     val.append(None)
 
             for t in ['a', '0', '1']:
                 if t in y:
                     val.append(y[t][i][0])
+                    temp = y[t][i][0]
+                    temp2 = t
                 else:
                     val.append(None)
+
             for t in ['a', '0', '1']:
                 if t in y:
-                    val.append(y[t][i][1])
+                    if temp == y[t][i][1] and t == temp2:
+                        val.append(None)
+                    else:
+                        val.append(y[t][i][1])
                 else:
                     val.append(None)
 
@@ -368,7 +396,7 @@ def comp_rel_save(array, path, name, image = False, arrow = True, gzip = True):
         provenance[1] = array_compression(array)
     else:
         provenance = compression(array, relative = True)
-    print(provenance)
+    #print(provenance)
     for id in provenance:
         prov = provenance[id]
         vals = convert_rel(prov)
@@ -399,7 +427,7 @@ def comp_rel_save(array, path, name, image = False, arrow = True, gzip = True):
             else: 
                 pq.write_table(table, dire)
             
-            #table_2 = pa.Table.from_pandas(df_2, preserve_index=False)
+            # table_2 = pa.Table.from_pandas(df_2, preserve_index=False)
             # dire_2 = os.path.join(path, name + 'for' + str(id) + '.parquet')
             # if gzip:
             #     pq.write_table(table_2, dire_2, compression='gzip')
@@ -439,7 +467,7 @@ import matplotlib.pyplot as plt
 array_size = [(100, 1), (1000, 1), (10000, 1), (100000, 1), (1000000, 1), (10000000, 1), (100000000, 1)]
 
 if __name__ == '__main__':
-    for size in array_size:
+    for size in range(1):
         try:
             shutil.rmtree('./storage')
         except OSError as e:
@@ -452,7 +480,7 @@ if __name__ == '__main__':
         os.mkdir('./temp')        
         # with open ('./compression_tests_2/join_output.pickle', 'rb') as f:
         #     arr = pickle.load(f)
-        arr = test7(size)
+        arr = test9(arr_size = (100000, 1))
         # for i in range(100, 200):
         #     print(i)
             # raw_save(arr[i], './storage', 'step0_{}'.format(i), ids = [1, 2], arrow = False)
@@ -463,7 +491,7 @@ if __name__ == '__main__':
         comp_rel_save(arr, './storage', 'step0_', arrow = True, gzip=True)
         end = time.time()
         print('compression time')
-        print(size)
+        #print(size)
         print(end - start)
         # print('compression size')
         # size = get_size(start_path = './storage')
