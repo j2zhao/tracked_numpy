@@ -470,12 +470,12 @@ if __name__ == '__main__':
     #     arr = pickle.load(f)
     arr = test6()
     #print(arr[0,0].provenance)
-    # for i in range(100, 200):
+    for i in range(0, 100):
+        column_save(arr, './storage', 'step0_{}'.format(i), temp_path = './temp', ids = [1, 2])
     #     print(i)
         # raw_save(arr[i], './storage', 'step0_{}'.format(i), ids = [1, 2], arrow = False)
     start = time.time()
     #raw_save(arr, './storage', 'step0_', ids = [1], arrow = True)
-    column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1, 2])
     #column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1, 2])
     #gzip_save(arr, './storage', 'step0_', ids = [1], arrow = True)
     #comp_rel_save(arr, './storage', 'step0_', image = False, arrow = True, gzip=True)
