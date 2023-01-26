@@ -32,7 +32,7 @@ def load_turbo(folder):
     for f1 in os.listdir(folder):
         f2 = os.path.join(folder, f1)
         if os.path.isdir(f2):
-            file_names = ["x1.npy", "x2.npy", "y1.npy", "y2.npy"]
+            file_names = ["x1.csv", "x2.csv", "y1.csv", "y2.csv"]
             db_names = ['output_x', 'output_y', 'input_x', 'input_y']
             array_dict = {}
             for i, file in enumerate(file_names):
@@ -40,7 +40,8 @@ def load_turbo(folder):
                 p2 = os.path.join(f2, file)
                 command = " ".join([turbo_dir, turbo_param, p1, p2])
                 os.system(command)
-                array_dict[db_names[i]] = np.load(p2, allow_pickle=True)
+                #array_dict[db_names[i]] = np.load(p2, allow_pickle=True)
+                array_dict[db_names[i]] = np.genfromtxt(p2, delimiter=',')
             table = pd.DataFrame(array_dict)
             tables[f1] = table
     return tables

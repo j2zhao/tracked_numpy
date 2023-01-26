@@ -284,7 +284,7 @@ def test16(data = './compression_tests_2/group_by_pandas.pickle', col_name = 'st
 #     data = groupby_prov(data, col_name, agg_name)
 #     return data
 
-def test18(limit = 1000000, data_left = './compression_tests_2/left_join_pandas.pickle', data_right = './compression_tests_2/right_join_pandas.pickle', column1 = 'tconst', column2 = 'tconst'):
+def test17(limit = 1000000, data_left = './compression_tests_2/left_join_pandas.pickle', data_right = './compression_tests_2/right_join_pandas.pickle', column1 = 'tconst', column2 = 'tconst'):
     """
     Join Sorted
     """
@@ -300,6 +300,15 @@ def test18(limit = 1000000, data_left = './compression_tests_2/left_join_pandas.
         print(df2.shape)
     data = join_prov(df1, df2, column1, column2, limit = limit)
     return data
+
+def test18(arr_size = (100000, 10)):
+    # tests random sort
+    arr = np.random.random(arr_size).astype(tf.tracked_float)
+    tf.initialize(arr, 1)
+    out = np.sort(arr, axis = 0)
+    #out = np.zeros(arr.shape).astype(tf.tracked_float)
+    #out[arr < 0.5] = arr[arr < 0.5]
+    return out
 
 # def test19(data_left = './compression_tests_2/left_join_pandas.pickle', data_right = './compression_tests_2/right_join_pandas.pickle', column1 = 'tconst', column2 = 'parentTconst'):
 #     """

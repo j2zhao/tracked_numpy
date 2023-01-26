@@ -164,9 +164,9 @@ def column_save(array, path, name, temp_path = './temp', ids = [1]):
     else:
         col_compression.to_column_2(array, temp_path, ids, zeros = True)
     turbo_dir = "./turbo/Turbo-Range-Coder/turborc"
-    turbo_param = "-20"
-    tb_h = '-H'
-    file_names = ['x1.npy', 'x2.npy', 'y1.npy', 'y2.npy']
+    turbo_param = "-12"
+    #tb_h = '-H'
+    file_names = ['x1.csv', 'x2.csv', 'y1.csv', 'y2.csv']
     for temp in file_names:
         p1 = os.path.join(temp_path, temp)
         p2 = os.path.join(path, name + str(ids[0]))
@@ -174,19 +174,20 @@ def column_save(array, path, name, temp_path = './temp', ids = [1]):
             os.mkdir(p2)
         p2 = os.path.join(p2, temp)
         print(p2)
-        command = " ".join([turbo_dir, tb_h, turbo_param, p1, p2])
+        #command = " ".join([turbo_dir, tb_h, turbo_param, p1, p2])
+        command = " ".join([turbo_dir, turbo_param, p1, p2])
         print(command)
         os.system(command)
 
     if num_arrays == 2:
-        temp_names = ['w1.npy', 'w2.npy', 'z1.npy', 'z2.npy']
+        temp_names = ['w1.csv', 'w2.csv', 'z1.csv', 'z2.csv']
         for i, temp in enumerate(temp_names):
             p1 = os.path.join(temp_path, temp)
             p2 = os.path.join(path, name + str(ids[0]))
             if not os.path.isdir(p2):
                 os.mkdir(p2)
             p2 = os.path.join(p2, temp_names[i])
-            command = " ".join([turbo_dir, tb_h, turbo_param, p1, p2])
+            command = " ".join([turbo_dir, turbo_param, p1, p2])
             os.system(command)
 
 def convert_inverse_rel(prov):
@@ -329,63 +330,39 @@ def convert_inverse_rel(prov):
                     new_list.append(tup)            
     return new_list
 
+offset = {'a': 0, '0': 1, '1':2}
+
 def convert_rel(prov):
     vals = []
     for tup in prov:
-        # insert input values
         x1, x2  = tup[0]
         y1, y2  = tup[1]
         if x2 == x1:
             x2 = None
-        elif y2 == y1:
+        if y2 == y1:
             y2 = None
         x, y = tup[2]
-        i = 0
-        max_i = -1
-        while True:
-            val = [x1, x2, y1, y2]
-            temp = None
-            temp2 = None
-            for t in ['a', '0', '1']:
-                if t in x:
-                    if max_i == -1:
-                        max_i = len(x[t])
-                    val.append(x[t][i][0])
-                    temp = x[t][i][0]
-                    temp2 = t
-                else:
-                    val.append(None)
-
-            for t in ['a', '0', '1']:
-                if t in x:
-                    if temp == x[t][i][1] and t == temp2:
-                        val.append(None)
-                    else:
-                        val.append(x[t][i][1])
-                else:
-                    val.append(None)
-
-            for t in ['a', '0', '1']:
-                if t in y:
-                    val.append(y[t][i][0])
-                    temp = y[t][i][0]
-                    temp2 = t
-                else:
-                    val.append(None)
-
-            for t in ['a', '0', '1']:
-                if t in y:
-                    if temp == y[t][i][1] and t == temp2:
-                        val.append(None)
-                    else:
-                        val.append(y[t][i][1])
-                else:
-                    val.append(None)
-
+        tp_x = None
+        tp_y = None
+        for t in ['a', '0', '1']:
+            if t in x and tp_x == None:
+               tp_x = t
+            if t in y and tp_y == None:
+                tp_y = t
+        for i in range(len(x[tp_x])):
+            val = [None]*16
+            val[0] = x1
+            val[1] = x2
+            val[2] = y1
+            val[3] = y2
+            val[4 + offset[tp_x]] = x[tp_x][i][0]
+            if x[tp_x][i][1] != x[tp_x][i][0]:
+                val[7 + offset[tp_x]] = x[tp_x][i][1]
+            
+            val[10 + offset[tp_y]] = y[tp_y][i][0]
+            if y[tp_y][i][1] != y[tp_y][i][0]:
+                val[13 + offset[tp_y]] = y[tp_y][i][1]
             vals.append(val)
-            if i >= max_i - 1:
-                break
-            i += 1
     return vals
     
 # (array, path, name,ids = [1], arrow = True)
@@ -397,6 +374,7 @@ def comp_rel_save(array, path, name, image = False, arrow = True, gzip = True):
     else:
         provenance = compression(array, relative = True)
     #print(provenance)
+    #print(provenance)
     for id in provenance:
         prov = provenance[id]
         vals = convert_rel(prov)
@@ -406,7 +384,8 @@ def comp_rel_save(array, path, name, image = False, arrow = True, gzip = True):
                 "input_x2_a", "input_x2_1", "input_x2_2",  \
                 "input_y1_a", "input_y1_1", "input_y1_2", \
                 "input_y2_a", "input_y2_1", "input_y2_2"])
-
+        pd.set_option('display.max_columns', None)
+        #print(df)
         # df_2 = pd.DataFrame(vals_inverse, columns= ["output_x1", "output_x2", "output_y1", "output_y2", \
         #         "input_x1_a", "input_x1_1", "input_x1_2", \
         #         "input_x2_a", "input_x2_1", "input_x2_2",  \
@@ -436,6 +415,7 @@ def comp_rel_save(array, path, name, image = False, arrow = True, gzip = True):
 
 def comp_save(array, path, name, arrow = True, gzip = True):
     provenance = compression(array, relative = False)
+    #print(provenance)
     for id in provenance:
         prov = provenance[id]
         vals = []
@@ -443,9 +423,17 @@ def comp_save(array, path, name, arrow = True, gzip = True):
             # insert input values
             x1, x2  = tup[0]
             y1, y2  = tup[1]
+            if x1 == x2:
+                x2 = None
+            if y1 == y2:
+                y2 = None
             for input in tup[2]:
                 ix1, ix2 = input[0]
                 iy1, iy2 = input[1]
+                if ix2 == ix1:
+                    ix2 = None
+                if iy1 == iy2:
+                    iy2 = None
                 val = [x1, x2, y1, y2, ix1, ix2, iy1, iy2]
                 vals.append(val)
         df = pd.DataFrame(vals, columns= ["output_x1", "output_x2", "output_y1", "output_y2", \
@@ -467,32 +455,36 @@ import matplotlib.pyplot as plt
 array_size = [(100, 1), (1000, 1), (10000, 1), (100000, 1), (1000000, 1), (10000000, 1), (100000000, 1)]
 
 if __name__ == '__main__':
-    for size in range(1):
-        try:
-            shutil.rmtree('./storage')
-        except OSError as e:
-            pass
-        try:
-            shutil.rmtree('./temp')
-        except OSError as e:
-            pass
-        os.mkdir('./storage')
-        os.mkdir('./temp')        
-        # with open ('./compression_tests_2/join_output.pickle', 'rb') as f:
-        #     arr = pickle.load(f)
-        arr = test9(arr_size = (100000, 1))
-        # for i in range(100, 200):
-        #     print(i)
-            # raw_save(arr[i], './storage', 'step0_{}'.format(i), ids = [1, 2], arrow = False)
-        start = time.time()
-        #column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1])
-        #column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1, 2])
-        #gzip_save(arr, './storage', 'step0_', ids = [1, 2], arrow = True)
-        comp_rel_save(arr, './storage', 'step0_', arrow = True, gzip=True)
-        end = time.time()
-        print('compression time')
-        #print(size)
-        print(end - start)
-        # print('compression size')
-        # size = get_size(start_path = './storage')
+#for size in range(1):
+    try:
+        shutil.rmtree('./storage')
+    except OSError as e:
+        pass
+    try:
+        shutil.rmtree('./temp')
+    except OSError as e:
+        pass
+    os.mkdir('./storage')
+    os.mkdir('./temp')        
+    with open ('./compression_tests_2/join_output.pickle', 'rb') as f:
+        arr = pickle.load(f)
+    #arr = test16()
+    #print(arr[0,0].provenance)
+    # for i in range(100, 200):
+    #     print(i)
+        # raw_save(arr[i], './storage', 'step0_{}'.format(i), ids = [1, 2], arrow = False)
+    start = time.time()
+    #raw_save(arr, './storage', 'step0_', ids = [1], arrow = True)
+    column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1, 2])
+    #column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1, 2])
+    #gzip_save(arr, './storage', 'step0_', ids = [1], arrow = True)
+    #comp_rel_save(arr, './storage', 'step0_', image = False, arrow = True, gzip=True)
+    #comp_save(arr, './storage', 'step0_', arrow = True, gzip=True)
+    end = time.time()
+    #print('compression time')
+    #print(size)
+    #print(end - start)
+    print('compression size')
+    size = get_size(start_path = './storage')
+    print(size)
         
