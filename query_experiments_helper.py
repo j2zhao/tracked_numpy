@@ -12,6 +12,7 @@ from query_dslog import *
 
 def compression_convert(folder1, folder2, num_steps, dfile, input2):
     final_shape = None
+    print('hello')
     for i in range(num_steps):
         array_file = os.path.join(folder1, 'step{}{}'.format(i, dfile))
         #print(array_file)
@@ -29,7 +30,6 @@ def compression_convert(folder1, folder2, num_steps, dfile, input2):
             ids = [1,2]
         #comp_rel_save(array, folder2, 'step{}_'.format(i), image = False, arrow = True, gzip = True)
         #column_save(array, folder2, 'step{}_'.format(i), temp_path = './temp', ids = ids)
-        print('hello')
         raw_save(array, folder2, 'step{}_'.format(i), ids = ids, arrow = True)
         #gzip_save(array, folder2, 'step{}_'.format(i), ids = ids, arrow = True)
         #else:
