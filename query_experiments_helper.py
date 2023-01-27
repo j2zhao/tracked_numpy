@@ -12,7 +12,6 @@ from query_dslog import *
 
 def compression_convert(folder1, folder2, num_steps, dfile, input2):
     final_shape = None
-    print('hello')
     for i in range(num_steps):
         array_file = os.path.join(folder1, 'step{}{}'.format(i, dfile))
         #print(array_file)
@@ -38,6 +37,7 @@ def compression_convert(folder1, folder2, num_steps, dfile, input2):
     return final_shape
 
 def make_compression_numpy(f2, f1, num_steps, folder_range):
+    print('hello')
     for i in folder_range:
         folder2 = f2 + str(i)
         folder1 = f1 + str(i)
