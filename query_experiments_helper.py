@@ -76,7 +76,7 @@ def make_compression_relational(f2, f1, num_steps):
         pickle.dump(y, f)
 
 if __name__ == '__main__':
-    print('hello 2')
+    #print('hello 2')
     #folder1 = 'compression_tests_2/relational_pipeline'
     folder2 = 'storage_10/numpy_raw'
     folder1 = 'compression_tests_2/numpy_pipeline_10_'
