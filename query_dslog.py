@@ -263,18 +263,3 @@ def query_comp(pranges, folder, tnames, backward = False, absolute = False, merg
             oranges = merge_ranges(oranges)
         pranges = oranges
     return pranges
-
-
-con = duckdb.connect(database=':memory:')
-d = {'col1': [0, 1], 'col2': [None, 2]}
-df = pd.DataFrame(data=d)
-start = time.time()
-result1 = con.execute("SELECT GREATEST(col2) FROM df").fetchdf()
-end = time.time()
-# print(end - start)
-# start = time.time()
-# result2 = con.execute("SELECT GREATEST(col2) FROM df").fetchdf()
-# end = time.time()
-# print(end - start)
-for row in result1.itertuples():
-    print(math.isnan((row[1])))
