@@ -84,3 +84,4 @@ if __name__ == '__main__':
     #make_compression_image(folder2, folder1, num_steps = 5) 
     make_compression_numpy(folder2, folder1, 10, folder_range)
     #make_compression_relational(folder2, folder1, num_steps = 5)
+    
