@@ -37,7 +37,6 @@ def compression_convert(folder1, folder2, num_steps, dfile, input2):
     return final_shape
 
 def make_compression_numpy(f2, f1, num_steps, folder_range):
-    print('hello')
     for i in folder_range:
         folder2 = f2 + str(i)
         folder1 = f1 + str(i)
@@ -77,6 +76,7 @@ def make_compression_relational(f2, f1, num_steps):
         pickle.dump(y, f)
 
 if __name__ == '__main__':
+    print('hello 2')
     #folder1 = 'compression_tests_2/relational_pipeline'
     folder2 = 'storage_10/numpy_raw'
     folder1 = 'compression_tests_2/numpy_pipeline_10_'
