@@ -23,7 +23,6 @@ def convert_array(array):
     for i in range(array.shape[0]):
         for j in range(array.shape[1]):
             arr2[i, j] = DummyProv(array[i,j].provenance)
-            print(array[i,j].provenance)
     return arr2
 
 def convert_functions(func):
@@ -84,7 +83,6 @@ if __name__ == '__main__':
         pass
     os.mkdir(folder_)
     for i, f in enumerate(func2):
-        print(f)
         array = run_function(array, f[0], f[1])
         array_saved = convert_array(array)
         dire = os.path.join(folder_, 'step{}.pickle'.format(i))
