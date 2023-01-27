@@ -244,7 +244,7 @@ def compression(prov_arr, relative = True):
                 compress[id] = compress_input(prov_dict[id])
                 ids.add(id)
             cell_prov[row, col] = compress
-    print('done step 1')
+    #print('done step 1')
     end = time.time()
 
     start = time.time()
@@ -252,7 +252,7 @@ def compression(prov_arr, relative = True):
     for id in ids:
         output[id] = compress_output(cell_prov, id = id, relative = relative)
     end = time.time()
-    print('done step 2')
+    #print('done step 2')
     #print('output compression: {}'.format(end - start))
     return output
 
