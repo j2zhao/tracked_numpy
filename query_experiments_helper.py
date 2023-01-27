@@ -28,7 +28,7 @@ def compression_convert(folder1, folder2, num_steps, dfile, input2):
         else:
             ids = [1,2]
         #comp_rel_save(array, folder2, 'step{}_'.format(i), image = False, arrow = True, gzip = True)
-        #column_save(array, folder2, 'step{}_'.format(i), temp_path = './temp', ids = ids)
+        column_save(array, folder2, 'step{}_'.format(i), temp_path = './temp', ids = ids)
         #raw_save(array, folder2, 'step{}_'.format(i), ids = ids, arrow = False)
         #gzip_save(array, folder2, 'step{}_'.format(i), ids = ids, arrow = True)
         #else:
@@ -78,7 +78,7 @@ def make_compression_relational(f2, f1, num_steps):
 if __name__ == '__main__':
     #print('hello 2')
     #folder1 = 'compression_tests_2/relational_pipeline'
-    folder2 = 'storage_10/numpy_dslog'
+    folder2 = 'storage_10/numpy_col'
     folder1 = 'compression_tests_2/numpy_pipeline_10_'
     folder_range = list(range(20))
     #folder_range = []
