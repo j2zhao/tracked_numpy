@@ -86,13 +86,13 @@ def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline
             print(pranges)
             tnames = []
             for i in range(5):
-                tname = 'step{}_1'.format(i + 1)
+                tname = 'step{}_1'.format(i)
                 tnames.append(tname)
             #tnames.reverse()
             # get query results
             start = time.time()
             #result = query_comp(pranges, folder2, tnames, backward = False, merge = True, dtype = 'arrow')
-            result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'csv')
+            result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
             end = time.time()
             if len(result) != 0:
                 print('finished experiment: {}'.format(experiment))
