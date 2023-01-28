@@ -73,14 +73,14 @@ def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline
     sizes = [(int(math.sqrt(s)*shape[0]), int(math.sqrt(s)*shape[1])) for s in experiments]
     experiments = [0, 1, 10, 20, 40, 60, 80, 100]
     for k in range(len(experiments)):
+        xsize = sizes[k][0]
+        ysize = sizes[k][1]
+        experiment = experiments[k]
+        print(experiment)
+        # get folder name and last size
+        x = shape[0]
+        y = shape[1]
         while True:
-            xsize = sizes[k][0]
-            ysize = sizes[k][1]
-            experiment = experiments[k]
-            print(experiment)
-            # get folder name and last size
-            x = shape[0]
-            y = shape[1]
             # get ranges and step names
             pranges = [get_range(xsize, ysize, x, y)]
             print(pranges)
