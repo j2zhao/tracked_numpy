@@ -67,7 +67,6 @@ def merge_ranges(pranges):
         compressed.append(((temp_start, last_value), col))
     return compressed
 
-# GIANT TODO: UPDATE NONEs
 def input_output(prange, results):
     x1 = prange[0][0]
     x2 = prange[0][1]
