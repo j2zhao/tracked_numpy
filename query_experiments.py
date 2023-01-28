@@ -93,6 +93,7 @@ def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline
             start = time.time()
             #result = query_comp(pranges, folder2, tnames, backward = False, merge = True, dtype = 'arrow')
             result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'turbo')
+            print(result)
             end = time.time()
             raise ValueError()
             if len(result) != 0:
