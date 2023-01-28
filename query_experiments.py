@@ -71,7 +71,6 @@ def query_experiments_numpy(shape, sizes, experiments, num_steps, num_exp, save_
 def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline/image_dslog'):
     experiments = [0.001, 0.01, 0.1, 0.2, 0.4, 0.6, 0.8, 1]
     sizes = [(int(math.sqrt(s)*shape[0]), int(math.sqrt(s)*shape[1])) for s in experiments]
-    sizes = [(1000, 100)]
     experiments = [0, 1, 10, 20, 40, 60, 80, 100]
     for k in range(len(experiments)):
         xsize = sizes[k][0]
