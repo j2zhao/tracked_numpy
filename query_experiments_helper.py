@@ -28,7 +28,7 @@ def compression_convert(folder1, folder2, num_steps, dfile, input2):
         else:
             ids = [1,2]
         #comp_rel_save(array, folder2, 'step{}_'.format(i), image = False, arrow = True, gzip = True)
-        comp_save(array, folder2, 'step{}_'.format(i), image = False, arrow = True, gzip = True)
+        comp_save(array, folder2, 'step{}_'.format(i), arrow = True, gzip = True)
         #column_save(array, folder2, 'step{}_'.format(i), temp_path = './temp', ids = ids)
         #raw_save(array, folder2, 'step{}_'.format(i), ids = ids, arrow = False)
         #gzip_save(array, folder2, 'step{}_'.format(i), ids = ids, arrow = True)
