@@ -14,26 +14,20 @@ import time
 
 def get_range(xsize, ysize, x, y):
     if x < xsize:
-        print('1')
         ysize = int(xsize/x)*ysize
     if y < ysize:
-        print('2')
         xsize = int(ysize/y)*xsize
 
     if x <= xsize:
-        print('3')
         xstart = 0
         xmax = x - 1
     else:
-        print('4')
         xstart = random.randrange(0, x - xsize)
         xmax = xstart + xsize - 1
     if y <= ysize:
-        print('5')
         ystart = 0
         ymax = y - 1
     else:
-        print('6')
         ystart = random.randrange(0, y - ysize)
         ymax = ystart + ysize - 1
     return (xstart, xmax), (ystart, ymax)
@@ -76,8 +70,8 @@ def query_experiments_numpy(shape, sizes, experiments, num_steps, num_exp, save_
 
 def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline/image_dslog'):
     experiments = [0.001, 0.01, 0.1, 0.2, 0.4, 0.6, 0.8, 1]
-    sizes = [(int(math.sqrt(s)*shape[0]), int(math.sqrt(s)*shape[1])) for s in experiments]
-    print(sizes)
+    #sizes = [(int(math.sqrt(s)*shape[0]), int(math.sqrt(s)*shape[1])) for s in experiments]
+    sizes = [(int(shape[0]), int(s*shape[1])) for s in experiments]
     experiments = [0, 1, 10, 20, 40, 60, 80, 100]
     for k in range(len(experiments)):
         xsize = sizes[k][0]
