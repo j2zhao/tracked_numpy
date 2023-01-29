@@ -42,6 +42,7 @@ def load_turbo(folder):
                 os.system(command)
                 #array_dict[db_names[i]] = np.load(p2, allow_pickle=True)
                 array_dict[db_names[i]] = np.genfromtxt(p2, delimiter=',')
+                print(array_dict[db_names[i]].shape)
             table = pd.DataFrame(array_dict)
             tables[f1] = table
     return tables
