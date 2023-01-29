@@ -468,9 +468,9 @@ if __name__ == '__main__':
         pass
     os.mkdir('./storage')
     os.mkdir('./temp')        
-    # with open ('./compression_tests_2/join_output.pickle', 'rb') as f:
-    #     arr = pickle.load(f)
-    arr = test8()
+    with open ('./compression_tests_2/join_output.pickle', 'rb') as f:
+        arr = pickle.load(f)
+    #arr = test8()
     #print(arr[0,0].provenance)
     # for i in range(0, 100):
     #     column_save(arr, './storage', 'step0_{}'.format(i), temp_path = './temp', ids = [1, 2])
@@ -479,10 +479,10 @@ if __name__ == '__main__':
     start = time.time()
     
     #raw_save(arr, './storage', 'step0_', ids = [1, 2], arrow = True)
-    #column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1, 2])
+    column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1, 2])
     #gzip_save(arr, './storage', 'step0_', ids = [1, 2], arrow = True)
     #comp_rel_save(arr, './storage', 'step0_', image = False, arrow = True, gzip=True)
-    comp_save(arr, './storage', 'step0_', arrow = True, gzip=True)
+    #comp_save(arr, './storage', 'step0_', arrow = True, gzip=True)
     end = time.time()
     #print('compression time')
     #print(size)
