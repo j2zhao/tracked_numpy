@@ -470,7 +470,8 @@ if __name__ == '__main__':
         os.mkdir('./temp')        
         # with open ('./compression_tests_2/join_output.pickle', 'rb') as f:
         #     arr = pickle.load(f)
-        arr = test1(array_size[size])
+        arr = test7(array_size[size])
+        
         #print(arr[0,0].provenance)
         # for i in range(0, 100):
         #     column_save(arr, './storage', 'step0_{}'.format(i), temp_path = './temp', ids = [1, 2])
@@ -489,5 +490,4 @@ if __name__ == '__main__':
         print(end - start)
         #print('compression size')
         #size = get_size(start_path = './storage')
-        #print(size)
-        
+        #print(size)        
