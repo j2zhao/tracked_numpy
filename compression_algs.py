@@ -173,7 +173,7 @@ def column_save(array, path, name, temp_path = './temp', ids = [1]):
         if not os.path.isdir(p2):
             os.mkdir(p2)
         p2 = os.path.join(p2, temp)
-        print(p2)
+        #print(p2)
         #command = " ".join([turbo_dir, tb_h, turbo_param, p1, p2])
         command = " ".join([turbo_dir, turbo_param, p1, p2])
         print(command)
@@ -187,7 +187,9 @@ def column_save(array, path, name, temp_path = './temp', ids = [1]):
             if not os.path.isdir(p2):
                 os.mkdir(p2)
             p2 = os.path.join(p2, temp_names[i])
+            #print(p2)
             command = " ".join([turbo_dir, turbo_param, p1, p2])
+            print(command)
             os.system(command)
 
 def convert_inverse_rel(prov):

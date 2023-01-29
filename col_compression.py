@@ -17,25 +17,21 @@ def to_column_1(array, temp_path, zeros = True):
                 y2.append(y)
     
     x1 = np.array(x1).astype(np.intc).flatten(order='F')
-    print(x1.shape)
     path = os.path.join(temp_path, 'x1.csv')
     #np.save(path, x1)
     x1.tofile(path, sep = ',')
 
     x2 = np.array(x2).astype(np.intc).flatten(order='F') 
-    print(x2.shape)
     path = os.path.join(temp_path, 'x2.csv')
     #np.save(path, x2)
     x2.tofile(path, sep = ',')
 
     y1 = np.array(y1).astype(np.intc).flatten(order='F') 
-    print(y1.shape)
     path = os.path.join(temp_path, 'y1.csv')
     np.save(path, y1)
     y1.tofile(path, sep = ',')
 
     y2 = np.array(y2).astype(np.intc).flatten(order='F')
-    print(y2.shape)
     path = os.path.join(temp_path, 'y2.csv')
     np.save(path, y2)
     y2.tofile(path, sep = ',')
@@ -67,8 +63,10 @@ def to_column_2(array, temp_path, input_id = (1, 2), zeros= True):
                     w2.append(j)
                     z1.append(x)
                     z2.append(y)
+    
+    #print('hello')
     x1 = np.array(x1).astype(np.intc).flatten(order='F') 
-    path = os.path.join(temp_path, 'x1.npy')
+    path = os.path.join(temp_path, 'x1.csv')
     #np.save(path, x1)
     x1.tofile(path, sep = ',')
 
@@ -80,11 +78,13 @@ def to_column_2(array, temp_path, input_id = (1, 2), zeros= True):
     y1 = np.array(y1).astype(np.intc).flatten(order='F') 
     path = os.path.join(temp_path, 'y1.csv')
     #np.save(path, y1)
+    print(y1.shape)
     y1.tofile(path, sep = ',')
 
     y2 = np.array(y2).astype(np.intc).flatten(order='F') 
     path = os.path.join(temp_path, 'y2.csv')
     #np.save(path, y2)
+    print(y2.shape)
     y2.tofile(path, sep = ',')
 
     w1 = np.array(w1).astype(np.intc).flatten(order='F') 

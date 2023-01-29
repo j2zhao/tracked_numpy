@@ -86,10 +86,10 @@ def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline
             pranges = [get_range(xsize, ysize, x, y)]
             print(pranges)
             tnames = []
-            # for i in range(5):
-            #     tname = 'step{}_1'.format(i)
-            #     tnames.append(tname)
-            tnames = ['step4_1']
+            for i in range(5):
+                tname = 'step{}_1'.format(i)
+                tnames.append(tname)
+            #tnames = ['step0_1']
             #tnames.reverse()
             # get query results
             start = time.time()
