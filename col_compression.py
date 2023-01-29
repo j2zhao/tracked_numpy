@@ -16,7 +16,8 @@ def to_column_1(array, temp_path, zeros = True):
                 y1.append(x)
                 y2.append(y)
     
-    x1 = np.array(x1).astype(np.intc).flatten(order='F') 
+    x1 = np.array(x1).astype(np.intc).flatten(order='F')
+    print(len(x1))
     path = os.path.join(temp_path, 'x1.csv')
     #np.save(path, x1)
     x1.tofile(path, sep = ',')

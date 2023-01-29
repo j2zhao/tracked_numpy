@@ -13,6 +13,7 @@ from query_dslog import *
 def compression_convert(folder1, folder2, num_steps, dfile, input2):
     final_shape = None
     for i in range(num_steps):
+        print(i)
         array_file = os.path.join(folder1, 'step{}{}'.format(i + 1, dfile))
         #print(array_file)
         if dfile == '.pickle':
@@ -27,9 +28,9 @@ def compression_convert(folder1, folder2, num_steps, dfile, input2):
             ids = [1]
         else:
             ids = [1,2]
-        comp_rel_save(array, folder2, 'step{}_'.format(i), image = False, arrow = True, gzip = True)
+        #comp_rel_save(array, folder2, 'step{}_'.format(i), image = False, arrow = True, gzip = True)
         #comp_save(array, folder2, 'step{}_'.format(i), arrow = True, gzip = True)
-        #column_save(array, folder2, 'step{}_'.format(i), temp_path = './temp', ids = ids)
+        column_save(array, folder2, 'step{}_'.format(i), temp_path = './temp', ids = ids)
         #raw_save(array, folder2, 'step{}_'.format(i), ids = ids, arrow = True)
         #gzip_save(array, folder2, 'step{}_'.format(i), ids = ids, arrow = True)
         #else:
@@ -83,6 +84,6 @@ if __name__ == '__main__':
     #folder1 = 'compression_tests_2/numpy_pipeline_10_'
     #folder_range = list(range(20))
     #folder_range = []
-    make_compression_image( './storage_pipeline/storage_image_dslog', 'compression_tests_2/compression_tests_2/image_pipeline', num_steps = 5) 
+    #make_compression_image( './storage_pipeline/storage_image_dslog', 'compression_tests_2/compression_tests_2/image_pipeline', num_steps = 5) 
     #make_compression_numpy(folder2, folder1, 10, folder_range)
-    make_compression_relational('./storage_pipeline/storage_relational_dslog', 'compression_tests_2/relational_pipeline', num_steps = 5)
+    make_compression_relational('./storage_pipeline/storage_relational_col', 'compression_tests_2/relational_pipeline', num_steps = 5)
