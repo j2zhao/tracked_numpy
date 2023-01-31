@@ -252,7 +252,7 @@ def query_comp(pranges, folder, tnames, backward = False, absolute = False, merg
                 AND LEAST(COALESCE(output_y2, output_y1), {}) >= GREATEST(output_y1, {})".format(x2, x1, y2, y1)
             #print(r)
             df = con.execute("SELECT DISTINCT * FROM arrow_table WHERE LEAST(COALESCE(output_x2, output_x1), {}) >= GREATEST(output_x1, {}) \
-                AND LEAST(COALESCE(output_y2, output_y1), {}) >= GREATEST(output_y1, {}) OR ".format(x2, x1, y2, y1)).fetchdf()
+                AND LEAST(COALESCE(output_y2, output_y1), {}) >= GREATEST(output_y1, {})".format(x2, x1, y2, y1)).fetchdf()
             if not absolute and backward:
                 oranges += input_output(prange, df)
             elif not absolute and not backward:
