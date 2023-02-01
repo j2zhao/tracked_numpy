@@ -42,7 +42,7 @@ def compression_convert(folder1, folder2, num_steps, dfile, input2):
 
 def make_compression_numpy(f2, f1, num_steps, folder_range):
     for i in folder_range:
-        folder2 = f2 + str(i)
+        folder2 = [f2[j] + str(i) for j in range(len(f2))]
         folder1 = f1 + str(i)
         try:
             shutil.rmtree(folder2)
