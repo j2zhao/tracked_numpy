@@ -43,6 +43,8 @@ def query_experiments_numpy(shape, sizes, experiments, num_steps, num_exp, save_
         print(experiment)
         for j in range(num_exp):
             print(j)
+            if j == 3:
+                continue
             # get folder name and last size
             folder2 = folder_name + str(j)
             x = shape[0]
@@ -74,8 +76,6 @@ def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline
     sizes = [(int(shape[0]), int(s*shape[1])) for s in experiments]
     experiments = [0, 1, 10, 20, 40, 60, 80, 100]
     for k in range(len(experiments)):
-        if k == 3:
-            continue
         xsize = sizes[k][0]
         ysize = sizes[k][1]
         experiment = experiments[k]
