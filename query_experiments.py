@@ -43,7 +43,7 @@ def query_experiments_numpy(shape, sizes, experiments, num_steps, num_exp, save_
         print(experiment)
         for j in range(num_exp):
             if j < 13:
-                pass
+                continue
             print(j)
             # get folder name and last size
             folder2 = folder_name + str(j)
