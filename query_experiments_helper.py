@@ -50,12 +50,11 @@ def make_compression_numpy(f2, f1, num_steps, folder_range):
             except OSError as e:
                 pass
             os.mkdir(f)
-        print(folder2)
         x, y = compression_convert(folder1, folder2, num_steps, dfile = '.pickle', input2 = [])
-        with open(os.path.join(folder2, 'x.pickle'), 'wb') as f:
-            pickle.dump(x, f)
-        with open(os.path.join(folder2, 'y.pickle'), 'wb') as f:
-            pickle.dump(y, f)
+        # with open(os.path.join(folder2, 'x.pickle'), 'wb') as f:
+        #     pickle.dump(x, f)
+        # with open(os.path.join(folder2, 'y.pickle'), 'wb') as f:
+        #     pickle.dump(y, f)
 
 def make_compression_image(f2, f1, num_steps):
     try:
