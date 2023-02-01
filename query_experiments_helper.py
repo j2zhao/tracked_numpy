@@ -44,11 +44,12 @@ def make_compression_numpy(f2, f1, num_steps, folder_range):
     for i in folder_range:
         folder2 = [f2[j] + str(i) for j in range(len(f2))]
         folder1 = f1 + str(i)
-        try:
-            shutil.rmtree(folder2)
-        except OSError as e:
-            pass
-        os.mkdir(folder2)
+        for f in folder2:
+            try:
+                shutil.rmtree(f)
+            except OSError as e:
+                pass
+            os.mkdir(f)
         x, y = compression_convert(folder1, folder2, num_steps, dfile = '.pickle', input2 = [])
         with open(os.path.join(folder2, 'x.pickle'), 'wb') as f:
             pickle.dump(x, f)
