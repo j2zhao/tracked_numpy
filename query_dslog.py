@@ -249,9 +249,11 @@ def query_comp(pranges, folder, tnames, backward = False, absolute = False, merg
             y2 = prange[1][1]
 
             arrow_table = tables[name]
+            print(arrow_table)
+            print('here')
             #edited here
-            r = "SELECT DISTINCT * FROM arrow_table WHERE LEAST(COALESCE(output_x2, output_x1), {}) >= GREATEST(output_x1, {}) \
-                AND LEAST(COALESCE(output_y2, output_y1), {}) >= GREATEST(output_y1, {})".format(x2, x1, y2, y1)
+            # r = "SELECT DISTINCT * FROM arrow_table WHERE LEAST(COALESCE(output_x2, output_x1), {}) >= GREATEST(output_x1, {}) \
+            #     AND LEAST(COALESCE(output_y2, output_y1), {}) >= GREATEST(output_y1, {})".format(x2, x1, y2, y1)
             #print(r)
             df = con.execute("SELECT DISTINCT * FROM arrow_table WHERE LEAST(COALESCE(output_x2, output_x1), {}) >= GREATEST(output_x1, {}) \
                 AND LEAST(COALESCE(output_y2, output_y1), {}) >= GREATEST(output_y1, {})".format(x2, x1, y2, y1)).fetchdf()
