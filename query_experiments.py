@@ -42,7 +42,7 @@ def query_experiments_numpy(shape, sizes, experiments, num_steps, num_exp, save_
         j = 0
         print(experiment)
         for j in range(num_exp):
-            print(j)
+            j = 3
             if j == 3:
                 continue
             # get folder name and last size
@@ -65,6 +65,7 @@ def query_experiments_numpy(shape, sizes, experiments, num_steps, num_exp, save_
             #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'turbo')
             end = time.time()
             times.append(end - start)
+            raise ValueError()
                 
         times = np.asarray(times)
         avg = np.average(times)
