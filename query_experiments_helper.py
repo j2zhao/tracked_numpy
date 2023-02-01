@@ -81,7 +81,7 @@ if __name__ == '__main__':
     #print('hello 2')
     #folder1 = 'compression_tests_2/relational_pipeline'
     folder2 = 'storage_10/numpy_dslog'
-    folder1 = 'compression_tests_2/numpy_pipeline_10'
+    folder1 = 'compression_tests_2/numpy_pipeline_10_'
     #folder_range = list(range(20))
     folder_range = [12]
     #make_compression_image( './storage_pipeline/storage_image_dslog', 'compression_tests_2/compression_tests_2/image_pipeline', num_steps = 5) 
