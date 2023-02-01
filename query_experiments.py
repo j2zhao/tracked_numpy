@@ -64,7 +64,6 @@ def query_experiments_numpy(shape, sizes, experiments, num_steps, num_exp, save_
             times.append(end - start)
                 
         times = np.asarray(times)
-        avg = np.average(times)
         np.save(save_name + '{}.npy'.format(experiment), times)
 
 def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline/image_dslog'):
