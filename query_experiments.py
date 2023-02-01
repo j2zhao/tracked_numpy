@@ -74,6 +74,8 @@ def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline
     sizes = [(int(shape[0]), int(s*shape[1])) for s in experiments]
     experiments = [0, 1, 10, 20, 40, 60, 80, 100]
     for k in range(len(experiments)):
+        if k == 3:
+            continue
         xsize = sizes[k][0]
         ysize = sizes[k][1]
         experiment = experiments[k]
