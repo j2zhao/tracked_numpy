@@ -42,6 +42,7 @@ def query_experiments_numpy(shape, sizes, experiments, num_steps, num_exp, save_
         j = 0
         print(experiment)
         for j in range(num_exp):
+            print(j)
             # get folder name and last size
             folder2 = folder_name + str(j)
             x = shape[0]
