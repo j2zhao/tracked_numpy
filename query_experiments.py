@@ -60,7 +60,7 @@ def query_experiments_numpy(shape, sizes, experiments, num_steps, num_exp, save_
             # get query results
             start = time.time()
             #result = query_comp(pranges, folder2, tnames, backward = False, merge = False, dtype = 'arrow')
-            result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'raw')
+            result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'csv')
             end = time.time()
             times.append(end - start)
                 
