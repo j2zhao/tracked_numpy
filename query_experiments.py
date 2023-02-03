@@ -106,7 +106,7 @@ def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline
 
 if __name__ == '__main__':
     query_experiments_numpy(shape = [1000, 100], sizes = [(1, 1), (10, 1), (100, 1), (1000, 1), (1000, 10), (1000, 100)], \
-        experiments = [1, 10, 100, 1000, 10000, 100000], num_steps = 10, num_exp = 20, save_name = 'query_results_10/numpy_pq_results', folder_name = 'storage_10/numpy_pq', forward = False)
+        experiments = [1, 10, 100, 1000, 10000, 100000], num_steps = 10, num_exp = 20, save_name = 'query_results_10/numpy_gzip_results', folder_name = 'storage_10/numpy_gzip', forward = False)
     # query_experiments_numpy(shape = [1000, 100], sizes = [(1000, 100)], 
     #      experiments = [100000], num_steps = 5, num_exp = 20, save_name = 'query_results_5/numpy_dslog_merge_results', folder_name = 'storage_5/numpy_dslog', forward = True)
     #query_experiemnts_pipeline(shape = [1080, 1920], folder2 = './storage_pipeline/storage_image_col')
