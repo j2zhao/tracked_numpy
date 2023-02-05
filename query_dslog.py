@@ -238,6 +238,8 @@ def query_comp(pranges, folder, tnames, backward = False, absolute = False, merg
     
 
     for name in tnames:
+        if name not in tables:
+            return []
         oranges = []
         for prange in pranges:
             #print(prange)
