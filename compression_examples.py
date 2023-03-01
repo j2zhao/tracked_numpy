@@ -28,7 +28,7 @@ def array_upscale(arr, factor = 10):
                     arr_2[(i*factor + a)] = arr[i]
         
         return arr_2
-
+ 
 
 
 class DummyProv(object):
@@ -320,6 +320,21 @@ def test18(arr_size = (100000, 10)):
 #         df2 = pickle.load(f, encoding='latin1')
 #     data = join_prov(df1, df2, column1, column2)
 #     return data
+
+def test20(arr_size = (100, 100)):
+    # basic test
+    arr = np.random.random(arr_size).astype(tf.tracked_float)
+    tf.initialize(arr, 1)
+    arr = np.unwrap(arr)
+    return arr
+
+def test21(arr_size = (100,)):
+    # basic test
+    arr = np.random.random(arr_size).astype(tf.tracked_float)
+    tf.initialize(arr, 1)
+    arr = np.interp(arr)
+    return arr
+
 
 if __name__ == '__main__':
     test18()
