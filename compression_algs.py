@@ -46,6 +46,15 @@ def aux(array, ids = [1]):
     for id in ids:
         results[id] = pd.DataFrame(provs[id], columns=['output_x', 'output_y', 'input_x', 'input_y'])
     return results
+
+def arr_save(array, path, name, ids = [1]):
+    dfs = aux(array, ids)
+    for id in dfs:
+        dire = os.path.join(path, name + str(id) + '.npy')
+        arr = dfs[id].values
+        print(arr.shape)
+        np.save(dire, arr)
+        
  
 def raw_save(array, path, name, ids = [1], arrow = True):
     dfs = aux(array, ids)
@@ -364,8 +373,6 @@ def comp_rel_save(array, path, name, image = False, arrow = True, gzip = True):
         provenance[1] = array_compression(array)
     else:
         provenance = compression(array, relative = True)
-    print(provenance)
-    raise ValueError()
     #print(provenance)
     #print(provenance)
     for id in provenance:
@@ -399,12 +406,12 @@ def comp_rel_save(array, path, name, image = False, arrow = True, gzip = True):
             else: 
                 pq.write_table(table, dire)
             
-            table_2 = pa.Table.from_pandas(df_2, preserve_index=False)
-            dire_2 = os.path.join(path, name + 'for' + str(id) + '.parquet')
-            if gzip:
-                pq.write_table(table_2, dire_2, compression='gzip')
-            else: 
-                pq.write_table(table_2, dire_2)
+            #table_2 = pa.Table.from_pandas(df_2, preserve_index=False)
+            #dire_2 = os.path.join(path, name + 'for' + str(id) + '.parquet')
+            #if gzip:
+            #    pq.write_table(table_2, dire_2, compression='gzip')
+            #else: 
+            #    pq.write_table(table_2, dire_2)
 
 def comp_save(array, path, name, arrow = True, gzip = True):
     provenance = compression(array, relative = False)
@@ -442,7 +449,8 @@ def comp_save(array, path, name, arrow = True, gzip = True):
                 pq.write_table(table, dire, compression='gzip')
             else: 
                 pq.write_table(table, dire)
-import matplotlib.pyplot as plt
+
+
 
 
 array_size = [(100, 1), (1000, 1), (10000, 1), (100000, 1), (1000000, 1), (10000000, 1), (100000000, 1)]
@@ -459,23 +467,24 @@ if __name__ == '__main__':
         pass
     os.mkdir('./storage')
     os.mkdir('./temp')        
-    # with open ('./compression_tests_2/join_output.pickle', 'rb') as f:
-    #     arr = pickle.load(f)
+    with open ('./compression_tests_2/join_output.pickle', 'rb') as f:
+        arr = pickle.load(f)
     #arr = test7(array_size[size])
-    arr = test20()
+    arr = test6()
     #print(arr[0,0].provenance)
-    # for i in range(0, 100):
-    #     column_save(arr, './storage', 'step0_{}'.format(i), temp_path = './temp', ids = [1, 2])
-    #     print(i)
-        # raw_save(arr[i], './storage', 'step0_{}'.format(i), ids = [1, 2], arrow = False)
-    start = time.time()
+    for i in range(0, 100):
+        column_save(arr, './storage', 'step0_{}'.format(i), temp_path = './temp', ids = [1, 2])
+        #print(i)
+        #raw_save(arr[i], './storage', 'step0_{}'.format(i), ids = [1, 2], arrow = False)
+    # start = time.time()
     
-    #raw_save(arr, './storage', 'step0_', ids = [1], arrow = False)
+    # arr_save(arr, './storage', 'step0_', ids = [1])
+    raw_save(arr, './storage', 'step0_', ids = [1, 2], arrow = False)
     #column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1])
     #gzip_save(arr, './storage', 'step0_', ids = [1, 2], arrow = True)
-    comp_rel_save(arr, './storage', 'step0_', image = False, arrow = True, gzip=True)
+    # comp_rel_save(arr, './storage', 'step0_', image = False, arrow = True, gzip=False)
     #comp_save(arr, './storage', 'step0_', arrow = True, gzip=True)
-    end = time.time()
+    # end = time.time()
     #print('compression time')
     #print(array_size[size])
     #print(end - start)

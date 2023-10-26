@@ -265,11 +265,12 @@ def test16(data = './compression_tests_2/group_by_pandas.pickle', col_name = 'st
     """
     #data = pd.read_csv(data)
     with open(data, 'rb') as f:
-        data = pickle.load(f, encoding='latin1')
-    
-    # print(len(data['startYear'].unique()))
-    # print(data['startYear'].unique())
-    data = groupby_prov(data, col_name, agg_name, limit = 1000000)
+        data = pickle.load(f, encoding='latin1')  
+        #data = data.head(1000)  
+    #print(len(data['startYear'].unique()))
+    #print(data.shape)
+    #print(data['startYear'].unique())
+    data = groupby_prov(data, col_name, agg_name)
     return data
 
 # def test17(data = './compression_tests_2/group_by_pandas.pickle', col_name = 'startYear', agg_name = 'isAdult'):
@@ -292,14 +293,35 @@ def test17(limit = 1000000, data_left = './compression_tests_2/left_join_pandas.
     #df2 = pd.read_csv(data_right)
     with open(data_left, 'rb') as f:
         df1 = pickle.load(f, encoding='latin1')
-        df1 = df1.head(1000000)
+        #df1 = df1.head(100)
         print(df1.shape)
+        #print(df1.tail(10))
     with open(data_right, 'rb') as f:
         df2 = pickle.load(f, encoding='latin1')
-        df2 = df2.head(1000000)
+        #df2 = df2.head(100)
         print(df2.shape)
-    data = join_prov(df1, df2, column1, column2, limit = limit)
-    return data
+        #print(df2.tail(10))
+    join_prov_2(df1, df2, column1, column2, limit = limit)
+    print('returned')    
+
+def testtemp(limit = 1000000, data_left = './compression_tests_2/left_join_pandas.pickle', data_right = './compression_tests_2/right_join_pandas.pickle', column1 = 'tconst', column2 = 'tconst'):
+    """
+    Join Sorted
+    """
+    #df1 = pd.read_csv(data_left)
+    #df2 = pd.read_csv(data_right)
+    with open(data_left, 'rb') as f:
+        df1 = pickle.load(f, encoding='latin1')
+        df1 = df1.head(100000)
+        print(df1.shape)
+        #print(df1.tail(10))
+    with open(data_right, 'rb') as f:
+        df2 = pickle.load(f, encoding='latin1')
+        df2 = df2.head(100)
+        print(df2.shape)
+        #print(df2.tail(10))
+    join_prov(df1, df2, column1, column2, limit = limit)
+    print('returned')    
 
 def test18(arr_size = (100000, 10)):
     # tests random sort
@@ -337,4 +359,8 @@ def test21(arr_size = (100,)):
 
 
 if __name__ == '__main__':
-    test18()
+    #test17()
+    test17()
+    print('finished')
+    # with open('./compression_tests_3/group_by_pandas_full.pickle', 'wb') as f:
+    #     pickle.dump(data, f)

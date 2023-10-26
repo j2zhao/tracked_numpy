@@ -4,10 +4,12 @@ from query_dslog import *
 
 import pickle
 
-with open('./compression_tests_2/join_output.pickle', 'rb') as f:
+
+with open('./compression_tests_3/group_by_pandas_full.pickle', 'rb') as f:
     table = pickle.load(f)
 
-print(table.shape)
+print(table[1, 0].provenance)
+print('hello')
 
 # def load_parquet(folder):
 #     tables = {}
