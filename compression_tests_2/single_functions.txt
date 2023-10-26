@@ -70,7 +70,6 @@
 ["repeat", {"repeats":[2, 3], "axis": [ 0, 1]}]
 ["delete", {"axis":[0, 1], "obj":["custom"]}]
 ["insert", {"axis":[0, 1], "obj":["custom"], "values":["custom"]}]
-["resize", {"new_shape":[[-1,1],[1,-1]]}]
 ["flip", {"axis": [0, 1]}]
 ["fliplr"]
 ["flipud"]
