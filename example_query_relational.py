@@ -3,7 +3,7 @@ import pandas as pd
 from relational_operations import *
 import pickle
 import os
-
+from compression_examples import test17
 
 def missing_filter(array, missing = '\\N'):
     for i in range(array.shape[0]):
@@ -76,7 +76,7 @@ def one2one(array):
 
 if __name__ == '__main__':
     # pipeline
-    folder = 'compression_tests_2/relational_pipeline'
+    folder = 'compression_tests_2/relational_pipeline_full'
     # data_left = 'compression_tests_2/left_join_pandas.pickle'
     # data_right = 'compression_tests_2/right_join_pandas.pickle'
     # column1 = 'tconst'
@@ -88,8 +88,9 @@ if __name__ == '__main__':
     #     df2 = pickle.load(f, encoding='latin1')
     # Merge two datasets
     #arr = join_prov(df1, df2, column1, column2, limit = 100000)
-    with open('./join_output.pickle', 'rb') as f:
-        arr = pickle.load(f)
+    # with open('./join_output.pickle', 'rb') as f:
+    #     arr = pickle.load(f)
+    arr = test17()
     p = os.path.join(folder, 'step1.pickle')
     with open(p, 'wb') as f:
         pickle.dump(arr, f)
