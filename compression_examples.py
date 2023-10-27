@@ -264,13 +264,12 @@ def test16(data = './compression_tests_2/group_by_pandas.pickle', col_name = 'st
     Groupby UnSorted
     """
     #data = pd.read_csv(data)
-    with open(data, 'rb') as f:
-        data = pickle.load(f, encoding='latin1')  
-        #data = data.head(1000)  
-    #print(len(data['startYear'].unique()))
-    #print(data.shape)
-    #print(data['startYear'].unique())
-    data = groupby_prov(data, col_name, agg_name)
+    # with open(data, 'rb') as f:
+    #     data = pickle.load(f, encoding='latin1')  
+    #     #data = data.head(1000)  
+    # data = groupby_prov(data, col_name, agg_name)
+    with open('.compression_tests_3/group_by_pandas_full.pickle', 'rb') as f:
+        data = pickle.load(f)
     return data
 
 # def test17(data = './compression_tests_2/group_by_pandas.pickle', col_name = 'startYear', agg_name = 'isAdult'):
@@ -291,18 +290,34 @@ def test17(limit = 1000000, data_left = './compression_tests_2/left_join_pandas.
     """
     #df1 = pd.read_csv(data_left)
     #df2 = pd.read_csv(data_right)
-    with open(data_left, 'rb') as f:
-        df1 = pickle.load(f, encoding='latin1')
-        #df1 = df1.head(100)
-        print(df1.shape)
-        #print(df1.tail(10))
-    with open(data_right, 'rb') as f:
-        df2 = pickle.load(f, encoding='latin1')
-        #df2 = df2.head(100)
-        print(df2.shape)
-        #print(df2.tail(10))
-    join_prov_2(df1, df2, column1, column2, limit = limit)
-    print('returned')    
+    # with open(data_left, 'rb') as f:
+    #     df1 = pickle.load(f, encoding='latin1')
+    #     #df1 = df1.head(100)
+    #     print(df1.shape)
+    #     #print(df1.tail(10))
+    # with open(data_right, 'rb') as f:
+    #     df2 = pickle.load(f, encoding='latin1')
+    #     #df2 = df2.head(100)
+    #     print(df2.shape)
+    #     #print(df2.tail(10))
+    # join_prov_2(df1, df2, column1, column2, limit = limit)
+    # print('returned')   
+    folder = './compression_tests_3/join_all'
+    paths = []
+    for file in os.listdir(folder):
+        if file.endswith('npy'):
+            index = int(file.split('_')[1])
+            full = os.path.join(folder, file)
+            paths.append((index, full))
+    paths.sort(key = lambda x : x[0])
+    arrs = []
+    for i, path in enumerate(paths):
+        print(i)
+        arr = np.load(path[1], allow_pickle=True)
+        arrs.append(arr)
+    array = np.concatenate(arrs, axis = 0)
+    print(array.shape)
+    return array
 
 def testtemp(limit = 1000000, data_left = './compression_tests_2/left_join_pandas.pickle', data_right = './compression_tests_2/right_join_pandas.pickle', column1 = 'tconst', column2 = 'tconst'):
     """
