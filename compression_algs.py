@@ -470,7 +470,7 @@ if __name__ == '__main__':
     # with open ('./compression_tests_2/join_output.pickle', 'rb') as f:
     #     arr = pickle.load(f)
     #arr = test7(array_size[size])
-    arr = test6()
+    arr = test16()
     print(arr.shape)
     # for i in range(0, 100):
     #     column_save(arr, './storage', 'step0_{}'.format(i), temp_path = './temp', ids = [1, 2])
@@ -479,8 +479,8 @@ if __name__ == '__main__':
     # start = time.time()
     
     # arr_save(arr, './storage', 'step0_', ids = [1])
-    #raw_save(arr, './storage', 'step0_', ids = [1, 2], arrow = False)
-    column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1, 2])
+    raw_save(arr, './storage', 'step0_', ids = [1], arrow = False)
+    #column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1, 2])
     #gzip_save(arr, './storage', 'step0_', ids = [1, 2], arrow = True)
     # comp_rel_save(arr, './storage', 'step0_', image = False, arrow = True, gzip=False)
     #comp_save(arr, './storage', 'step0_', arrow = True, gzip=True)

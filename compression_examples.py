@@ -268,7 +268,7 @@ def test16(data = './compression_tests_2/group_by_pandas.pickle', col_name = 'st
     #     data = pickle.load(f, encoding='latin1')  
     #     #data = data.head(1000)  
     # data = groupby_prov(data, col_name, agg_name)
-    with open('.compression_tests_3/group_by_pandas_full.pickle', 'rb') as f:
+    with open('./compression_tests_3/group_by_pandas_full.pickle', 'rb') as f:
         data = pickle.load(f)
     return data
 
