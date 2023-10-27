@@ -52,7 +52,7 @@ def arr_save(array, path, name, ids = [1]):
     for id in dfs:
         dire = os.path.join(path, name + str(id) + '.npy')
         arr = dfs[id].values
-        print(arr.shape)
+        #print(arr[0])
         np.save(dire, arr)
         
  
@@ -470,16 +470,16 @@ if __name__ == '__main__':
     # with open ('./compression_tests_2/join_output.pickle', 'rb') as f:
     #     arr = pickle.load(f)
     #arr = test7(array_size[size])
-    arr = test16()
-    print(arr.shape)
+    arr = test1()
+    #print(arr[0])
     # for i in range(0, 100):
     #     column_save(arr, './storage', 'step0_{}'.format(i), temp_path = './temp', ids = [1, 2])
         #print(i)
         #raw_save(arr[i], './storage', 'step0_{}'.format(i), ids = [1, 2], arrow = False)
     # start = time.time()
     
-    # arr_save(arr, './storage', 'step0_', ids = [1])
-    raw_save(arr, './storage', 'step0_', ids = [1], arrow = False)
+    arr_save(arr, './storage', 'step0_', ids = [1])
+    #raw_save(arr, './storage', 'step0_', ids = [1], arrow = False)
     #column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1, 2])
     #gzip_save(arr, './storage', 'step0_', ids = [1, 2], arrow = True)
     # comp_rel_save(arr, './storage', 'step0_', image = False, arrow = True, gzip=False)
