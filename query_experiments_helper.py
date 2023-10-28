@@ -68,16 +68,16 @@ def make_compression_image(f2, f1, num_steps):
     with open(os.path.join(f2, 'y.pickle'), 'wb') as f:
         pickle.dump(y, f)
 
-def make_compression_relational(f2, f1, num_steps):
+def make_compression_relational(base_folder, f2, f1, num_steps):
     try:
-        shutil.rmtree(f2)
+        shutil.rmtree(base_folder)
     except OSError as e:
         pass
-    os.mkdir(f2)
+    os.mkdir(base_folder)
     x, y = compression_convert(f1, f2, num_steps, dfile = '.pickle', input2 = [0])
-    with open(os.path.join(f2, 'x.pickle'), 'wb') as f:
+    with open(os.path.join(base_folder, 'x.pickle'), 'wb') as f:
         pickle.dump(x, f)
-    with open(os.path.join(f2, 'y.pickle'), 'wb') as f:
+    with open(os.path.join(base_folder, 'y.pickle'), 'wb') as f:
         pickle.dump(y, f)
 
 if __name__ == '__main__':
