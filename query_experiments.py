@@ -68,10 +68,11 @@ def query_experiments_numpy(shape, sizes, experiments, num_steps, num_exp, save_
         np.save(save_name + '{}.npy'.format(experiment), times)
 
 def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline/image_dslog'):
-    experiments = [0.001, 0.01, 0.1, 0.2, 0.4, 0.6, 0.8, 1]
+    #experiments = [0.001, 0.01, 0.1, 0.2, 0.4, 0.6, 0.8, 1]
+    experiments = [0.001, 0.01, 0.2, 0.8, 1]
     #sizes = [(int(math.sqrt(s)*shape[0]), int(math.sqrt(s)*shape[1])) for s in experiments]
     sizes = [(int(shape[0]), int(s*shape[1])) for s in experiments]
-    experiments = [0, 1, 10, 20, 40, 60, 80, 100]
+    experiments = [0, 1, 20, 80, 100]
     for k in range(len(experiments)):
         xsize = sizes[k][0]
         ysize = sizes[k][1]
@@ -92,8 +93,8 @@ def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline
             #tnames.reverse()
             # get query results
             start = time.time()
-            result = query_comp(pranges, folder2, tnames, backward = False, merge = False, dtype = 'arrow')
-            #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'turbo')
+            #result = query_comp(pranges, folder2, tnames, backward = False, merge = False, dtype = 'arrow')
+            result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
             #print(result)
             end = time.time()
             #raise ValueError()
@@ -105,10 +106,10 @@ def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline
 
 
 if __name__ == '__main__':
-    query_experiments_numpy(shape = [1000, 100], sizes = [(1, 1), (10, 1), (100, 1), (1000, 1), (1000, 10), (1000, 100)], \
-        experiments = [1, 10, 100, 1000, 10000, 100000], num_steps = 10, num_exp = 20, save_name = 'query_results_10/numpy_col_results', folder_name = 'storage_10/numpy_col', forward = False)
+    #query_experiments_numpy(shape = [1000, 100], sizes = [(1, 1), (10, 1), (100, 1), (1000, 1), (1000, 10), (1000, 100)], \
+    #    experiments = [1, 10, 100, 1000, 10000, 100000], num_steps = 10, num_exp = 20, save_name = 'query_results_10/numpy_col_results', folder_name = 'storage_10/numpy_col', forward = False)
     # query_experiments_numpy(shape = [1000, 100], sizes = [(1000, 100)], 
     #      experiments = [100000], num_steps = 5, num_exp = 20, save_name = 'query_results_5/numpy_dslog_merge_results', folder_name = 'storage_5/numpy_dslog', forward = True)
     #query_experiemnts_pipeline(shape = [1080, 1920], folder2 = './storage_pipeline/storage_image_col')
-    #query_experiemnts_pipeline(shape = [9, 1000000], folder2 = 'storage_pipeline/storage_relational_col')
+    query_experiemnts_pipeline(shape = [9, 6802437], folder2 = 'storage_pipeline/storage_relational_compression/relational_pq')
     
