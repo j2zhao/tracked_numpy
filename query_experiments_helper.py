@@ -14,7 +14,7 @@ def compression_convert(folder1, folder2, num_steps, dfile, input2):
     final_shape = None
     for i in range(num_steps):
         #print(i)
-        array_file = os.path.join(folder1, 'step{}{}'.format(i, dfile))
+        array_file = os.path.join(folder1, 'step{}{}'.format(i + 1, dfile))
         #print(array_file)
         if dfile == '.pickle':
             with open(array_file, 'rb') as f:
@@ -91,4 +91,4 @@ if __name__ == '__main__':
     #folder_range = [13]
     #make_compression_image( './storage_pipeline/storage_image_dslog', 'compression_tests_2/compression_tests_2/image_pipeline', num_steps = 5) 
     #make_compression_numpy(folder2, folder1, 10, folder_range)
-    make_compression_relational(base_folder, folder2, 'compression_tests_3/relational_pipeline_full', num_steps = 5)
+    make_compression_relational(base_folder, folder2, 'compression_tests_2/relational_pipeline_full', num_steps = 5)
