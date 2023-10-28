@@ -406,12 +406,12 @@ def comp_rel_save(array, path, name, image = False, arrow = True, gzip = True):
             else: 
                 pq.write_table(table, dire)
             
-            #table_2 = pa.Table.from_pandas(df_2, preserve_index=False)
-            #dire_2 = os.path.join(path, name + 'for' + str(id) + '.parquet')
-            #if gzip:
-            #    pq.write_table(table_2, dire_2, compression='gzip')
-            #else: 
-            #    pq.write_table(table_2, dire_2)
+            table_2 = pa.Table.from_pandas(df_2, preserve_index=False)
+            dire_2 = os.path.join(path, name + 'for' + str(id) + '.parquet')
+            if gzip:
+               pq.write_table(table_2, dire_2, compression='gzip')
+            else: 
+               pq.write_table(table_2, dire_2)
 
 def comp_save(array, path, name, arrow = True, gzip = True):
     provenance = compression(array, relative = False)
