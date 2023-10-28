@@ -91,4 +91,4 @@ if __name__ == '__main__':
     #folder_range = [13]
     #make_compression_image( './storage_pipeline/storage_image_dslog', 'compression_tests_2/compression_tests_2/image_pipeline', num_steps = 5) 
     #make_compression_numpy(folder2, folder1, 10, folder_range)
-    make_compression_relational(base_folder, folder2, 'compression_tests_2/relational_pipeline_full', num_steps = 5)
+    make_compression_relational(base_folder, folder2, 'compression_tests_3/relational_pipeline_full', num_steps = 5)
