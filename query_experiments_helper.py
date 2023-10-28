@@ -74,6 +74,12 @@ def make_compression_relational(base_folder, f2, f1, num_steps):
     except OSError as e:
         pass
     os.mkdir(base_folder)
+    for f in f2:
+        try:
+            shutil.rmtree(base_folder)
+        except OSError as e:
+            pass
+        os.mkdir(base_folder)
     x, y = compression_convert(f1, f2, num_steps, dfile = '.pickle', input2 = [0])
     with open(os.path.join(base_folder, 'x.pickle'), 'wb') as f:
         pickle.dump(x, f)
@@ -84,7 +90,7 @@ if __name__ == '__main__':
     #print('hello 2')
     #folder1 = 'compression_tests_2/relational_pipeline'
     #folder2 = ['storage_10/numpy_raw', 'storage_10/numpy_pq', 'storage_10/numpy_gzip', 'storage_10/numpy_col', 'storage_10/numpy_dslog']
-    folder2 = ['./storage_pipeline/storage_relational_compression/numpy_raw', './storage_pipeline/storage_relational_compression/numpy_pq', './storage_pipeline/storage_relational_compression/numpy_gzip', './storage_pipeline/storage_relational_compression/numpy_col', './storage_pipeline/storage_relational_compression/numpy_dslog']
+    folder2 = ['./storage_pipeline/storage_relational_compression/relational_raw', './storage_pipeline/storage_relational_compression/relational_pq', './storage_pipeline/storage_relational_compression/relational_gzip', './storage_pipeline/storage_relational_compression/relational_col', './storage_pipeline/storage_relational_compression/relational_dslog']
     base_folder = './storage_pipeline/storage_relational_compression/'
     #folder1 = 'compression_tests_2/numpy_pipeline_10_'
     #folder_range = list(range(20))
