@@ -359,7 +359,7 @@ def query_comp_join(pranges, folder, tnames, backward = False, absolute = False,
         arrow_table = tables[name]
         q = "SELECT arrow_table.*, query.* FROM arrow_table JOIN query ON query.x2 >= arrow_table.output_x1 AND query.x1 <= COALESCE(arrow_table.output_x2, arrow_table.output_x1) AND (query.y2 >= arrow_table.output_y1 AND query.y1 <= COALESCE(arrow_table.output_y2, arrow_table.output_y1)) "
         df = con.execute(q).fetchdf()
-        print(df)
+        #print(df)
         for row in df.itertuples():
             prange = ((row[-4],row[-3]), (row[-2], row[-1]))
             oranges.append(input_output_forone(prange, row))
