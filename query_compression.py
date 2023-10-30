@@ -108,7 +108,7 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
         else:
             start = time.time()
             #query = 'SELECT output_x, output_y FROM arrow_table WHERE (input_x, input_y) IN ' + str(tuple(query_rows))
-            query = 'SELECT output_x, output_y FROM arrow_table WHERE arrow_table.input_x = query_rows_table.output_x, AND arrow_table.input_y = query_rows_table.output_y'
+            query = 'SELECT arrow_table.output_x, arrow_table.output_y FROM arrow_table JOIN query_rows_table ON arrow_table.input_x = query_rows_table.output_x AND arrow_table.input_y = query_rows_table.output_y;'
             #query = 'SELECT * FROM arrow_table'
             con.execute(query)
             #con.execute('SELECT output_x, output_y FROM arrow_table WHERE input_x = ? AND input_y = ?', row)
