@@ -92,9 +92,9 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
     for name in tnames:
         arrow_table = tables[name]
         new_query_rows = set()
-        for row in query_rows:
-            row = (int(row[0]), int(row[1]))
-            print(con.fetchall())
+        # for row in query_rows:
+        #     row = (int(row[0]), int(row[1]))
+            # print(con.fetchall())
         if backwards:
             query = 'SELECT input_x, input_y FROM arrow_table WHERE (output_x, output_y) IN ' + str(tuple(query_rows))
             con.execute(query)
@@ -116,7 +116,7 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
         query_rows = new_query_rows
         if len(query_rows) == 0:
             return query_rows
-    print(total)
+    print()
     #return(start-end)
     return query_rows
 
