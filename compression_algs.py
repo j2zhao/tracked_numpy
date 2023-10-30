@@ -479,10 +479,10 @@ if __name__ == '__main__':
     # start = time.time()
     
     #arr_save(arr, './storage', 'step0_', ids = [1])
-    raw_save(arr, './storage', 'step0_', ids = [1], arrow = True)
+    #raw_save(arr, './storage', 'step0_', ids = [1], arrow = True)
     #column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1, 2])
     #gzip_save(arr, './storage', 'step0_', ids = [1, 2], arrow = True)
-    # comp_rel_save(arr, './storage', 'step0_', image = False, arrow = True, gzip=False)
+    comp_rel_save(arr, './storage', 'step0_', image = False, arrow = True, gzip=False)
     #comp_save(arr, './storage', 'step0_', arrow = True, gzip=True)
     # end = time.time()
     #print('compression time')
