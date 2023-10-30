@@ -478,8 +478,8 @@ if __name__ == '__main__':
         #raw_save(arr[i], './storage', 'step0_{}'.format(i), ids = [1, 2], arrow = False)
     # start = time.time()
     
-    arr_save(arr, './storage', 'step0_', ids = [1])
-    #raw_save(arr, './storage', 'step0_', ids = [1], arrow = False)
+    #arr_save(arr, './storage', 'step0_', ids = [1])
+    raw_save(arr, './storage', 'step0_', ids = [1], arrow = True)
     #column_save(arr, './storage', 'step0_', temp_path = './temp', ids = [1, 2])
     #gzip_save(arr, './storage', 'step0_', ids = [1, 2], arrow = True)
     # comp_rel_save(arr, './storage', 'step0_', image = False, arrow = True, gzip=False)
