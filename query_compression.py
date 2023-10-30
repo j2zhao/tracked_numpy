@@ -113,6 +113,7 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
         if len(query_rows) == 0:
             return query_rows
     end = time.time()
+    print('testing')
     return(start-end)
     return query_rows
 
