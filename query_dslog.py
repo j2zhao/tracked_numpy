@@ -342,9 +342,8 @@ def query_comp_join(pranges, folder, tnames, backward = False, absolute = False,
     else:
         raise ValueError('dtype not supported')
     
-    query = []
-    
     for name in tnames:
+        query = []
         for prange in pranges:
         #print(prange)
             x1 = prange[0][0]
