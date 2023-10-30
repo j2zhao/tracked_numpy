@@ -87,16 +87,19 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
         for i in range(prange[0][0], prange[0][1] + 1):
             for j in range(prange[1][0], prange[1][1] + 1):
                 query_rows.append((int(i), int(j)))
+    query_rows = pd.DataFrame(query, columns=['output_x', 'output_y'])
     start = time.time()
     total = 0
     for name in tnames:
         arrow_table = tables[name]
         new_query_rows = set()
+        con.register('query_rows_table', query_rows)
+        con.register('query_rows_table', arrow_table)
         # for row in query_rows:
         #     row = (int(row[0]), int(row[1]))
             # print(con.fetchall())
         if backwards:
-            query = 'SELECT input_x, input_y FROM arrow_table WHERE (output_x, output_y) IN ' + str(tuple(query_rows))
+            #query = 'SELECT input_x, input_y FROM arrow_table WHERE (output_x, output_y) IN ' + str(tuple(query_rows))
             con.execute(query)
             #con.execute('SELECT input_x, input_y FROM arrow_table WHERE output_x = ? AND output_y = ?', row)
             sql_results = con.fetchdf()
@@ -104,16 +107,18 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
                 new_query_rows.add((row['input_x'], row['input_y']))
         else:
             start = time.time()
-            query = 'SELECT output_x, output_y FROM arrow_table WHERE (input_x, input_y) IN ' + str(tuple(query_rows))
+            #query = 'SELECT output_x, output_y FROM arrow_table WHERE (input_x, input_y) IN ' + str(tuple(query_rows))
+            query = 'SELECT output_x, output_y FROM arrow_table WHERE arrow_table.input_x = query_rows_table.output_x, AND arrow_table.input_y = query_rows_table.output_y'
             #query = 'SELECT * FROM arrow_table'
             con.execute(query)
             #con.execute('SELECT output_x, output_y FROM arrow_table WHERE input_x = ? AND input_y = ?', row)
             sql_results = con.fetchdf()
             end = time.time()
-            total += end - start
-            for _, row in sql_results.iterrows():
-                new_query_rows.add((row['output_x'], row['output_y']))
-        query_rows = new_query_rows
+            # for _, row in sql_results.iterrows():
+            #     new_query_rows.add((row['output_x'], row['output_y']))
+        #query_rows = new_query_rows
+        query_rows = sql_results
+        print(query_rows)
         if len(query_rows) == 0:
             return query_rows
     print(total)
