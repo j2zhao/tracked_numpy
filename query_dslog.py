@@ -343,16 +343,17 @@ def query_comp_join(pranges, folder, tnames, backward = False, absolute = False,
         raise ValueError('dtype not supported')
     
     query = []
-    for prange in pranges:
-        #print(prange)
-        x1 = prange[0][0]
-        x2 = prange[0][1]
-        y1 = prange[1][0]
-        y2 = prange[1][1]
-        q = (x1, x2, y1, y2)
-        query.append(q)
-    query = pd.DataFrame(query, columns=["x1", "x2", "y1", "y2"])
+    
     for name in tnames:
+        for prange in pranges:
+        #print(prange)
+            x1 = prange[0][0]
+            x2 = prange[0][1]
+            y1 = prange[1][0]
+            y2 = prange[1][1]
+            q = (x1, x2, y1, y2)
+            query.append(q)
+        query = pd.DataFrame(query, columns=["x1", "x2", "y1", "y2"])
         if name not in tables:
             return []
         oranges = []
