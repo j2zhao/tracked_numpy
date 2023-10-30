@@ -103,8 +103,8 @@ def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline
                 print(end - start)
                 break
                 
-def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline/image_dslog'):
-    pass
+# def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline/image_dslog'):
+#     pass
 
 
 if __name__ == '__main__':
