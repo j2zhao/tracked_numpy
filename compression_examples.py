@@ -327,15 +327,15 @@ def testtemp(limit = 1000000, data_left = './compression_tests_2/left_join_panda
     #df2 = pd.read_csv(data_right)
     with open(data_left, 'rb') as f:
         df1 = pickle.load(f, encoding='latin1')
-        df1 = df1.head(100000)
+        #df1 = df1.head(100000)
         print(df1.shape)
         #print(df1.tail(10))
     with open(data_right, 'rb') as f:
         df2 = pickle.load(f, encoding='latin1')
-        df2 = df2.head(100)
+        #df2 = df2.head(100)
         print(df2.shape)
         #print(df2.tail(10))
-    join_prov(df1, df2, column1, column2, limit = limit)
+    #join_prov(df1, df2, column1, column2, limit = limit)
     print('returned')    
 
 def test18(arr_size = (100000, 10)):
@@ -375,7 +375,7 @@ def test21(arr_size = (100,)):
 
 if __name__ == '__main__':
     #test17()
-    test17()
+    testtemp()
     print('finished')
     # with open('./compression_tests_3/group_by_pandas_full.pickle', 'wb') as f:
     #     pickle.dump(data, f)

@@ -73,6 +73,21 @@ def relu(array):
             new_array[i, j] = DummyProv(arr[i, j].provenance)
     return new_array
 
+def array_sum(array1, array2):
+    '''
+    Return  provenance to simulate addition
+    '''
+    arr1 = array1.astype(tf.tracked_float)
+    tf.initialize(arr1, 1)
+    arr2 = array2.astype(tf.tracked_float)
+    tf.initialize(arr2, 2)
+    new_array = np.zeros(array1.shape, dtype=object)
+    
+    for i in range(array1.shape[0]):
+        for j in range(array2.shape[1]):
+            new_array[i, j] = DummyProv(arr1[i, j].provenance + arr2[i, j].provenance)
+    return new_array
+
 def conv11(array):
     '''
     Return identity provenance to simulate 1x1 convolution
@@ -126,9 +141,10 @@ if __name__ == '__main__':
     dire = os.path.join(folder, 'step5.npy')
     np.save(dire, prov_arr)
 
-    # apply sum (1)
-    image = np.zeros(image.shape)
-    image = batchnorm(image)
+    # apply sum 
+    image1 = np.zeros(image.shape)
+    image2 = np.zeros(image.shape)
+    image = array_sum(image1, image2)
     prov_arr = convert(image) 
     dire = os.path.join(folder, 'step6.npy')
     np.save(dire, prov_arr)
@@ -140,10 +156,10 @@ if __name__ == '__main__':
     dire = os.path.join(folder, 'step7.npy')
     np.save(dire, prov_arr)
 
-    # apply sum (2)
-    image = np.zeros(image.shape)
-    image = batchnorm(image)
-    prov_arr = convert(image) 
-    dire = os.path.join(folder, 'step6a.npy')
-    np.save(dire, prov_arr)
+    # # apply sum (2)
+    # image = np.zeros(image.shape)
+    # image = batchnorm(image)
+    # prov_arr = convert(image) 
+    # dire = os.path.join(folder, 'step6a.npy')
+    # np.save(dire, prov_arr)
 
