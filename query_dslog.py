@@ -236,7 +236,7 @@ def query_comp(pranges, folder, tnames, backward = False, absolute = False, merg
     else:
         raise ValueError('dtype not supported')
     
-
+    df = pd.DataFrame()
     for name in tnames:
         if name not in tables:
             return []
@@ -253,14 +253,87 @@ def query_comp(pranges, folder, tnames, backward = False, absolute = False, merg
             r = "SELECT DISTINCT * FROM arrow_table WHERE LEAST(COALESCE(output_x2, output_x1), {}) >= GREATEST(output_x1, {}) \
                 AND LEAST(COALESCE(output_y2, output_y1), {}) >= GREATEST(output_y1, {})".format(x2, x1, y2, y1)
             #print(r)
-            df = con.execute("SELECT DISTINCT * FROM arrow_table WHERE LEAST(output_x2, {}) >= GREATEST(output_x1, {}) \
-                AND LEAST(output_y2, {}) >= GREATEST(output_y1, {})".format(x2, x1, y2, y1)).fetchdf()
+            # df = con.execute("SELECT DISTINCT * FROM arrow_table WHERE LEAST(output_x2, {}) >= GREATEST(output_x1, {}) \
+            #     AND LEAST(output_y2, {}) >= GREATEST(output_y1, {})".format(x2, x1, y2, y1)).fetchdf()
+            df = con.execute(r)
             if not absolute and backward:
                 oranges += input_output(prange, df)
             elif not absolute and not backward:
                 oranges += input_output_for(prange, df)
             else:
                 oranges += input_output_abs(df)
+        
+        if len(oranges) == 0:
+            return oranges
+        if merge:
+            oranges = merge_ranges(oranges)
+        else:
+            #oranges = list(set(oranges))
+            oranges = oranges
+        pranges = oranges
+    return pranges
+
+def query_comp_join(pranges, folder, tnames, backward = False, absolute = False, merge = True, dtype = 'arrow'):
+    con = duckdb.connect(database=':memory:')
+    if dtype == 'arrow':
+        tables = load_parquet(folder)
+    else:
+        raise ValueError('dtype not supported')
+    
+    query = []
+    for prange in pranges:
+        #print(prange)
+        x1 = prange[0][0]
+        x2 = prange[0][1]
+        y1 = prange[1][0]
+        y2 = prange[1][1]
+        query = (x1, x2, y1, y2)
+    df = pd.DataFrame(pranges, columns=["x1, x2, y1, y2"])
+    for name in tnames:
+        if name not in tables:
+            return []
+        oranges = []
+        q = '''WITH
+                intersections AS (
+                    SELECT
+                        *
+                        GREATEST(t1.start, t2.start) AS intersect_start,
+                        LEAST(t1.end, t2.end) AS intersect_end
+                    FROM
+                        table1 t1
+                    JOIN
+                        table2 t2
+                    ON
+                        -- Join condition to find overlapping intervals
+                        t1.start <= t2.end
+                        AND t1.end >= t2.start
+                )
+            SELECT
+                *
+            FROM
+                intersections
+            WHERE
+                intersect_start <= intersect_end;'''
+        # for prange in pranges:
+        #     #print(prange)
+        #     x1 = prange[0][0]
+        #     x2 = prange[0][1]
+        #     y1 = prange[1][0]
+        #     y2 = prange[1][1]
+
+        #     arrow_table = tables[name]
+        #     #edited here
+        #     r = "SELECT DISTINCT * FROM arrow_table WHERE LEAST(COALESCE(output_x2, output_x1), {}) >= GREATEST(output_x1, {}) \
+        #         AND LEAST(COALESCE(output_y2, output_y1), {}) >= GREATEST(output_y1, {})".format(x2, x1, y2, y1)
+        #     #print(r)
+        #     df = con.execute("SELECT DISTINCT * FROM arrow_table WHERE LEAST(output_x2, {}) >= GREATEST(output_x1, {}) \
+        #         AND LEAST(output_y2, {}) >= GREATEST(output_y1, {})".format(x2, x1, y2, y1)).fetchdf()
+        #     if not absolute and backward:
+        #         oranges += input_output(prange, df)
+        #     elif not absolute and not backward:
+        #         oranges += input_output_for(prange, df)
+        #     else:
+        #         oranges += input_output_abs(df)
         
         if len(oranges) == 0:
             return oranges
