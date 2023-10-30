@@ -105,12 +105,12 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
         else:
             start = time.time()
             query = 'SELECT output_x, output_y FROM arrow_table WHERE (input_x, input_y) IN ' + str(tuple(query_rows))
-            end = time.time()
-            total += end - start
             #query = 'SELECT * FROM arrow_table'
             con.execute(query)
             #con.execute('SELECT output_x, output_y FROM arrow_table WHERE input_x = ? AND input_y = ?', row)
             sql_results = con.fetchdf()
+            end = time.time()
+            total += end - start
             for _, row in sql_results.iterrows():
                 new_query_rows.add((row['output_x'], row['output_y']))
         query_rows = new_query_rows
