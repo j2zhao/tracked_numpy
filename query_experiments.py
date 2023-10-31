@@ -61,7 +61,7 @@ def query_experiments_numpy(shape, sizes, experiments, num_steps, num_exp, save_
             start = time.time()
             #result = query_comp(pranges, folder2, tnames, backward = False, merge = False, dtype = 'arrow')
             #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'turbo')
-            if k != j and not forward:
+            if j != 6 and not forward:
                 result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
             elif not forward:
                 result = query_one2one_select(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
