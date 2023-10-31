@@ -135,6 +135,8 @@ if __name__ == '__main__':
     # Resize Image
     image, prov_arr = resize_img(image)
     #prov_arr = convert(prov_arr)
+    #print(prov_arr[0,0].provenance)
+    #raise ValueError()
     dire = os.path.join(folder, 'step1.npy')
     np.save(dire, prov_arr)
     # Change Luminosity

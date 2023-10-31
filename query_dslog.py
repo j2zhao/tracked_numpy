@@ -18,8 +18,13 @@ def sort_(prov):
 def merge_ranges(pranges):
     """pranges [(x1, x2), (y1, y2)"""
     plist = list(set(pranges))
-    plist.sort(key=sort_)
-    
+    #plist.sort(key=sort_)
+    plist = sorted(plist)
+    #print(plist)
+    # for p in plist:
+    #     (ox1, ox2), (oy1, oy2) = p
+    #     if ox1 == 0 and ox2 == 0:
+    #         print(p)
     cur_x1 = -1
     cur_x2 = -1
     temp_start = -1
@@ -50,6 +55,7 @@ def merge_ranges(pranges):
     if temp_start != -1 and (temp_start, last_value) not in temp_list:
         temp_list[(temp_start, last_value)] = []
     temp_list[(temp_start, last_value)].append((cur_x1, cur_x2))
+    
     compressed = []
     for col in temp_list:
         temp_start = -1
@@ -303,6 +309,7 @@ def query_comp(pranges, folder, tnames, backward = False, absolute = False, merg
         if name not in tables:
             return []
         oranges = []
+        #print('hi')
         for prange in pranges:
             #print(prange)
             x1 = prange[0][0]
@@ -312,19 +319,22 @@ def query_comp(pranges, folder, tnames, backward = False, absolute = False, merg
 
             arrow_table = tables[name]
             #edited here
+            #print('hi')
+            
             r = "SELECT DISTINCT * FROM arrow_table WHERE LEAST(COALESCE(output_x2, output_x1), {}) >= GREATEST(output_x1, {}) \
                 AND LEAST(COALESCE(output_y2, output_y1), {}) >= GREATEST(output_y1, {})".format(x2, x1, y2, y1)
             #print(r)
             # df = con.execute("SELECT DISTINCT * FROM arrow_table WHERE LEAST(output_x2, {}) >= GREATEST(output_x1, {}) \
             #     AND LEAST(output_y2, {}) >= GREATEST(output_y1, {})".format(x2, x1, y2, y1)).fetchdf()
             df = con.execute(r).fetchdf()
+            #print('hi')
             if not absolute and backward:
                 oranges += input_output(prange, df)
             elif not absolute and not backward:
                 oranges += input_output_for(prange, df)
             else:
                 oranges += input_output_abs(df)
-        
+        #print('hi')
         if len(oranges) == 0:
             return oranges
         if merge:
@@ -357,13 +367,14 @@ def query_comp_join(pranges, folder, tnames, backward = False, absolute = False,
             return []
         oranges = []
         arrow_table = tables[name]
+        con.register('query', query)
+        con.register('arrow_table', arrow_table)
         q = "SELECT arrow_table.*, query.* FROM arrow_table JOIN query ON query.x2 >= arrow_table.output_x1 AND query.x1 <= COALESCE(arrow_table.output_x2, arrow_table.output_x1) AND (query.y2 >= arrow_table.output_y1 AND query.y1 <= COALESCE(arrow_table.output_y2, arrow_table.output_y1)) "
         df = con.execute(q).fetchdf()
         #print(df)
         for row in df.itertuples():
             prange = ((row[-4],row[-3]), (row[-2], row[-1]))
             oranges.append(input_output_forone(prange, row))
-        
         if len(oranges) == 0:
             return oranges
         if merge:
@@ -375,12 +386,12 @@ def query_comp_join(pranges, folder, tnames, backward = False, absolute = False,
     return pranges
 
 if __name__ == '__main__':
+    #start = time.time()
+    #q = query_comp([((0,0), (0,0))], 'storage', ['step0_for1'], backward = False, dtype = 'arrow')
+    #end = time.time()
+    #print(end-start)
     start = time.time()
-    q = query_comp([((0,0), (0,0))], 'storage', ['step0_for1'], backward = False, dtype = 'arrow')
-    end = time.time()
-    print(end-start)
-    start = time.time()
-    q = query_comp_join([((0,0), (0,0))], 'storage', ['step0_for1'], backward = False, dtype = 'arrow')
+    q = query_comp_join([((0,1080), (0,1920))], 'storage_pipeline/storage_image_compression/image_dslog', ['step0_for1'], backward = False, dtype = 'arrow')
     end = time.time()
     print(end-start)
     print(q)

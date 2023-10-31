@@ -16,7 +16,7 @@ def sort_(prov):
 
 def compress_input(prov_list):
     prov_list = list(set(prov_list))
-    prov_list.sort(key=sort_)
+    prove_list = sorted(prov_list)
     compressed_col = {}
     temp_start = -1
     last_value = -1

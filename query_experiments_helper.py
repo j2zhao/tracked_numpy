@@ -29,10 +29,10 @@ def compression_convert(folder1, folder2, num_steps, dfile, input2):
         else:
             ids = [1,2]
         
-        raw_save(array, folder2[0], 'step{}_'.format(i), ids = ids, arrow = False)
-        raw_save(array, folder2[1], 'step{}_'.format(i), ids = ids, arrow = True)
-        gzip_save(array, folder2[2], 'step{}_'.format(i), ids = ids, arrow = True)
-        column_save(array, folder2[3], 'step{}_'.format(i), temp_path = './temp', ids = ids)
+        #raw_save(array, folder2[0], 'step{}_'.format(i), ids = ids, arrow = False)
+        #raw_save(array, folder2[1], 'step{}_'.format(i), ids = ids, arrow = True)
+        #gzip_save(array, folder2[2], 'step{}_'.format(i), ids = ids, arrow = True)
+        #column_save(array, folder2[3], 'step{}_'.format(i), temp_path = './temp', ids = ids)
         comp_rel_save(array, folder2[4], 'step{}_'.format(i), image = False, arrow = True, gzip = True)
         #comp_save(array, folder2, 'step{}_'.format(i), arrow = True, gzip = True)
         #else:
@@ -124,6 +124,6 @@ if __name__ == '__main__':
     #folder_range = list(range(20))
     #folder_range = [13]
     folder2 = ['./storage_pipeline/storage_image_compression/image_raw', './storage_pipeline/storage_image_compression/image_pq', './storage_pipeline/storage_image_compression/image_gzip', './storage_pipeline/storage_image_compression/image_col', './storage_pipeline/storage_image_compression/image_dslog']
-    make_compression_image( './storage_pipeline/storage_image_compression', folder2, 'compression_tests_2/compression_tests_2/image_pipeline', num_steps = 5) 
+    make_compression_image( './storage_pipeline/storage_image_compression', folder2, 'compression_tests_2/image_pipeline', num_steps = 5) 
     #make_compression_numpy(folder2, folder1, 10, folder_range)
     #make_compression_relational(base_folder, folder2, 'compression_tests_2/resnet_pipeline', steps = 7)
