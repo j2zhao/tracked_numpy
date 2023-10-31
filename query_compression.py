@@ -90,7 +90,7 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
                 query_rows.append((int(i), int(j)))
     query_rows = pd.DataFrame(query_rows, columns=['output_x', 'output_y'])
     end = time.time()
-    print(end- start)
+    #print(end- start)
     #print(query_rows)
     start = time.time()
     total = 0
@@ -124,6 +124,73 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
             #     new_query_rows.add((row['output_x'], row['output_y']))
         #query_rows = new_query_rows
         query_rows = sql_results
+        #print(query_rows)
+        if len(query_rows) == 0:
+            return query_rows
+    #print(total)
+    #return(start-end)
+    return query_rows
+
+def query_one2one_select(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
+    """
+    type: 'arrow' or 'turbo' or 'csv' -> right now only support  arrow and turbo
+
+    """
+    con = duckdb.connect(database=':memory:')
+    if dtype == 'arrow':
+        tables = load_parquet(folder)
+    elif dtype == 'turbo':
+        tables = load_turbo(folder)
+    elif dtype == 'csv':
+        tables = load_csv(folder)
+    elif dtype == 'temp':
+        tables = load_temp()
+    else:
+        raise ValueError('dtype argument not supported')
+
+    query_rows = []
+    #print(pranges)
+    start = time.time()
+    for prange in pranges:
+        for i in range(prange[0][0], prange[0][1] + 1):
+            for j in range(prange[1][0], prange[1][1] + 1):
+                query_rows.append((int(i), int(j)))
+    query_rows = pd.DataFrame(query_rows, columns=['output_x', 'output_y'])
+    end = time.time()
+    #print(end- start)
+    #print(query_rows)
+    start = time.time()
+    total = 0
+    for name in tnames:
+        arrow_table = tables[name]
+        #print(arrow_table)
+        new_query_rows = set()
+        con.register('query_rows_table', query_rows)
+        con.register('arrow_table', arrow_table)
+        # for row in query_rows:
+        #     row = (int(row[0]), int(row[1]))
+            # print(con.fetchall())
+        if backwards:
+            #query = 'SELECT input_x, input_y FROM arrow_table WHERE (output_x, output_y) IN ' + str(tuple(query_rows))
+            con.execute(query)
+            #con.execute('SELECT input_x, input_y FROM arrow_table WHERE output_x = ? AND output_y = ?', row)
+            sql_results = con.fetchdf()
+            for _, row in sql_results.iterrows():
+                new_query_rows.add((row['input_x'], row['input_y']))
+        else:
+            start = time.time()
+            query = 'SELECT output_x, output_y FROM arrow_table WHERE (input_x, input_y) IN ' + str(tuple(query_rows))
+            #query = 'SELECT arrow_table.output_x, arrow_table.output_y FROM arrow_table JOIN query_rows_table ON arrow_table.input_x = query_rows_table.output_x AND arrow_table.input_y = query_rows_table.output_y;'
+            #query = 'SELECT * FROM arrow_table INNER JOIN query_rows_table ON arrow_table.input_x = query_rows_table.output_x AND arrow_table.input_y = query_rows_table.output_y;'
+            #query = 'SELECT * FROM arrow_table'
+            con.execute(query)
+            #con.execute('SELECT output_x, output_y FROM arrow_table WHERE input_x = ? AND input_y = ?', row)
+            sql_results = con.fetchdf()
+            end = time.time()
+            for _, row in sql_results.iterrows():
+                new_query_rows.add((row['output_x'], row['output_y']))
+        query_rows = new_query_rows
+        #uery_rows = sql_results
         #print(query_rows)
         if len(query_rows) == 0:
             return query_rows
