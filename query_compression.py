@@ -132,7 +132,6 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
     return query_rows
 
 def query_one2one_select(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
-    def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
     """
     type: 'arrow' or 'turbo' or 'csv' -> right now only support  arrow and turbo
 
