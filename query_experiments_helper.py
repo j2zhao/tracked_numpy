@@ -69,9 +69,9 @@ def make_compression_image(base_folder, f2, f1, num_steps):
             pass
         os.mkdir(f)
     x, y = compression_convert(f1, f2, num_steps, dfile = '.npy', input2 = [])
-    with open(os.path.join(f2, 'x.pickle'), 'wb') as f:
+    with open(os.path.join(base_folder, 'x.pickle'), 'wb') as f:
         pickle.dump(x, f)
-    with open(os.path.join(f2, 'y.pickle'), 'wb') as f:
+    with open(os.path.join(base_folder, 'y.pickle'), 'wb') as f:
         pickle.dump(y, f)
 
 def make_compression_relational(base_folder, f2, f1, num_steps):

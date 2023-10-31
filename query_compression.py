@@ -83,11 +83,14 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
 
     query_rows = []
     #print(pranges)
+    start = time.time()
     for prange in pranges:
         for i in range(prange[0][0], prange[0][1] + 1):
             for j in range(prange[1][0], prange[1][1] + 1):
                 query_rows.append((int(i), int(j)))
     query_rows = pd.DataFrame(query_rows, columns=['output_x', 'output_y'])
+    end = time.time()
+    print(end- start)
     #print(query_rows)
     start = time.time()
     total = 0
