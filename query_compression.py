@@ -114,11 +114,12 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
             start = time.time()
             #query = 'SELECT output_x, output_y FROM arrow_table WHERE (input_x, input_y) IN ' + str(tuple(query_rows))
             #query = 'SELECT arrow_table.output_x, arrow_table.output_y FROM arrow_table JOIN query_rows_table ON arrow_table.input_x = query_rows_table.output_x AND arrow_table.input_y = query_rows_table.output_y;'
-            query = 'SELECT * FROM arrow_table INNER JOIN query_rows_table ON arrow_table.input_x = query_rows_table.output_x AND arrow_table.input_y = query_rows_table.output_y;'
+            query = 'SELECT  output_x, output_y  FROM arrow_table INNER JOIN query_rows_table ON arrow_table.input_x = query_rows_table.output_x AND arrow_table.input_y = query_rows_table.output_y;'
             #query = 'SELECT * FROM arrow_table'
             con.execute(query)
             #con.execute('SELECT output_x, output_y FROM arrow_table WHERE input_x = ? AND input_y = ?', row)
             sql_results = con.fetchdf()
+            print(sql_results.head())
             end = time.time()
             # for _, row in sql_results.iterrows():
             #     new_query_rows.add((row['output_x'], row['output_y']))
@@ -220,5 +221,5 @@ def query_one2one_select(pranges, folder, tnames, backwards = True, dtype = 'arr
 #     return query_rows
 
 if __name__ == '__main__':
-    q = query_one2one([((0,0), (0,0))], 'storage', ['step0_1'], backwards = False, dtype = 'arrow')
+    q = query_one2one([((0,0), (0,0))], 'storage', ['step0_1', 'step1_1'], backwards = False, dtype = 'arrow')
     print(q)
