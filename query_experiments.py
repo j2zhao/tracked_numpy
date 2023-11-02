@@ -99,8 +99,8 @@ def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline
             #tnames.reverse()
             # get query results
             start = time.time()
-            result = query_comp_join(pranges, folder2, tnames, backward = False, merge = True, dtype = 'arrow')
-            #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
+            #result = query_comp_join(pranges, folder2, tnames, backward = False, merge = True, dtype = 'arrow')
+            result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
             #print(result)
             end = time.time()
             #raise ValueError()
