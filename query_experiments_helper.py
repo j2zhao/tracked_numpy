@@ -29,10 +29,10 @@ def compression_convert(folder1, folder2, num_steps, dfile, input2):
         else:
             ids = [1,2]
         
-        #raw_save(array, folder2[0], 'step{}_'.format(i), ids = ids, arrow = False)
-        #raw_save(array, folder2[1], 'step{}_'.format(i), ids = ids, arrow = True)
-        #gzip_save(array, folder2[2], 'step{}_'.format(i), ids = ids, arrow = True)
-        #column_save(array, folder2[3], 'step{}_'.format(i), temp_path = './temp', ids = ids)
+        raw_save(array, folder2[0], 'step{}_'.format(i), ids = ids, arrow = False)
+        raw_save(array, folder2[1], 'step{}_'.format(i), ids = ids, arrow = True)
+        gzip_save(array, folder2[2], 'step{}_'.format(i), ids = ids, arrow = True)
+        column_save(array, folder2[3], 'step{}_'.format(i), temp_path = './temp', ids = ids)
         comp_rel_save(array, folder2[4], 'step{}_'.format(i), image = False, arrow = True, gzip = True)
         #comp_save(array, folder2, 'step{}_'.format(i), arrow = True, gzip = True)
         #else:
