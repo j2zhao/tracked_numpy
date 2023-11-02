@@ -118,12 +118,14 @@ if __name__ == '__main__':
     folder2 = ['./storage_pipeline/storage_relational_compression/relational_raw', './storage_pipeline/storage_relational_compression/relational_pq', './storage_pipeline/storage_relational_compression/relational_gzip', './storage_pipeline/storage_relational_compression/relational_col', './storage_pipeline/storage_relational_compression/relational_dslog']
     base_folder = './storage_pipeline/storage_relational_compression/'
 
-    # folder2 = ['./storage_pipeline/storage_resnet_compression/resnet_raw', './storage_pipeline/storage_resnet_compression/resnet_pq', './storage_pipeline/storage_rresnet_compression/resnet_gzip', './storage_pipeline/storage_resnet_compression/resnet_col', './storage_pipeline/storage_resnet_compression/resnet_dslog']
-    # base_folder = './storage_pipeline/storage_resnet_compression/'
+    folder2 = ['./storage_pipeline/storage_resnet_compression/resnet_raw', './storage_pipeline/storage_resnet_compression/resnet_pq', './storage_pipeline/storage_rresnet_compression/resnet_gzip', './storage_pipeline/storage_resnet_compression/resnet_col', './storage_pipeline/storage_resnet_compression/resnet_dslog']
+    base_folder = './storage_pipeline/storage_resnet_compression/'
     #folder1 = 'compression_tests_2/numpy_pipeline_10_'
     #folder_range = list(range(20))
     #folder_range = [13]
     #folder2 = ['./storage_pipeline/storage_image_compression/image_raw', './storage_pipeline/storage_image_compression/image_pq', './storage_pipeline/storage_image_compression/image_gzip', './storage_pipeline/storage_image_compression/image_col', './storage_pipeline/storage_image_compression/image_dslog']
     #make_compression_image( './storage_pipeline/storage_image_compression', folder2, 'compression_tests_2/image_pipeline', num_steps = 5) 
     #make_compression_numpy(folder2, folder1, 10, folder_range)
-    make_compression_relational(base_folder, folder2, 'compression_tests_3/resnet_pipeline', steps = 5)
+    #make_compression_relational(base_folder, folder2, 'compression_tests_3/resnet_pipeline', steps = 5)
+    make_compression_resnet(base_folder, folder2, 'compression_tests_2/resnet_pipeline', steps = 6)
+
