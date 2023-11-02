@@ -86,25 +86,7 @@ def make_compression_relational(base_folder, f2, f1, num_steps):
         except OSError as e:
             pass
         os.mkdir(f)
-    x, y = compression_convert(f1, f2, num_steps, dfile = '.pickle', input2 = [0])
-    with open(os.path.join(base_folder, 'x.pickle'), 'wb') as f:
-        pickle.dump(x, f)
-    with open(os.path.join(base_folder, 'y.pickle'), 'wb') as f:
-        pickle.dump(y, f)
-
-def make_compression_resnet(base_folder, f2, f1, steps):
-    try:
-        shutil.rmtree(base_folder)
-    except OSError as e:
-        pass
-    os.mkdir(base_folder)
-    for f in f2:
-        try:
-            shutil.rmtree(f)
-        except OSError as e:
-            pass
-        os.mkdir(f)
-    x, y = compression_convert2(f1, f2, steps, dfile = '.pickle', input2 = [0])
+    x, y = compression_convert(f1, f2, num_steps, dfile = '.pickle', input2 = [5])
     with open(os.path.join(base_folder, 'x.pickle'), 'wb') as f:
         pickle.dump(x, f)
     with open(os.path.join(base_folder, 'y.pickle'), 'wb') as f:
