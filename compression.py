@@ -16,7 +16,7 @@ def sort_(prov):
 
 def compress_input(prov_list):
     prov_list = list(set(prov_list))
-    prove_list = sorted(prov_list)
+    prov_list = sorted(prov_list)
     compressed_col = {}
     temp_start = -1
     last_value = -1
@@ -47,7 +47,6 @@ def compress_input(prov_list):
     if temp_start != -1 and (temp_start, last_value) not in compressed_col:
         compressed_col[(temp_start, last_value)] = []
     compressed_col[(temp_start, last_value)].append(cur_row)
-
     compressed = []
     for col in compressed_col:
         temp_start = -1
@@ -64,7 +63,6 @@ def compress_input(prov_list):
                 last_value = row
     
         compressed.append(((temp_start, last_value), col))
-    
     return compressed
 
 # to fix

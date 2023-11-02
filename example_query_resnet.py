@@ -1,5 +1,5 @@
 
-import cv2
+#import cv2
 import pandas as pd
 import pickle
 import os
@@ -7,6 +7,8 @@ import numpy.core.tracked_float as tf
 import numpy as np
 import math
 import copy
+from compression import compression
+from compression_algs import convert_rel, convert_inverse_rel
 
 class DummyProv(object):
     def __init__(self, prov):
@@ -104,12 +106,23 @@ def conv11(array):
 if __name__ == '__main__': 
     folder = 'compression_tests_2/resnet_pipeline'
     image_dire = 'compression_tests_2/VIRAT_S_000101_10.jpeg'
-    image = np.asarray(cv2.imread(image_dire))
-    image = image[:, :, 0]
-    
+    #image = np.asarray(cv2.imread(image_dire))
+    #image = image[:, :, 0]
+    #print(image.shape)
+    image = np.zeros((1080,1920)) #(1080, 1920)
     # apply 3x3 convolution
     image = convolution(image)
-    prov_arr = convert(image) 
+    prov_arr = convert(image)
+    # image = compression(image)[1]
+    # prov_arr = convert_inverse_rel(image)
+    # df = pd.DataFrame(prov_arr, columns= ["output_x1", "output_x2", "output_y1", "output_y2", \
+    #             "input_x1_a", "input_x1_1", "input_x1_2", \
+    #             "input_x2_a", "input_x2_1", "input_x2_2",  \
+    #             "input_y1_a", "input_y1_1", "input_y1_2", \
+    #             "input_y2_a", "input_y2_1", "input_y2_2"])
+    #pd.set_option('display.max_columns', None)
+    #print(df)
+    #raise ValueError()
     dire = os.path.join(folder, 'step1.npy')
     np.save(dire, prov_arr)
 
