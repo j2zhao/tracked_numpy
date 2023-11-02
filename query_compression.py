@@ -174,7 +174,7 @@ def query_one2one_select(pranges, folder, tnames, backwards = True, dtype = 'arr
         query_rows = new_query_rows
         if len(query_rows) == 0:
             return query_rows
-        print(tim)
+    print(tim)
     return query_rows
 
 # def query_invertedlist(pranges, folder, tnames, dtype = 'arrow'):
