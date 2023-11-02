@@ -108,6 +108,6 @@ if __name__ == '__main__':
     #folder2 = ['./storage_pipeline/storage_image_compression/image_raw', './storage_pipeline/storage_image_compression/image_pq', './storage_pipeline/storage_image_compression/image_gzip', './storage_pipeline/storage_image_compression/image_col', './storage_pipeline/storage_image_compression/image_dslog']
     #make_compression_image( './storage_pipeline/storage_image_compression', folder2, 'compression_tests_2/image_pipeline', num_steps = 5) 
     #make_compression_numpy(folder2, folder1, 10, folder_range)
-    #make_compression_relational(base_folder, folder2, 'compression_tests_3/resnet_pipeline', steps = 5)
-    make_compression_relational(base_folder, folder2, 'compression_tests_2/resnet_pipeline', steps = 6)
+    #make_compression_relational(base_folder, folder2, 'compression_tests_3/resnet_pipeline', num_steps = 5)
+    make_compression_relational(base_folder, folder2, 'compression_tests_2/resnet_pipeline', num_steps = 6)
 
