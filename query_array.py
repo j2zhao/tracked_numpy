@@ -10,7 +10,7 @@ def load_npy(folder):
             tables[nm] = np.load(dire)
     return tables
 
-def query_array(pranges, folder, tnames, backwards = True, batch_size = 1000):
+def query_array(pranges, folder, tnames, backwards = True, batch_size = 10):
     arrays = load_npy(folder)
     query_rows = []
     for prange in pranges:
@@ -28,11 +28,13 @@ def query_array(pranges, folder, tnames, backwards = True, batch_size = 1000):
             cur_array = arrays[name][:, 2:]
         all_index_1 = []
         for i in range(0, query_rows.shape[0], batch_size):
-            max_i = min((i +1)*batch_size, query_rows.shape[0])
-            min_i = i*batch_size
-            query_rows = query_rows[min_i:max_i, :]
-            equal_rows = np.all(cur_array[:, np.newaxis] == query_rows, axis=-1)
+            min_i = i
+            max_i = min(i +batch_size, query_rows.shape[0])            
+            query_rows_ = query_rows[min_i:max_i, :]
+            #print(query_rows_)
+            equal_rows = np.all(cur_array[:, np.newaxis] == query_rows_, axis=-1)
             index_1, index_2 = np.where(equal_rows)
+            #print(index_1)
             all_index_1.append(index_1)
         all_index_1 = np.concatenate(all_index_1)
         if backwards:
@@ -43,4 +45,5 @@ def query_array(pranges, folder, tnames, backwards = True, batch_size = 1000):
 
 
 if __name__ == '__main__':
-     q = query_array([((0,0), (0,0))], 'storage', ['step0_1'], backwards = False)
+     q = query_array([((0,10), (0,10))], 'storage', ['step0_1'], backwards = False)
+     print(q)
