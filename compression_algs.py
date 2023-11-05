@@ -471,7 +471,7 @@ if __name__ == '__main__':
     #     arr = pickle.load(f)
     #arr = test7(array_size[size])
     #arr = test1((10, 10))
-    arr = np.random.random((3, 3)).astype(tf.tracked_float)
+    arr = np.random.random((100, 100)).astype(tf.tracked_float)
     tf.initialize(arr, 1)
     arr = np.rot90(arr)
     #print(arr[0])

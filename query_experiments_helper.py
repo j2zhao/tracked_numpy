@@ -47,10 +47,10 @@ def make_compression_numpy(f2, f1, num_steps, folder_range):
         folder1 = f1 + str(i)
         for f in folder2:
             try:
-                shutil.rmtree(f)
+                os.mkdir(f)
             except OSError as e:
                 pass
-            os.mkdir(f)
+            #os.mkdir(f)
         x, y = compression_convert(folder1, folder2, num_steps, dfile = '.pickle', input2 = [])
         # with open(os.path.join(folder2, 'x.pickle'), 'wb') as f:
         #     pickle.dump(x, f)
@@ -103,13 +103,13 @@ if __name__ == '__main__':
 
     #folder2 = ['./storage_pipeline/storage_resnet_compression/resnet_raw', './storage_pipeline/storage_resnet_compression/resnet_pq', './storage_pipeline/storage_resnet_compression/resnet_gzip', './storage_pipeline/storage_resnet_compression/resnet_col', './storage_pipeline/storage_resnet_compression/resnet_dslog']
     #base_folder = './storage_pipeline/storage_resnet_compression/'
-    folder2 = ['./storage_pipeline/storage_relational_compression/relational_arr']
-    #folder1 = 'compression_tests_2/numpy_pipeline_10_'
-    #folder_range = list(range(20))
+    folder2 = ['./storage_5/numpy_arr']
+    folder1 = 'compression_tests_2/numpy_pipeline'
+    folder_range = list(range(20))
     #folder_range = [13]
     #folder2 = ['./storage_pipeline/storage_image_compression/image_raw', './storage_pipeline/storage_image_compression/image_pq', './storage_pipeline/storage_image_compression/image_gzip', './storage_pipeline/storage_image_compression/image_col', './storage_pipeline/storage_image_compression/image_dslog']
     #make_compression_image( './storage_pipeline/storage_image_compression', folder2, 'compression_tests_2/image_pipeline', num_steps = 5) 
-    #make_compression_numpy(folder2, folder1, 10, folder_range)
-    make_compression_relational(base_folder, folder2, 'compression_tests_3/relational_pipeline', num_steps = 5)
+    make_compression_numpy(folder2, folder1, 5, folder_range)
+    #make_compression_relational(base_folder, folder2, 'compression_tests_2/relational_pipeline_full', num_steps = 5)
     #make_compression_relational(base_folder, folder2, 'compression_tests_2/resnet_pipeline', num_steps = 6)
 

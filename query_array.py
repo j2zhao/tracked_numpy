@@ -10,7 +10,7 @@ def load_npy(folder):
             tables[nm] = np.load(dire)
     return tables
 
-def query_array(pranges, folder, tnames, backwards = True, batch_size = 10):
+def query_array(pranges, folder, tnames, backwards = True, batch_size = 1000):
     arrays = load_npy(folder)
     query_rows = []
     for prange in pranges:
