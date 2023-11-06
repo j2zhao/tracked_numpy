@@ -41,12 +41,9 @@ def load_turbo(folder):
                 p2 = os.path.join(f2, file)
                 command = " ".join([turbo_dir, turbo_param, p1, p2])
                 os.system(command)
-                #array_dict[db_names[i]] = np.load(p2, allow_pickle=True)
-                #print(p2)
                 x = np.genfromtxt(p2, delimiter=',')
                 x = np.reshape(x, (-1))
                 array_dict[db_names[i]] = x
-                #print(array_dict[db_names[i]].shape)
             table = pd.DataFrame(array_dict)
             tables[f1] = table
     return tables
@@ -90,19 +87,13 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
                 query_rows.append((int(i), int(j)))
     query_rows = pd.DataFrame(query_rows, columns=['output_x', 'output_y'])
     end = time.time()
-    #print(end- start)
-    #print(query_rows)
     start = time.time()
     total = 0
     for name in tnames:
         arrow_table = tables[name]
-        #print(arrow_table)
         new_query_rows = set()
         con.register('query_rows_table', query_rows)
         con.register('arrow_table', arrow_table)
-        # for row in query_rows:
-        #     row = (int(row[0]), int(row[1]))
-            # print(con.fetchall())
         if backwards:
             query = 'SELECT * FROM arrow_table INNER JOIN query_rows_table ON arrow_table.input_x = query_rows_table.output_x AND arrow_table.input_y = query_rows_table.output_y;'
             con.execute(query)
@@ -111,17 +102,13 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
                 new_query_rows.add((row['input_x'], row['input_y']))
         else:
             start = time.time()
-            #query = 'SELECT output_x, output_y FROM arrow_table WHERE (input_x, input_y) IN ' + str(tuple(query_rows))
             query = 'SELECT * FROM arrow_table INNER JOIN query_rows_table ON arrow_table.input_x = query_rows_table.output_x AND arrow_table.input_y = query_rows_table.output_y;'
             con.execute(query)
             sql_results = con.fetchdf()
-            #print(sql_results.head())
             end = time.time()
         query_rows = sql_results
         if len(query_rows) == 0:
             return query_rows
-    #print(total)
-    #return(start-end)
     return query_rows
 
 def query_one2one_select(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
@@ -151,13 +138,9 @@ def query_one2one_select(pranges, folder, tnames, backwards = True, dtype = 'arr
     for name in tnames:
         arrow_table = tables[name]
         new_query_rows = set()
-        # for row in query_rows:
-        #     row = (int(row[0]), int(row[1]))
-            # print(con.fetchall())
         if backwards:
             query = 'SELECT input_x, input_y FROM arrow_table WHERE (output_x, output_y) IN ' + str(tuple(query_rows))
             con.execute(query)
-            #con.execute('SELECT input_x, input_y FROM arrow_table WHERE output_x = ? AND output_y = ?', row)
             sql_results = con.fetchdf()
             for _, row in sql_results.iterrows():
                 new_query_rows.add((row['input_x'], row['input_y']))
@@ -167,7 +150,6 @@ def query_one2one_select(pranges, folder, tnames, backwards = True, dtype = 'arr
             con.execute(query)
             end = time.time()
             tim += end - start
-            #con.execute('SELECT output_x, output_y FROM arrow_table WHERE input_x = ? AND input_y = ?', row)
             sql_results = con.fetchdf()
             for _, row in sql_results.iterrows():
                 new_query_rows.add((row['output_x'], row['output_y']))

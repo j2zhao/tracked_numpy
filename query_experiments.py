@@ -77,7 +77,7 @@ def query_experiments_numpy(shape, sizes, experiments, num_steps, num_exp, save_
                 #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'turbo')
                 if not forward:
                     #result = query_array(pranges, folder2, tnames, backwards = False)
-                    result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'csv')
+                    result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
                 # elif not forward:
                 #     result = query_one2one_select(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
                 else:
