@@ -76,8 +76,8 @@ def query_experiments_numpy(shape, sizes, experiments, num_steps, num_exp, save_
                 #result = query_comp(pranges, folder2, tnames, backward = False, merge = False, dtype = 'arrow')
                 #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'turbo')
                 if not forward:
-                    result = query_array(pranges, folder2, tnames, backwards = False)
-                    #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
+                    #result = query_array(pranges, folder2, tnames, backwards = False)
+                    result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'csv')
                 # elif not forward:
                 #     result = query_one2one_select(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
                 else:
@@ -149,10 +149,10 @@ def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline
 
 
 if __name__ == '__main__':
-    #query_experiments_numpy(shape = [1000, 100], sizes = [(1, 1), (10, 1), (100, 1), (1000, 1), (1000, 10), (1000, 100)], \
-    #   experiments = [1, 10, 100, 1000, 10000, 100000], num_steps = 5, num_exp = 20, save_name = 'query_results_5/numpy_arr_results', folder_name = 'storage_5/numpy_arr', forward = False)
+    query_experiments_numpy(shape = [1000, 100], sizes = [(1, 1), (10, 1), (100, 1), (1000, 1), (1000, 10), (1000, 100)], \
+       experiments = [1, 10, 100, 1000, 10000, 100000], num_steps = 5, num_exp = 20, save_name = 'query_results_5/numpy_raw_results', folder_name = 'storage_5/numpy_raw', forward = False)
     # query_experiments_numpy(shape = [1000, 100], sizes = [(1000, 100)], 
     #      experiments = [100000], num_steps = 5, num_exp = 20, save_name = 'query_results_5/numpy_dslog_merge_results', folder_name = 'storage_5/numpy_dslog', forward = True)
     #query_experiemnts_pipeline(shape = [1080, 1920], folder2 = './storage_pipeline/storage_image_compression/image_arr')
-    query_experiemnts_pipeline(shape = [9, 9044976], folder2 = 'storage_pipeline/storage_relational_compression/relational_arr')
+    #query_experiemnts_pipeline(shape = [9, 9044976], folder2 = 'storage_pipeline/storage_relational_compression/relational_arr')
     #query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline/storage_resnet_compression/resnet_arr')
