@@ -470,10 +470,10 @@ if __name__ == '__main__':
     # with open ('./compression_tests_2/join_output.pickle', 'rb') as f:
     #     arr = pickle.load(f)
     #arr = test7(array_size[size])
-    #arr = test1((10, 10))
-    arr = np.random.random((100, 100)).astype(tf.tracked_float)
-    tf.initialize(arr, 1)
-    arr = np.rot90(arr)
+    arr = test1()
+    #arr = np.random.random((100, 100)).astype(tf.tracked_float)
+    #tf.initialize(arr, 1)
+    #arr = np.rot90(arr)
     #print(arr[0])
     # for i in range(0, 100):
     #     column_save(arr, './storage', 'step0_{}'.format(i), temp_path = './temp', ids = [1, 2])

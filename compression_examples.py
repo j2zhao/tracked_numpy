@@ -270,6 +270,7 @@ def test16(data = './compression_tests_2/group_by_pandas.pickle', col_name = 'st
     # data = groupby_prov(data, col_name, agg_name)
     with open('./compression_tests_3/group_by_pandas_full.pickle', 'rb') as f:
         data = pickle.load(f)
+        print(data.shape)
     return data
 
 # def test17(data = './compression_tests_2/group_by_pandas.pickle', col_name = 'startYear', agg_name = 'isAdult'):
@@ -375,7 +376,7 @@ def test21(arr_size = (100,)):
 
 if __name__ == '__main__':
     #test17()
-    testtemp()
+    test16()
     print('finished')
     # with open('./compression_tests_3/group_by_pandas_full.pickle', 'wb') as f:
     #     pickle.dump(data, f)
