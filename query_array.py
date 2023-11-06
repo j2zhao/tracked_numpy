@@ -10,7 +10,7 @@ def load_npy(folder):
             tables[nm] = np.load(dire)
     return tables
 
-def query_array(pranges, folder, tnames, backwards = True, batch_size = 1000):
+def query_array(pranges, folder, tnames, backwards = True, batch_size = 1):
     arrays = load_npy(folder)
     query_rows = []
     for prange in pranges:
@@ -37,6 +37,7 @@ def query_array(pranges, folder, tnames, backwards = True, batch_size = 1000):
             #print(index_1)
             all_index_1.append(index_1)
         all_index_1 = np.concatenate(all_index_1)
+        all_index_1 = np.unique(all_index_1)
         if backwards:
             query_rows = arrays[name][all_index_1, 2:]
         else:

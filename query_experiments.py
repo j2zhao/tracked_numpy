@@ -11,6 +11,17 @@ from query_dslog import *
 import math
 import time
 from query_array import query_array
+import signal
+
+class TimeoutException(Exception):
+    pass
+
+# Define the signal handler
+def signal_handler(signum, frame):
+    raise TimeoutException
+
+# Set the signal handler for the SIGALRM signal
+signal.signal(signal.SIGALRM, signal_handler)
 
 def get_range(xsize, ysize, x, y):
     if x < xsize:
@@ -57,19 +68,29 @@ def query_experiments_numpy(shape, sizes, experiments, num_steps, num_exp, save_
                 else:
                     tname = 'step{}_for1'.format(i)
                 tnames.append(tname)
-            # get query results
-            start = time.time()
-            #result = query_comp(pranges, folder2, tnames, backward = False, merge = False, dtype = 'arrow')
-            #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'turbo')
-            if not forward:
-                result = query_array(pranges, folder2, tnames, backwards = False)
-                #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
-            # elif not forward:
-            #     result = query_one2one_select(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
-            else:
-                result = query_comp(pranges, folder2, tnames, backward = False, merge = False, dtype = 'arrow') 
-            end = time.time()
-            times.append(end - start)
+
+            signal.alarm(10800)  # 300 seconds = 5 minutes
+            try:
+                # get query results
+                start = time.time()
+                #result = query_comp(pranges, folder2, tnames, backward = False, merge = False, dtype = 'arrow')
+                #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'turbo')
+                if not forward:
+                    result = query_array(pranges, folder2, tnames, backwards = False)
+                    #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
+                # elif not forward:
+                #     result = query_one2one_select(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
+                else:
+                    result = query_comp(pranges, folder2, tnames, backward = False, merge = False, dtype = 'arrow') 
+                end = time.time()
+                times.append(end - start)
+            except TimeoutException:
+                print('DID NOT FINISH')
+                print('')
+                break
+            finally:
+                # Disable the alarm
+                signal.alarm(0)
         times = np.asarray(times)
         print(np.average(times))
         print(np.min(times))
@@ -98,16 +119,25 @@ def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline
             for i in range(5):
                 tname = 'step{}_1'.format(i)
                 tnames.append(tname)
-            #tnames = ['step0_1']w
+            #tnames = ['step0_1']
             #tnames.reverse()
             # get query results
-            start = time.time()
-            #result = query_comp_join(pranges, folder2, tnames, backward = False, merge = True, dtype = 'arrow')
-            #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
-            result = query_array(pranges, folder2, tnames, backwards = False)
-            #print(result)
-            end = time.time()
-            #raise ValueError()
+            signal.alarm(10800)  # 300 seconds = 5 minutes
+            try:
+                start = time.time()
+                #result = query_comp_join(pranges, folder2, tnames, backward = False, merge = True, dtype = 'arrow')
+                #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
+                result = query_array(pranges, folder2, tnames, backwards = False)
+                #print(result)
+                end = time.time()
+                #raise ValueError()
+            except TimeoutException:
+                start = 0
+                end = 0
+                result = [0]
+            finally:
+                # Disable the alarm
+                signal.alarm(0)
             if len(result) != 0:
                 print('finished experiment: {}'.format(experiment))
                 print(end - start)
@@ -118,10 +148,10 @@ def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline
 
 
 if __name__ == '__main__':
-    query_experiments_numpy(shape = [1000, 100], sizes = [(1, 1), (10, 1), (100, 1), (1000, 1), (1000, 10), (1000, 100)], \
-       experiments = [1, 10, 100, 1000, 10000, 100000], num_steps = 5, num_exp = 20, save_name = 'query_results_5/numpy_arr_results', folder_name = 'storage_5/numpy_arr', forward = False)
+    #query_experiments_numpy(shape = [1000, 100], sizes = [(1, 1), (10, 1), (100, 1), (1000, 1), (1000, 10), (1000, 100)], \
+    #   experiments = [1, 10, 100, 1000, 10000, 100000], num_steps = 5, num_exp = 20, save_name = 'query_results_5/numpy_arr_results', folder_name = 'storage_5/numpy_arr', forward = False)
     # query_experiments_numpy(shape = [1000, 100], sizes = [(1000, 100)], 
     #      experiments = [100000], num_steps = 5, num_exp = 20, save_name = 'query_results_5/numpy_dslog_merge_results', folder_name = 'storage_5/numpy_dslog', forward = True)
     #query_experiemnts_pipeline(shape = [1080, 1920], folder2 = './storage_pipeline/storage_image_compression/image_arr')
     #query_experiemnts_pipeline(shape = [9, 9044976], folder2 = 'storage_pipeline/storage_relational_compression/relational_pq')
-    #query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline/storage_resnet_compression/resnet_pq')
+    query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline/storage_resnet_compression/resnet_arr')
