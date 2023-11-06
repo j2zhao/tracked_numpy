@@ -91,11 +91,12 @@ def query_experiments_numpy(shape, sizes, experiments, num_steps, num_exp, save_
             finally:
                 # Disable the alarm
                 signal.alarm(0)
-        times = np.asarray(times)
-        print(np.average(times))
-        print(np.min(times))
-        print(np.max(times))
-        np.save(save_name + '{}.npy'.format(experiment), times)
+        if len(times) == num_exp:
+            times = np.asarray(times)
+            print(np.average(times))
+            print(np.min(times))
+            print(np.max(times))
+            np.save(save_name + '{}.npy'.format(experiment), times)
 
 def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline/image_dslog'):
     #experiments = [0.001, 0.01, 0.1, 0.2, 0.4, 0.6, 0.8, 1]
@@ -153,5 +154,5 @@ if __name__ == '__main__':
     # query_experiments_numpy(shape = [1000, 100], sizes = [(1000, 100)], 
     #      experiments = [100000], num_steps = 5, num_exp = 20, save_name = 'query_results_5/numpy_dslog_merge_results', folder_name = 'storage_5/numpy_dslog', forward = True)
     #query_experiemnts_pipeline(shape = [1080, 1920], folder2 = './storage_pipeline/storage_image_compression/image_arr')
-    #query_experiemnts_pipeline(shape = [9, 9044976], folder2 = 'storage_pipeline/storage_relational_compression/relational_pq')
-    query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline/storage_resnet_compression/resnet_arr')
+    query_experiemnts_pipeline(shape = [9, 9044976], folder2 = 'storage_pipeline/storage_relational_compression/relational_arr')
+    #query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline/storage_resnet_compression/resnet_arr')
