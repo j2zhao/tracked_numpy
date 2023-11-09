@@ -178,14 +178,11 @@ def input_output_forone(prange, row):
         k = j + 3
         if not np.isnan(row[j]):
             if i == 0:
-                #print('x4')
                 ox1 = int(row[j])
                 ox2 = int(row[k])
             elif i == 1:
-                #print('x2')
                 ox1, ox2 = forward_aux(int(row[1]), int(row[2]), ix1, ix2, int(row[j]), int(row[k]))
             else:
-                #print('x1')
                 ox1, ox2 = forward_aux(int(row[3]), int(row[4]), iy1, iy2, int(row[j]), int(row[k]))
             break
 
@@ -241,14 +238,11 @@ def input_output_for(prange, results):
             k = j + 3
             if not np.isnan(row[j]):
                 if i == 0:
-                    #print('x4')
                     ox1 = int(row[j])
                     ox2 = int(row[k])
                 elif i == 1:
-                    #print('x2')
                     ox1, ox2 = forward_aux(int(row[1]), int(row[2]), ix1, ix2, int(row[j]), int(row[k]))
                 else:
-                    #print('x1')
                     ox1, ox2 = forward_aux(int(row[3]), int(row[4]), iy1, iy2, int(row[j]), int(row[k]))
                 break
 
@@ -257,14 +251,11 @@ def input_output_for(prange, results):
             k = j + 3
             if not np.isnan(row[j]):
                 if i == 0:
-                    #print('hi2')
                     oy1 = int(row[j])
                     oy2 = int(row[k])
                 elif i == 1:
-                    #print('hi1')
                     oy1, oy2 = forward_aux(int(row[1]), int(row[2]), ix1, ix2, int(row[j]), int(row[k]))
                 else:
-                    #print('hi')
                     oy1, oy2 = forward_aux(int(row[3]), int(row[4]), iy1, iy2, int(row[j]), int(row[k]))
                 break
 
@@ -309,38 +300,28 @@ def query_comp(pranges, folder, tnames, backward = False, absolute = False, merg
         if name not in tables:
             return []
         oranges = []
-        #print('hi')
         for prange in pranges:
-            #print(prange)
             x1 = prange[0][0]
             x2 = prange[0][1]
             y1 = prange[1][0]
             y2 = prange[1][1]
 
             arrow_table = tables[name]
-            #edited here
-            #print('hi')
             
             r = "SELECT DISTINCT * FROM arrow_table WHERE LEAST(COALESCE(output_x2, output_x1), {}) >= GREATEST(output_x1, {}) \
                 AND LEAST(COALESCE(output_y2, output_y1), {}) >= GREATEST(output_y1, {})".format(x2, x1, y2, y1)
-            #print(r)
-            # df = con.execute("SELECT DISTINCT * FROM arrow_table WHERE LEAST(output_x2, {}) >= GREATEST(output_x1, {}) \
-            #     AND LEAST(output_y2, {}) >= GREATEST(output_y1, {})".format(x2, x1, y2, y1)).fetchdf()
             df = con.execute(r).fetchdf()
-            #print('hi')
             if not absolute and backward:
                 oranges += input_output(prange, df)
             elif not absolute and not backward:
                 oranges += input_output_for(prange, df)
             else:
                 oranges += input_output_abs(df)
-        #print('hi')
         if len(oranges) == 0:
             return oranges
         if merge:
             oranges = merge_ranges(oranges)
         else:
-            #oranges = list(set(oranges))
             oranges = oranges
         pranges = oranges
     return pranges
@@ -355,7 +336,6 @@ def query_comp_join(pranges, folder, tnames, backward = False, absolute = False,
     for name in tnames:
         query = []
         for prange in pranges:
-        #print(prange)
             x1 = prange[0][0]
             x2 = prange[0][1]
             y1 = prange[1][0]
@@ -371,7 +351,6 @@ def query_comp_join(pranges, folder, tnames, backward = False, absolute = False,
         con.register('arrow_table', arrow_table)
         q = "SELECT arrow_table.*, query.* FROM arrow_table JOIN query ON query.x2 >= arrow_table.output_x1 AND query.x1 <= COALESCE(arrow_table.output_x2, arrow_table.output_x1) AND (query.y2 >= arrow_table.output_y1 AND query.y1 <= COALESCE(arrow_table.output_y2, arrow_table.output_y1)) "
         df = con.execute(q).fetchdf()
-        #print(df)
         df = con.execute(q).fetchdf()
         for row in df.itertuples():
             prange = ((row[-4],row[-3]), (row[-2], row[-1]))
@@ -381,16 +360,11 @@ def query_comp_join(pranges, folder, tnames, backward = False, absolute = False,
         if merge:
             oranges = merge_ranges(oranges)
         else:
-            #oranges = list(set(oranges))
             oranges = oranges
         pranges = oranges
     return pranges
 
 if __name__ == '__main__':
-    #start = time.time()
-    #q = query_comp([((0,0), (0,0))], 'storage', ['step0_for1'], backward = False, dtype = 'arrow')
-    #end = time.time()
-    #print(end-start)
     start = time.time()
     q = query_comp_join([((0,1080), (0,1920))], 'storage_pipeline/storage_image_compression/image_dslog', ['step0_for1'], backward = False, dtype = 'arrow')
     end = time.time()

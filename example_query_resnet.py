@@ -113,16 +113,6 @@ if __name__ == '__main__':
     # apply 3x3 convolution
     image = convolution(image)
     prov_arr = convert(image)
-    # image = compression(image)[1]
-    # prov_arr = convert_inverse_rel(image)
-    # df = pd.DataFrame(prov_arr, columns= ["output_x1", "output_x2", "output_y1", "output_y2", \
-    #             "input_x1_a", "input_x1_1", "input_x1_2", \
-    #             "input_x2_a", "input_x2_1", "input_x2_2",  \
-    #             "input_y1_a", "input_y1_1", "input_y1_2", \
-    #             "input_y2_a", "input_y2_1", "input_y2_2"])
-    #pd.set_option('display.max_columns', None)
-    #print(df)
-    #raise ValueError()
     dire = os.path.join(folder, 'step1.npy')
     np.save(dire, prov_arr)
 
@@ -169,10 +159,4 @@ if __name__ == '__main__':
     dire = os.path.join(folder, 'step7.npy')
     np.save(dire, prov_arr)
 
-    # # apply sum (2)
-    # image = np.zeros(image.shape)
-    # image = batchnorm(image)
-    # prov_arr = convert(image) 
-    # dire = os.path.join(folder, 'step6a.npy')
-    # np.save(dire, prov_arr)
 

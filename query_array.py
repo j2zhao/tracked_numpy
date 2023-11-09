@@ -31,10 +31,8 @@ def query_array(pranges, folder, tnames, backwards = True, batch_size = 1):
             min_i = i
             max_i = min(i +batch_size, query_rows.shape[0])            
             query_rows_ = query_rows[min_i:max_i, :]
-            #print(query_rows_)
             equal_rows = np.all(cur_array[:, np.newaxis] == query_rows_, axis=-1)
             index_1, index_2 = np.where(equal_rows)
-            #print(index_1)
             all_index_1.append(index_1)
         all_index_1 = np.concatenate(all_index_1)
         all_index_1 = np.unique(all_index_1)

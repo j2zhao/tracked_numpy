@@ -149,7 +149,6 @@ def inverted_list(array, path, name, ids = [1], batch_size = 10000, arrow = True
             dire = os.path.join(path, name + str(id) + '.parquet')
             pq.write_table(table, dire)
 
-# (array, path, name,ids = [1], arrow = True)
 def column_save(array, path, name, temp_path = './temp', ids = [1]):
     num_arrays = len(ids)
     if len(array.shape) == 0:
@@ -162,7 +161,6 @@ def column_save(array, path, name, temp_path = './temp', ids = [1]):
         col_compression.to_column_2(array, temp_path, ids, zeros = True)
     turbo_dir = "./turbo/Turbo-Range-Coder/turborc"
     turbo_param = "-12"
-    #tb_h = '-H'
     file_names = ['x1.csv', 'x2.csv', 'y1.csv', 'y2.csv']
     for temp in file_names:
         p1 = os.path.join(temp_path, temp)
@@ -170,8 +168,6 @@ def column_save(array, path, name, temp_path = './temp', ids = [1]):
         if not os.path.isdir(p2):
             os.mkdir(p2)
         p2 = os.path.join(p2, temp)
-        #print(p2)
-        #command = " ".join([turbo_dir, tb_h, turbo_param, p1, p2])
         command = " ".join([turbo_dir, turbo_param, p1, p2])
         print(command)
         os.system(command)
@@ -184,7 +180,6 @@ def column_save(array, path, name, temp_path = './temp', ids = [1]):
             if not os.path.isdir(p2):
                 os.mkdir(p2)
             p2 = os.path.join(p2, temp_names[i])
-            #print(p2)
             command = " ".join([turbo_dir, turbo_param, p1, p2])
             print(command)
             os.system(command)
@@ -214,12 +209,6 @@ def convert_inverse_rel(prov):
         max_i = len(x[type_x])
 
         for i in range(max_i):
-            # if (type_x == '0' and type_y == '0') or (type_x == '1' and type_y == '1'):
-            #     tups = get_rel_tups(tup[0], tup[1], x[type_x][i], y[type_y][i], type_x)
-            #     new_list += tups
-            #     continue
-
-            # get xs
             out_x_tup = [None, None, None, None, None, None]
             out_y_tup = [None, None, None, None, None, None]
             if type_x == 'a' and type_y == 'a': #1
@@ -373,8 +362,6 @@ def comp_rel_save(array, path, name, image = False, arrow = True, gzip = True):
         provenance[1] = array_compression(array)
     else:
         provenance = compression(array, relative = True)
-    #print(provenance)
-    #print(provenance)
     for id in provenance:
         prov = provenance[id]
         vals = convert_rel(prov)
@@ -385,7 +372,6 @@ def comp_rel_save(array, path, name, image = False, arrow = True, gzip = True):
                 "input_y1_a", "input_y1_1", "input_y1_2", \
                 "input_y2_a", "input_y2_1", "input_y2_2"])
         pd.set_option('display.max_columns', None)
-        #print(df)
         df_2 = pd.DataFrame(vals_inverse, columns= ["output_x1", "output_x2", "output_y1", "output_y2", \
                 "input_x1_a", "input_x1_1", "input_x1_2", \
                 "input_x2_a", "input_x2_1", "input_x2_2",  \

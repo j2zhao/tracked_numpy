@@ -30,15 +30,12 @@ def compression_convert(folder1, folder2, num_steps, dfile, input2):
             ids = [1,2]
         
         arr_save(array, folder2[0], 'step{}_'.format(i), ids = ids)
-        #raw_save(array, folder2[0], 'step{}_'.format(i), ids = ids, arrow = False)
-        #raw_save(array, folder2[1], 'step{}_'.format(i), ids = ids, arrow = True)
-        #gzip_save(array, folder2[2], 'step{}_'.format(i), ids = ids, arrow = True)
-        #column_save(array, folder2[3], 'step{}_'.format(i), temp_path = './temp', ids = ids)
-        #comp_rel_save(array, folder2[4], 'step{}_'.format(i), image = False, arrow = True, gzip = True)
-        #comp_save(array, folder2, 'step{}_'.format(i), arrow = True, gzip = True)
-        #else:
-            #raw_save(array, folder2, 'step{}_'.format(i), ids = ids, image = False, arrow=True)
-    #print(final_shape)
+        raw_save(array, folder2[0], 'step{}_'.format(i), ids = ids, arrow = False)
+        raw_save(array, folder2[1], 'step{}_'.format(i), ids = ids, arrow = True)
+        gzip_save(array, folder2[2], 'step{}_'.format(i), ids = ids, arrow = True)
+        column_save(array, folder2[3], 'step{}_'.format(i), temp_path = './temp', ids = ids)
+        comp_rel_save(array, folder2[4], 'step{}_'.format(i), image = False, arrow = True, gzip = True)
+        comp_save(array, folder2, 'step{}_'.format(i), arrow = True, gzip = True)
     return final_shape
 
 def make_compression_numpy(f2, f1, num_steps, folder_range):
@@ -50,7 +47,6 @@ def make_compression_numpy(f2, f1, num_steps, folder_range):
                 os.mkdir(f)
             except OSError as e:
                 pass
-            #os.mkdir(f)
         x, y = compression_convert(folder1, folder2, num_steps, dfile = '.pickle', input2 = [])
         # with open(os.path.join(folder2, 'x.pickle'), 'wb') as f:
         #     pickle.dump(x, f)
@@ -93,9 +89,7 @@ def make_compression_relational(base_folder, f2, f1, num_steps):
     with open(os.path.join(base_folder, 'y.pickle'), 'wb') as f:
         pickle.dump(y, f)
 
-if __name__ == '__main__':
-    #print('hello 2')
-    
+if __name__ == '__main__':    
     #folder1 = 'compression_tests_2/relational_pipeline'
     #folder2 = ['storage_10/numpy_raw', 'storage_10/numpy_pq', 'storage_10/numpy_gzip', 'storage_10/numpy_col', 'storage_10/numpy_dslog']
     #folder2 = ['./storage_pipeline/storage_relational_compression/relational_raw', './storage_pipeline/storage_relational_compression/relational_pq', './storage_pipeline/storage_relational_compression/relational_gzip', './storage_pipeline/storage_relational_compression/relational_col', './storage_pipeline/storage_relational_compression/relational_dslog']

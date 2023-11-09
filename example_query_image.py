@@ -45,9 +45,6 @@ def convert(array):
 def resize_aux(arr, w, h, prov = False):
     w_org = arr.shape[0]
     h_org = arr.shape[1]
-    # if prov:
-    #     new_arr = np.zeros((w, h), dtype=np.float64).astype(tf.tracked_float)
-    # else:
     new_arr = np.zeros((w, h), dtype = object)
     
     for i in range(w):
@@ -63,7 +60,6 @@ def resize_aux(arr, w, h, prov = False):
             else:
                 y2 = math.floor((j + 1)*h_org/h)
             total = (x2 - x1)*(y2 - y1)
-            #new_arr[i, j] = np.sum(arr[x1:x2, y1:y2], initial= None)//total
             provenance = []
             for a in range(x1, x2):
                 for b in range(y1, y2):
@@ -75,13 +71,8 @@ def resize_aux(arr, w, h, prov = False):
 def resize_img(array, w = 416, h = 416):
     w_org = array.shape[0]
     h_org = array.shape[1]
-    # prov_array = np.zeros((w_org, h_org)).astype(tf.tracked_float)
-    # tf.initialize(prov_array, 1)
     prov_array = resize_aux(array, w, h, prov = True)
     new_array = np.zeros((w, h, 3))
-    # for i in range(3):
-    #     new_array[:, :, i] = resize_aux(array[:, :, i], w, h, prov = False)
-    
     return new_array, prov_array
 
 def lum_img(array, max = 255):
@@ -135,8 +126,6 @@ if __name__ == '__main__':
     # Resize Image
     image, prov_arr = resize_img(image)
     #prov_arr = convert(prov_arr)
-    #print(prov_arr[0,0].provenance)
-    #raise ValueError()
     dire = os.path.join(folder, 'step1.npy')
     np.save(dire, prov_arr)
     # Change Luminosity

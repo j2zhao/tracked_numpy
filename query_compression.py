@@ -79,7 +79,6 @@ def query_one2one(pranges, folder, tnames, backwards = True, dtype = 'arrow'):
         raise ValueError('dtype argument not supported')
 
     query_rows = []
-    #print(pranges)
     start = time.time()
     for prange in pranges:
         for i in range(prange[0][0], prange[0][1] + 1):
@@ -129,7 +128,6 @@ def query_one2one_select(pranges, folder, tnames, backwards = True, dtype = 'arr
         raise ValueError('dtype argument not supported')
 
     query_rows = []
-    #print(pranges)
     for prange in pranges:
         for i in range(prange[0][0], prange[0][1] + 1):
             for j in range(prange[1][0], prange[1][1] + 1):
@@ -158,46 +156,6 @@ def query_one2one_select(pranges, folder, tnames, backwards = True, dtype = 'arr
             return query_rows
     print(tim)
     return query_rows
-
-# def query_invertedlist(pranges, folder, tnames, dtype = 'arrow'):
-#     con = duckdb.connect(database=':memory:')
-#     if dtype == 'arrow':
-#         tables = load_parquet(folder)
-
-#     query_rows = []
-#     for prange in pranges:
-#         for i in range(prange[0][0], prange[0][1] + 1):
-#             for j in range(prange[1][0], prange[1][1] + 1):
-#                 query_rows.append([i, j])
-#     for name in tnames:
-#         arrow_table = tables[name]
-#         # print(con.fetchall())
-#         new_query_rows = []
-#         for row in query_rows:
-#             arrow_table = tables[name]
-#             sql_results = con.execute('SELECT input_x, input_y FROM arrow_table WHERE output_x = ? AND output_y = ?', row).fetchdf()
-#             indices = {}
-#             for _, row in sql_results.iterrows():
-#                 if int(row['input_x']) >= 0 and int(row['input_y']) >= 0:
-#                     new_query_rows.append((row['input_x'], row['input_y']))
-#                 else:
-#                     index = abs(int(row['input_x']))
-#                     array_id = abs(int(row['input_y']))
-#                     if array_id not in indices:
-#                         indices[array_id] = []
-#                     indices[array_id].append(index)
-#         for i in indices:
-#             dire = os.path.join(folder, name + '_' + str(i) + '.npy')
-#             arr = np.load(dire).tolist()
-#             for j in indices[i]:
-#                 arr_i = j
-#                 while True:
-#                     if arr[arr_i] == -1:
-#                         break
-#                     new_query_rows.append([int(arr[arr_i]), int(arr[arr_i + 1])])
-#                     arr_i += 2
-#         query_rows = new_query_rows
-#     return query_rows
 
 if __name__ == '__main__':
     q = query_one2one([((0,0), (0,0))], 'storage', ['step0_1', 'step1_1'], backwards = False, dtype = 'arrow')

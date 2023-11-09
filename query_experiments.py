@@ -53,14 +53,12 @@ def query_experiments_numpy(shape, sizes, experiments, num_steps, num_exp, save_
         j = 0
         print(experiment)
         for j in range(num_exp):
-            #print(j)
             # get folder name and last size
             folder2 = folder_name + str(j)
             x = shape[0]
             y = shape[1]
             # get ranges and step names
             pranges = [get_range(xsize, ysize, x, y)]
-            #print(pranges)
             tnames = []
             for i in range(num_steps):
                 if not forward:
@@ -73,8 +71,6 @@ def query_experiments_numpy(shape, sizes, experiments, num_steps, num_exp, save_
             try:
                 # get query results
                 start = time.time()
-                #result = query_comp(pranges, folder2, tnames, backward = False, merge = False, dtype = 'arrow')
-                #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'turbo')
                 if not forward:
                     result = query_array(pranges, folder2, tnames, backwards = False)
                     #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
@@ -115,13 +111,10 @@ def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline
         while True:
             # get ranges and step names
             pranges = [get_range(xsize, ysize, x, y)]
-            print(pranges)
             tnames = []
             for i in range(5):
                 tname = 'step{}_1'.format(i)
                 tnames.append(tname)
-            #tnames = ['step0_1']
-            #tnames.reverse()
             # get query results
             signal.alarm(10800)  # 300 seconds = 5 minutes
             try:
@@ -129,9 +122,7 @@ def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline
                 #result = query_comp_join(pranges, folder2, tnames, backward = False, merge = True, dtype = 'arrow')
                 #result = query_one2one(pranges, folder2, tnames, backwards = False, dtype = 'arrow')
                 result = query_array(pranges, folder2, tnames, backwards = False)
-                #print(result)
                 end = time.time()
-                #raise ValueError()
             except TimeoutException:
                 start = 0
                 end = 0
@@ -144,8 +135,6 @@ def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline
                 print(end - start)
                 break
                 
-# def query_experiemnts_pipeline(shape = [1080, 1920], folder2 = 'storage_pipeline/image_dslog'):
-#     pass
 
 
 if __name__ == '__main__':

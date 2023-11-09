@@ -13,8 +13,6 @@ def missing_filter(array, missing = '\\N'):
     for i in range(array.shape[0]):
         skip = False
         for j in range(array.shape[1]):
-            # print(array[i, j].value)
-            # print(j)
             if j == 6:
                 continue
             if array[i, j].value == missing:
@@ -22,8 +20,6 @@ def missing_filter(array, missing = '\\N'):
                 break
         if not skip:
             new_array.append(array[i, :])
-        # if i > 10:
-        #     raise ValueError()
     return np.array(new_array)
 
 def combine_cols(array, col1 = 0, col2 = 0):
@@ -53,7 +49,6 @@ def one_hot(array, column = 8):
             values.add(val)
             values_dict[val] = index
             index +=1
-    #raise ValueError()
     new_size = array.shape[1] - 1 + len(values)
     new_array = np.zeros((array.shape[0], new_size), dtype = object)
     new_array[:, :column] = array[:, :column]
@@ -62,10 +57,6 @@ def one_hot(array, column = 8):
         for j in range(len(values)):
             x = j + array.shape[1] - 1
             new_array[i,x] = TrackedObj('onehot', [(1, i, column)])
-    # for i in range(array.shape[0]): 
-    #     val = array[i, column].value
-    #     index = values_dict[val] + array.shape[1] - 1
-    #     new_array[:, :column]
     return new_array
     
 def one2one(array):
@@ -95,41 +86,27 @@ if __name__ == '__main__':
     with open(p, 'wb') as f:
         pickle.dump(arr, f)
     print('step1 done')
-    print(arr.shape)
     #Filter out missing data
     arr = missing_filter(arr)
-    # for i in range(arr.shape[0]):
-    #     for j in range(arr.shape[1]):
-    #         if not isinstance(arr[i, j].provenance, tuple):
-    #             print(i)
-    #             print(j)
-    #             print(arr[i, j].provenance)
-    #             raise ValueError()
-    print(arr.shape)
     p = os.path.join(folder, 'step2.pickle')
     with open(p, 'wb') as f:
         pickle.dump(arr, f)
     print('step2 done')
-    print(arr.shape)
     #Create a new column that is the combination of two columns
     arr = combine_cols(arr)
     p = os.path.join(folder, 'step3.pickle')
     with open(p, 'wb') as f:
         pickle.dump(arr, f)
     print('step3 done')
-    print(arr.shape)
     # Use one hot encoding
     arr = one_hot(arr)
     p = os.path.join(folder, 'step4.pickle')
     with open(p, 'wb') as f:
         pickle.dump(arr, f)
-    print(arr.shape)
     print('step4 done')
     # Raise one column to exponents
     arr = one2one(arr)
     p = os.path.join(folder, 'step5.pickle')
     with open(p, 'wb') as f:
         pickle.dump(arr, f)
-    print('step5 done')
-    print(arr.shape)
-    
+    print('step5 done')    

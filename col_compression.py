@@ -28,12 +28,12 @@ def to_column_1(array, temp_path, zeros = True):
 
     y1 = np.array(y1).astype(np.intc).flatten(order='F') 
     path = os.path.join(temp_path, 'y1.csv')
-    np.save(path, y1)
+    #np.save(path, y1)
     y1.tofile(path, sep = ',')
 
     y2 = np.array(y2).astype(np.intc).flatten(order='F')
     path = os.path.join(temp_path, 'y2.csv')
-    np.save(path, y2)
+    #np.save(path, y2)
     y2.tofile(path, sep = ',')
 
 def to_column_2(array, temp_path, input_id = (1, 2), zeros= True):

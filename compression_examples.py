@@ -152,17 +152,6 @@ def test11(arr_shape = 1000000):
     arr_33 = np.zeros((arr_shape, )).astype(tf.tracked_float)
     out[3] = np.dot(arr_3, arr_33)
 
-    #for i in range(arr.shape[0]):
-
-
-        # if arr[i,0].n <= 0.25:
-        #     out[0] = out[0] + arr[i,0]
-        # elif arr[i,0].n <= 0.5:
-        #     out[1] = out[1] + arr[i,0]
-        # elif arr[i,0].n <= 0.75:
-        #     out[2] = out[2] + arr[i,0]
-        # else:
-        #     out[3] = out[3] + arr[i,0]
     return out
 
 def test12(arr_shape = 1000000, sorted = True):
@@ -273,17 +262,6 @@ def test16(data = './compression_tests_2/group_by_pandas.pickle', col_name = 'st
         print(data.shape)
     return data
 
-# def test17(data = './compression_tests_2/group_by_pandas.pickle', col_name = 'startYear', agg_name = 'isAdult'):
-#     """
-#     Groupby Sorted
-#     """
-#     #data = pd.read_csv(data)
-#     with open(data, 'rb') as f:
-#         data = pickle.load(f, encoding='latin1')
-#         data = data.head(1000000)
-#         data = data.sort_values(by='startYear', ignore_index= True)
-#     data = groupby_prov(data, col_name, agg_name)
-#     return data
 
 def test17(limit = 1000000, data_left = './compression_tests_2/left_join_pandas.pickle', data_right = './compression_tests_2/right_join_pandas.pickle', column1 = 'tconst', column2 = 'tconst'):
     """
@@ -313,31 +291,10 @@ def test17(limit = 1000000, data_left = './compression_tests_2/left_join_pandas.
     paths.sort(key = lambda x : x[0])
     arrs = []
     for i, path in enumerate(paths):
-        print(i)
         arr = np.load(path[1], allow_pickle=True)
         arrs.append(arr)
     array = np.concatenate(arrs, axis = 0)
-    print(array.shape)
     return array
-
-def testtemp(limit = 1000000, data_left = './compression_tests_2/left_join_pandas.pickle', data_right = './compression_tests_2/right_join_pandas.pickle', column1 = 'tconst', column2 = 'tconst'):
-    """
-    Join Sorted
-    """
-    #df1 = pd.read_csv(data_left)
-    #df2 = pd.read_csv(data_right)
-    with open(data_left, 'rb') as f:
-        df1 = pickle.load(f, encoding='latin1')
-        #df1 = df1.head(100000)
-        print(df1.shape)
-        #print(df1.tail(10))
-    with open(data_right, 'rb') as f:
-        df2 = pickle.load(f, encoding='latin1')
-        #df2 = df2.head(100)
-        print(df2.shape)
-        #print(df2.tail(10))
-    #join_prov(df1, df2, column1, column2, limit = limit)
-    print('returned')    
 
 def test18(arr_size = (100000, 10)):
     # tests random sort
@@ -348,16 +305,6 @@ def test18(arr_size = (100000, 10)):
     #out[arr < 0.5] = arr[arr < 0.5]
     return out
 
-# def test19(data_left = './compression_tests_2/left_join_pandas.pickle', data_right = './compression_tests_2/right_join_pandas.pickle', column1 = 'tconst', column2 = 'parentTconst'):
-#     """
-#     Join UnSorted
-#     """
-#     with open(data_left, 'rb') as f:
-#         df1 = pickle.load(f, encoding='latin1')
-#     with open(data_right, 'rb') as f:
-#         df2 = pickle.load(f, encoding='latin1')
-#     data = join_prov(df1, df2, column1, column2)
-#     return data
 
 def test20(arr_size = (100, 100)):
     # basic test

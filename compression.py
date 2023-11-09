@@ -65,7 +65,6 @@ def compress_input(prov_list):
         compressed.append(((temp_start, last_value), col))
     return compressed
 
-# to fix
 def prov_eq(prov1, prov2):
     if len(prov1) != len(prov2):
         return ()
@@ -101,10 +100,8 @@ def convert_to_relative(prov_interval, row, col):
         rel11.append((start1 - col, end1 - col))
 
     return ({'a': abs0, '0': rel00, '1':rel01}, {'a': abs1, '0': rel10, '1':rel11})
-    #return {'abs': {0: abs0, 1: abs1}, 'rel0': {0:rel00, 1:rel10}, 'rel1': {0:rel01, 1:rel11}}
     
 
-#to fix? what was i supposed to fix lol
 def compress_output(prov_arr, id, relative = True):
     '''
     we compress by specified id -> requires id field
@@ -126,7 +123,6 @@ def compress_output(prov_arr, id, relative = True):
                         prov1 = convert_to_relative(prov_arr[row, col][id], row, col)
                     else:
                         prov1 = prov_arr[row, col][id]
-                # need to check alternative??
             else:
                 # check for provenance and match
                 if id in prov_arr[row, col]:
@@ -164,7 +160,6 @@ def compress_output(prov_arr, id, relative = True):
         if prev_compressed_col == None:
             prev_compressed_col = compressed_col
         else:
-            # print(prev_compressed_col)
             prev_index = 0
             new_compressed_col = []
             for interval in compressed_col:
@@ -188,9 +183,6 @@ def compress_output(prov_arr, id, relative = True):
                             new_compressed_col.append(((prev[0][0], interval[0][1]), interval[1], prov))
                             prev_index +=1
                         else:
-                            # print('test')
-                            # print(prev)
-                            # print('test2')
                             compressed.append(prev)
                             prev_index +=1
                             new_compressed_col.append(interval)
@@ -205,7 +197,6 @@ def compress_output(prov_arr, id, relative = True):
 
     if prev_compressed_col != None:
         compressed += prev_compressed_col
-    #print(compressed)
     return compressed
 
             
@@ -224,16 +215,12 @@ def compression(prov_arr, relative = True):
     separate_by_ids: if True, try to compress by different ids
     separate_by_ids: if False, try to compress all input arrays in separate lineage
     '''
-    # change this format based on whatever
-    # need to change to -1 for compression
-    # merge inputs
     if len(prov_arr.shape) == 0:
         prov_arr = np.reshape(prov_arr, (1, 1))
     if len(prov_arr.shape) == 1:
         prov_arr = np.reshape(prov_arr, (prov_arr.shape[0], 1))
     ids = set()
     cell_prov = np.zeros(prov_arr.shape, dtype=object)
-    start = time.time()
     for row in range(prov_arr.shape[0]):
         for col in range(prov_arr.shape[1]):
             prov_dict = divide_by_id(prov_arr[row, col].provenance)
@@ -242,16 +229,10 @@ def compression(prov_arr, relative = True):
                 compress[id] = compress_input(prov_dict[id])
                 ids.add(id)
             cell_prov[row, col] = compress
-    #print('done step 1')
-    end = time.time()
 
-    start = time.time()
     output = {}
     for id in ids:
         output[id] = compress_output(cell_prov, id = id, relative = relative)
-    end = time.time()
-    #print('done step 2')
-    #print('output compression: {}'.format(end - start))
     return output
 
 
@@ -278,11 +259,8 @@ def generate_array(size = (100, 100)):
 
 
 if __name__ == '__main__':
-
-
     # base = './logs'
     # prov = np.load('logs/1632433790.421791.npy', allow_pickle=True)
-
     prov = generate_array()
     compressed = compression(prov)
     with open("test.npy", 'wb') as f:

@@ -95,7 +95,6 @@ def check_eq_prov(prov1, prov2):
     return new_prov
 
 
-# deal with list of arrays -> TODO later
 # arguments can't change type
 class FunctionProvenance():
     """
@@ -242,7 +241,6 @@ class FunctionProvenance():
                         num_pass = prov[2]
             if provenance != None:
                 type = 1
-        #raise ValueError()
         # if there isn't a match, we should run the full program
         if provenance == None:
             output = self._run_func(func, args, kwargs)
@@ -364,13 +362,13 @@ class FunctionProvenance():
         ### NEED TO DEAL WITH ARRAYS MAINLY
         # if isinstance(prov, np.array):
         #     array_name = ''
-        #     np.save(array_name, prov) #need to generate new array with provenance?
+        #     np.save(array_name, prov) 
         #     with open(self.log) as f:
         #         tup = (line, arrays, nfunc, args, array_name, 0)
-        #         f.write(str(tup)) # does this work?  i might need to convert customly?
+        #         f.write(str(tup)) 
         with open(self.log, 'a') as f:
             tup = (line, arrays, nfunc, args, arr_tup, prov)
-            f.write(str(tup)) # does this work?  i might need to convert customly??
+            f.write(str(tup)) 
     
     def save(self, file_name):
         with open(file_name, 'a') as f:
